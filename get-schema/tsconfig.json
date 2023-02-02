@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "preserveConstEnums": true,
+      "target": "es6",
+      "moduleResolution": "node",
+      "skipLibCheck": true
+    },
+    "exclude": ["node_modules", "dist"],
+    "include": ["./scripts/**/*.ts", "./src/**/*.ts"]
+  }

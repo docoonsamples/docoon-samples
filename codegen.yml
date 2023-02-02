@@ -1,0 +1,11 @@
+schema: get-schema/schema.graphql
+generates:
+  sample_typescript/typed-document-nodes.ts:
+    plugins:
+      - typescript
+  sample_java/Types.java:
+    plugins:
+      - java
+  sample_c-sharp/Types.cs:
+    plugins:
+      - c-sharp
