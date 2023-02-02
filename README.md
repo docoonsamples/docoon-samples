@@ -1,4 +1,4 @@
-# graphql-docoon-samples
+# docoon-samples
 
 GraphQL samples for the Docoon API.
 This project is an add-on to the Documentation API:
@@ -31,8 +31,10 @@ npm generate
 
 1. Create a .env file in the root folder with your ApiKey
 
-> ApiKey=<YourApiKeyGeneratedFronWebsite>
-> Endpoint=https://graphqlapi.docoon.com/api/BusinessApi
+```cmd
+ApiKey=<YourApiKeyGeneratedFronWebsite>
+Endpoint=https://graphqlapi.docoon.com/api/BusinessApi
+```
 
 2. Launch the loadschema cmd file in the root folder
 ```cmd
