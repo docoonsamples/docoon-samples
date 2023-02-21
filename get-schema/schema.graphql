@@ -441,6 +441,9 @@ enum ArrayElementFilterOperator {
   EQUAL_OR_UNDEFINED
   DEFINED
   UNDEFINED
+  IN_ARRAY
+  IS_NULL
+  IS_NOT_NULL
 }
 
 input AttachmentInput {
@@ -452,6 +455,11 @@ input AttachmentInput {
 enum BoolFilterOperator {
   EQUAL
   NOT_EQUAL
+  EQUAL_OR_UNDEFINED
+  DEFINED
+  UNDEFINED
+  IS_NULL
+  IS_NOT_NULL
 }
 
 type BusinessSchemaMutation {
@@ -475,8 +483,8 @@ type BusinessSchemaMutation {
   deleteContact(id: String!, tenantId: String): Void
   addDashboardRight(item: DashboardRightInput!): DashboardRight
   deleteDashboardRight(id: String!): Void
-  addDocumentJob(item: DocumentJobInput!, tenantId: String): DocumentJob
-  addDocumentProbativeJob(item: DocumentProbativeJobInput!, tenantId: String): DocumentProbativeJob
+  addDocumentJob(item: DocumentJobInput!, tenantId: String): JobCreationResult
+  addDocumentProbativeJob(item: DocumentProbativeJobInput!, tenantId: String): JobCreationResult
   readDocument(tenantId: String!, jobId: String!, jobMessageId: String!): Void
   addDocumentType(item: DocumentTypeInput!, tenantId: String): DocumentType
   editDocumentType(id: String!, item: DocumentTypeInput!, tenantId: String): DocumentType
@@ -515,7 +523,7 @@ type BusinessSchemaMutation {
   addNote(item: NoteInput!, tenantId: String): Note
   editNote(id: String!, item: NoteInput!, tenantId: String): Note
   deleteNote(id: String!, tenantId: String): Void
-  addPaperMailJob(item: PaperMailJobInput!, tenantId: String): PaperMailJob
+  addPaperMailJob(item: PaperMailJobInput!, tenantId: String): JobCreationResult
   addPowerBiAuthToken(id: String!): PowerBiAuthToken
   addService(item: ServiceInput!, tenantId: String): Service
   editService(id: String!, item: ServiceInput!, tenantId: String): Service
@@ -569,6 +577,8 @@ type BusinessSchemaQuery {
   documentItems(idList: [String!]!, tenantId: String): [Document]
   documentList(params: DocumentQueryParams, after: String, tenantId: String): DocumentTypeConnection
   documentSizeStatistics(params: DocumentSizeStatisticsQueryParams, tenantId: String): DocumentSizeStatistics
+  documentSubTypeItems(idList: [String!]!, language: Language): [DocumentSubType]
+  documentSubTypeList(params: DocumentSubTypeQueryParams, after: String, language: Language): DocumentSubTypeTypeConnection
   documentTypeItems(idList: [String!]!, tenantId: String): [DocumentType]
   documentTypeList(params: DocumentTypeQueryParams, after: String, tenantId: String): DocumentTypeTypeConnection
   domainUserItems(idList: [String!]!): [DomainUser]
@@ -593,6 +603,8 @@ type BusinessSchemaQuery {
   jobItemList(params: JobItemQueryParams, after: String, tenantId: String): JobItemTypeConnection
   jobMessageItems(idList: [String!]!, tenantId: String): [JobMessage]
   jobMessageList(params: JobMessageQueryParams, after: String, tenantId: String): JobMessageTypeConnection
+  jobItems(idList: [String!]!, tenantId: String): [Job]
+  jobList(params: JobQueryParams, after: String, tenantId: String): JobTypeConnection
   processingJobCountStatistics(tenantId: String): JobCountStatistics
   jobSummaryItems(idList: [Int!]!, tenantId: String): [JobSummary]
   jobSummaryList(params: JobSummaryQueryParams, after: String, tenantId: String): JobSummaryTypeConnection
@@ -606,6 +618,8 @@ type BusinessSchemaQuery {
   natureList(params: NatureQueryParams, after: String, language: Language): NatureTypeConnection
   noteItems(idList: [String!]!, tenantId: String): [Note]
   noteList(params: NoteQueryParams, after: String, tenantId: String): NoteTypeConnection
+  postalJobItems(idList: [String!]!, tenantId: String): [PaperMailJob]
+  postalJobList(params: PostalJobQueryParams, after: String, tenantId: String): PostalJobTypeConnection
   rightInitialValueList(profile: UserProfile!, params: RightInitialValueQueryParams, after: String): RightInitialValueTypeConnection
   serviceItems(idList: [String!]!, tenantId: String): [Service]
   serviceList(params: ServiceQueryParams, after: String, tenantId: String): ServiceTypeConnection
@@ -757,11 +771,11 @@ input ContactInput {
   phone: String!
   culture: String
   timeZone: String
-  isFavorite: Boolean!
-  isPrincipal: Boolean!
-  documentTransmissionMode: DocumentTransmissionMode!
-  functionIds: [String!]!
-  thirdPartyId: String
+  isFavorite: Boolean
+  isPrincipal: Boolean
+  documentTransmissionMode: DocumentTransmissionMode
+  functionIds: [String!]
+  thirdPartyId: String!
   isEnabled: Boolean
 }
 
@@ -921,6 +935,7 @@ type Document {
   tenantId: String!
   fileName: String!
   documentTypeCode: String!
+  documentSubTypeCode: String
   status: DocumentStatus!
   jobIds: [String]
   metadata: [KeyValue]
@@ -928,10 +943,27 @@ type Document {
   archiveId: String!
   archiver: ArchiverProvider
   signRequired: Boolean!
+  hash: String!
+  readDate: DateTime
+  signedDate: DateTime
+  sentDate: DateTime
+  signType: DocumentTypeSignType
 }
 
 enum DocumentArrayElementFilterField {
   METADATA
+}
+
+enum DocumentBooleanFilterField {
+  IS_READ
+  IS_SIGNED
+  IS_SENT
+}
+
+input DocumentBoolFilter {
+  field: DocumentBooleanFilterField!
+  operator: BoolFilterOperator!
+  filterValue1: Boolean!
 }
 
 type DocumentCountStatistics {
@@ -977,14 +1009,25 @@ input DocumentDateFilter {
 
 enum DocumentDateFilterField {
   CREATION_DATE
+  READ_DATE
+  SIGN_DATE
+  SENT_DATE
 }
 
 input DocumentDocumentArrayElementFilterFieldArrayElementFilter {
   field: DocumentArrayElementFilterField!
   filterArrayElementName: String!
   operator: ArrayElementFilterOperator!
-  filterValue1: String!
-  filterValue2: String
+  filterStringValue1: String
+  filterStringValue2: String
+  filterIntValue1: Int
+  filterIntValue2: Int
+  filterDoubleValue1: Float
+  filterDoubleValue2: Float
+  filterBoolValue1: Boolean
+  filterBoolValue2: Boolean
+  filterDateValue1: DateTime
+  filterDateValue2: DateTime
 }
 
 input DocumentDocumentStatusEnumFilter {
@@ -994,18 +1037,32 @@ input DocumentDocumentStatusEnumFilter {
   filterValue2: DocumentStatus
 }
 
+input DocumentDocumentTypeSignTypeEnumFilter {
+  field: DocumentSignTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: DocumentTypeSignType!
+  filterValue2: DocumentTypeSignType
+}
+
 input DocumentIdOrNewInput {
   existingDocumentId: String
   newDocument: DocumentInput
 }
 
+type DocumentInfo {
+  id: String!
+  hash: String!
+}
+
 input DocumentInput {
   documentTypeCode: String!
+  documentSubTypeCode: String
   fileName: String!
   gedFields: [GedFieldInput]
   gedXml: String
   tempFileId: String
   base64: String
+  hash: String
 }
 
 type DocumentJob {
@@ -1015,19 +1072,15 @@ type DocumentJob {
   serviceId: String
   note: String
   validationType: DocumentJobValidationType!
-  documentsId: [String]
-  attachmentsId: [String]
+  documentIds: [String]
+  attachmentIds: [String]
 }
 
 input DocumentJobDateFilter {
-  field: DocumentJobDateFilterField!
+  field: JobDateFilterField!
   operator: NumberFilterOperator!
   filterValue1: DateTime
   filterValue2: DateTime
-}
-
-enum DocumentJobDateFilterField {
-  CREATION_DATE
 }
 
 input DocumentJobInput {
@@ -1046,40 +1099,24 @@ input DocumentJobInput {
 }
 
 input DocumentJobJobBaseStatusEnumFilter {
-  field: DocumentJobStatusFilterField!
+  field: JobStatusFilterField!
   operator: NumberFilterOperator!
   filterValue1: JobBaseStatus!
   filterValue2: JobBaseStatus
 }
 
 input DocumentJobQueryParams {
-  sortField: DocumentJobSortField
+  sortField: JobSortField
   sortDirection: SortDirection
   stringFilters: [DocumentJobStringFilter]
   dateFilters: [DocumentJobDateFilter]
   statusFilters: [DocumentJobJobBaseStatusEnumFilter]
 }
 
-enum DocumentJobSortField {
-  ID
-  TRACKING_ID
-  SERVICE_ID
-}
-
-enum DocumentJobStatusFilterField {
-  STATUS
-}
-
 input DocumentJobStringFilter {
-  field: DocumentJobStringFilterField!
+  field: JobStringFilterField!
   operator: StringFilterOperator!
   filterValue1: String!
-}
-
-enum DocumentJobStringFilterField {
-  TENANT_ID
-  TRACKING_ID
-  SERVICE_ID
 }
 
 type DocumentJobTypeConnection {
@@ -1108,14 +1145,10 @@ type DocumentProbativeJob {
 }
 
 input DocumentProbativeJobDateFilter {
-  field: DocumentProbativeJobDateFilterField!
+  field: JobDateFilterField!
   operator: NumberFilterOperator!
   filterValue1: DateTime
   filterValue2: DateTime
-}
-
-enum DocumentProbativeJobDateFilterField {
-  CREATION_DATE
 }
 
 input DocumentProbativeJobInput {
@@ -1136,38 +1169,24 @@ input DocumentProbativeJobInput {
 }
 
 input DocumentProbativeJobJobBaseStatusEnumFilter {
-  field: DocumentProbativeJobStatusFilterField!
+  field: JobStatusFilterField!
   operator: NumberFilterOperator!
   filterValue1: JobBaseStatus!
   filterValue2: JobBaseStatus
 }
 
 input DocumentProbativeJobQueryParams {
-  sortField: DocumentProbativeJobSortField
+  sortField: JobSortField
   sortDirection: SortDirection
   stringFilters: [DocumentProbativeJobStringFilter]
   dateFilters: [DocumentProbativeJobDateFilter]
   statusFilters: [DocumentProbativeJobJobBaseStatusEnumFilter]
 }
 
-enum DocumentProbativeJobSortField {
-  ID
-  TRACKING_ID
-  SERVICE_ID
-}
-
-enum DocumentProbativeJobStatusFilterField {
-  STATUS
-}
-
 input DocumentProbativeJobStringFilter {
-  field: DocumentProbativeJobStringFilterField!
+  field: JobStringFilterField!
   operator: StringFilterOperator!
   filterValue1: String!
-}
-
-enum DocumentProbativeJobStringFilterField {
-  TENANT_ID
 }
 
 enum DocumentProbativeJobType {
@@ -1188,8 +1207,14 @@ input DocumentQueryParams {
   sortDirection: SortDirection
   stringFilters: [DocumentStringFilter]
   dateFilters: [DocumentDateFilter]
+  boolFilters: [DocumentBoolFilter]
   statusFilters: [DocumentDocumentStatusEnumFilter]
   arrayElementFilters: [DocumentDocumentArrayElementFilterFieldArrayElementFilter]
+  signTypeFilters: [DocumentDocumentTypeSignTypeEnumFilter]
+}
+
+enum DocumentSignTypeFilterField {
+  SIGN_TYPE
 }
 
 type DocumentSizeStatistics {
@@ -1216,22 +1241,16 @@ enum DocumentSortField {
   FILE_NAME
   METADATA
   CREATION_DATE
+  READ_DATE
+  SIGN_DATE
+  SENT_DATE
+  SIGN_TYPE
 }
 
 enum DocumentStatus {
   DRAFT
-  SIGNED
-  ARCHIVED
-  SENT
-  EDI_TRANSMITTED
-  READ
-  EDI_SUBMIT
-  TO_PAY
-  PAID
-  EDI_PROCESSED
-  LATE
-  DISPUTED
-  EDI_NOT_TRANSLATED
+  PROCESSING
+  COMPLETED
   ERROR
   CANCELED
 }
@@ -1250,6 +1269,55 @@ enum DocumentStringFilterField {
   TENANT_ID
   DOCUMENT_TYPE_CODE
   FILE_NAME
+  DOCUMENT_SUB_TYPE_CODE
+}
+
+type DocumentSubType {
+  creationDate: DateTime
+  creationUserId: String
+  creationUserLabel: String
+  lastModificationDate: DateTime
+  lastModificationUserId: String
+  lastModificationUserLabel: String
+  id: String!
+  code: String!
+  name: String!
+  chorusAttachmentTypeId: String!
+  chorusAttachmentTypeCode: String!
+  natureCodes: [String]
+}
+
+input DocumentSubTypeQueryParams {
+  sortField: DocumentSubTypeSortField
+  sortDirection: SortDirection
+  stringFilters: [DocumentSubTypeStringFilter]
+}
+
+enum DocumentSubTypeSortField {
+  CODE
+  NAME
+  CHORUS_ATTACHMENT_TYPE_ID
+  CHORUS_ATTACHMENT_TYPE_CODE
+  CREATION_DATE
+}
+
+input DocumentSubTypeStringFilter {
+  field: DocumentSubTypeStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum DocumentSubTypeStringFilterField {
+  CODE
+  NAME
+  NATURE_CODES
+  CHORUS_ATTACHMENT_TYPE_ID
+  CHORUS_ATTACHMENT_TYPE_CODE
+}
+
+type DocumentSubTypeTypeConnection {
+  edges: [DocumentSubType]
+  pageInfo: PageInfo
 }
 
 enum DocumentTransmissionMode {
@@ -1355,6 +1423,12 @@ enum DomainRightType {
 
   """Synchronize EDC resources"""
   SYNCHRONIZE_EDC_RESOURCES
+
+  """Get or list Domain Api users"""
+  READ_DOMAIN_API_USER
+
+  """Create, edit or renew Domain Api users"""
+  CHANGE_DOMAIN_API_USER
 }
 
 type DomainRightValue {
@@ -1406,11 +1480,11 @@ enum DomainUserBoolFilterField {
 
 input DomainUserInput {
   id: String
-  civility: String!
+  civility: String
   firstName: String!
   lastName: String!
   email: String!
-  phone: String!
+  phone: String
   culture: String
   timeZone: String
   isEnabled: Boolean
@@ -1549,6 +1623,12 @@ enum EnvironmentRightType {
 
   """Create, edit or delete contact functions"""
   CHANGE_CONTACT_FUNCTION
+
+  """Get or list Environment Api users"""
+  READ_ENVIRONMENT_API_USER
+
+  """Create, edit or renew Environment Api users"""
+  CHANGE_ENVIRONMENT_API_USER
 }
 
 type EnvironmentRightValue {
@@ -1598,11 +1678,11 @@ enum EnvironmentUserBoolFilterField {
 
 input EnvironmentUserInput {
   id: String
-  civility: String!
+  civility: String
   firstName: String!
   lastName: String!
   email: String!
-  phone: String!
+  phone: String
   culture: String
   timeZone: String
   isEnabled: Boolean
@@ -1650,14 +1730,15 @@ type ErrorQueueMessage {
   tenantId: String!
   tenantName: String!
   jobId: String!
-  resourceId: String!
-  resourceType: ErrorQueueMessageResourceType!
+  resourceId: String
+  resourceType: ErrorQueueMessageResourceType
   status: ErrorQueueMessageStatus!
   action: EngineEventAction!
   errorCode: Int!
   errorMessage: String!
   errorStackTrace: String!
-  errorFunctionName: String!
+  errorFunctionName: String
+  errorServiceName: String
 }
 
 enum ErrorQueueMessageActionFilterField {
@@ -1698,6 +1779,7 @@ input ErrorQueueMessageInput {
   errorMessage: String!
   errorStackTrace: String!
   errorFunctionName: String!
+  errorServiceName: String!
 }
 
 input ErrorQueueMessageIntFilter {
@@ -1744,6 +1826,7 @@ enum ErrorQueueMessageSortField {
   ERROR_MESSAGE
   ERROR_FUNCTION_NAME
   ERROR_STACK_TRACE
+  ERROR_SERVICE_NAME
 }
 
 enum ErrorQueueMessageStatus {
@@ -1770,6 +1853,7 @@ enum ErrorQueueMessageStringFilterField {
   ERROR_MESSAGE
   ERROR_FUNCTION_NAME
   ERROR_STACK_TRACE
+  ERROR_SERVICE_NAME
 }
 
 type ErrorQueueMessageTypeConnection {
@@ -1997,18 +2081,81 @@ type InboundSmsTypeConnection {
   pageInfo: PageInfo
 }
 
+type Job {
+  id: String!
+  tenantId: String!
+  trackingId: String!
+  completedDate: DateTime
+  status: JobBaseStatus!
+  documentIds: [String]
+  serviceId: String
+  note: String
+  creationDate: DateTime
+  jobType: JobBaseType
+}
+
+input JobBaseDateFilter {
+  field: JobDateFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: DateTime
+  filterValue2: DateTime
+}
+
+input JobBaseJobBaseStatusEnumFilter {
+  field: JobStatusFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: JobBaseStatus!
+  filterValue2: JobBaseStatus
+}
+
+input JobBaseJobBaseTypeEnumFilter {
+  field: JobTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: JobBaseType!
+  filterValue2: JobBaseType
+}
+
 enum JobBaseStatus {
   CREATED
   PROCESSING
-  AWAITING_JOB_VISA
-  AWAITING_NEW_THIRD_PARTY_VISA
-  COMPLETE
+  COMPLETED
   ERROR
   CANCELED
 }
 
+input JobBaseStringFilter {
+  field: JobStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum JobBaseType {
+  NONE
+  DOCUMENT
+  DOCUMENT_PROBATIVE
+  POSTAL
+  EMAIL
+  SMS
+  VOICE
+  FAX
+  PUSH
+}
+
 type JobCountStatistics {
   count: Int!
+}
+
+type JobCreationResult {
+  id: String!
+  tenantId: String!
+  trackingId: String!
+  documents: [DocumentInfo]
+  attachments: [DocumentInfo]
+}
+
+enum JobDateFilterField {
+  CREATION_DATE
+  COMPLETED_DATE
 }
 
 type JobItem {
@@ -2222,6 +2369,7 @@ enum JobMessageTransmissionStatus {
   UNKNOWN_WEB_NOTIFICATION_TRANSMISSION_ERROR
   UNKNOWN_POSTAL_TRANSMISSION_ERROR
   WRONG_DELIVERY_ADDRESS
+  INVALID_DOCUMENT
 }
 
 enum JobMessageTransmissionStatusFilterField {
@@ -2240,8 +2388,27 @@ type JobMessageTypeConnection {
   pageInfo: PageInfo
 }
 
+input JobQueryParams {
+  sortField: JobSortField
+  sortDirection: SortDirection
+  stringFilters: [JobBaseStringFilter]
+  dateFilters: [JobBaseDateFilter]
+  statusFilters: [JobBaseJobBaseStatusEnumFilter]
+  jobTypeFilters: [JobBaseJobBaseTypeEnumFilter]
+}
+
 type JobResult {
   jobNumber: Int!
+}
+
+enum JobSortField {
+  ID
+  TRACKING_ID
+  SERVICE_ID
+  COMPLETED_DATE
+  CREATION_DATE
+  STATUS
+  JOB_TYPE
 }
 
 enum JobStatus {
@@ -2266,6 +2433,16 @@ enum JobStatus {
   COMPLETED
   FINISHED
   ARCHIVED
+}
+
+enum JobStatusFilterField {
+  STATUS
+}
+
+enum JobStringFilterField {
+  TENANT_ID
+  TRACKING_ID
+  SERVICE_ID
 }
 
 type JobSummary {
@@ -2363,6 +2540,15 @@ enum JobSummaryStringFilterField {
 type JobSummaryTypeConnection {
   edges: [JobSummary]
   pageInfo: PageInfo
+}
+
+type JobTypeConnection {
+  edges: [Job]
+  pageInfo: PageInfo
+}
+
+enum JobTypeFilterField {
+  JOB_TYPE
 }
 
 type KeyValue {
@@ -2654,6 +2840,11 @@ enum NumberFilterOperator {
   GREATER_THAN
   LOWER_THAN_OR_EQUAL
   LOWER_THAN
+  EQUAL_OR_UNDEFINED
+  DEFINED
+  UNDEFINED
+  IS_NULL
+  IS_NOT_NULL
 }
 
 type PageInfo {
@@ -2663,19 +2854,22 @@ type PageInfo {
 
 type PaperMailJob {
   id: String!
-  tenantId: String!
   trackingId: String!
+  status: JobBaseStatus!
+  completedDate: DateTime
+  documentIds: [String]
+  serviceId: String
+  note: String
 }
 
 input PaperMailJobInput {
-  tenantId: String!
   trackingId: String
-  scheduledStartTime: DateTime
   adhocRecipientFiles: [FileIdOrNewInputType]
-  deDuplicate: Boolean
   postalAdhocRecipients: [PostalAdhocRecipientInput]
   documents: [FileIdOrNewInputType]
   parameter: PostalParameter
+  serviceId: String
+  note: String
 }
 
 type PostalAddress {
@@ -2702,12 +2896,44 @@ input PostalAddressInput {
 
 input PostalAdhocRecipientInput {
   name: String!
-  printOptions: PrintOptionsInput
   addressLine1: String!
   addressLine2: String!
   postalCode: String!
   city: String!
   country: String!
+}
+
+input PostalJobDateFilter {
+  field: JobDateFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: DateTime
+  filterValue2: DateTime
+}
+
+input PostalJobJobBaseStatusEnumFilter {
+  field: JobStatusFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: JobBaseStatus!
+  filterValue2: JobBaseStatus
+}
+
+input PostalJobQueryParams {
+  sortField: JobSortField
+  sortDirection: SortDirection
+  stringFilters: [PostalJobStringFilter]
+  dateFilters: [PostalJobDateFilter]
+  statusFilters: [PostalJobJobBaseStatusEnumFilter]
+}
+
+input PostalJobStringFilter {
+  field: JobStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+type PostalJobTypeConnection {
+  edges: [PaperMailJob]
+  pageInfo: PageInfo
 }
 
 input PostalParameter {
@@ -2728,20 +2954,6 @@ type PowerBiAuthToken {
   lastModificationUserLabel: String
   accessToken: String!
   embedUrl: String!
-}
-
-input PrintOptionsInput {
-  type: PrintType!
-  color: Boolean!
-  doubleSided: Boolean!
-  addAddressPage: Boolean!
-}
-
-enum PrintType {
-  NORMAL
-  FR_LETTRE_VERTE
-  FR_INDUSTRIEL
-  FR_INDUSTRIEL_PLUS_4
 }
 
 input PushJob {
@@ -2886,10 +3098,10 @@ enum RightType {
   CHANGE_ENVIRONMENT_USER
 
   """Get or list Api users"""
-  READ_API_USER
+  READ_TENANT_API_USER
 
   """Create, edit or renew Api users"""
-  CHANGE_API_USER
+  CHANGE_TENANT_API_USER
 
   """Get or list services"""
   READ_SERVICE
@@ -3034,6 +3246,18 @@ enum RightType {
 
   """Create postalJob"""
   CHANGE_POSTAL_JOB
+
+  """Get or list Domain Api users"""
+  READ_DOMAIN_API_USER
+
+  """Create, edit or renew Domain Api users"""
+  CHANGE_DOMAIN_API_USER
+
+  """Get or list Environment Api users"""
+  READ_ENVIRONMENT_API_USER
+
+  """Create, edit or renew Environment Api users"""
+  CHANGE_ENVIRONMENT_API_USER
 }
 
 input RightValueBoolFilter {
@@ -3178,8 +3402,8 @@ input SmtpConfigInput {
   errorAddress: String
   hasSmtpSsl: Boolean
   replyAddress: String
-  senderAddress: String
-  senderName: String
+  senderAddress: String!
+  senderName: String!
   smtpLogin: String
   smtpPassword: String
   smtpPort: Int
@@ -3212,6 +3436,8 @@ enum StringFilterOperator {
   DEFINED
   UNDEFINED
   IN_ARRAY
+  IS_NULL
+  IS_NOT_NULL
 }
 
 type TemporaryDocumentContent {
@@ -3313,10 +3539,10 @@ enum TenantRightType {
   CHANGE_TENANT_USER
 
   """Get or list Api users"""
-  READ_API_USER
+  READ_TENANT_API_USER
 
   """Create, edit or renew Api users"""
-  CHANGE_API_USER
+  CHANGE_TENANT_API_USER
 
   """Create, edit or delete services"""
   CHANGE_SERVICE
@@ -3489,11 +3715,11 @@ enum TenantUserDocumentAccessType {
 
 input TenantUserInput {
   id: String
-  civility: String!
+  civility: String
   firstName: String!
   lastName: String!
   email: String!
-  phone: String!
+  phone: String
   culture: String
   timeZone: String
   isEnabled: Boolean
