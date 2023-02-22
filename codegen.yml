@@ -1,11 +1,25 @@
-schema: get-schema/schema.graphql
 generates:
   sample_typescript/typed-document-nodes.ts:
+    schema: get-schema/schema.graphql
     plugins:
       - typescript
   sample_java/Types.java:
+    schema: get-schema/schema.graphql
     plugins:
       - java
   sample_c-sharp/Types.cs:
+    schema: get-schema/schema.graphql
+    plugins:
+      - c-sharp
+  sample_typescript/common_typed-document-nodes.ts:
+    schema: get-schema/common_schema.graphql
+    plugins:
+      - typescript
+  sample_java/common_Types.java:
+    schema: get-schema/common_schema.graphql
+    plugins:
+      - java
+  sample_c-sharp/common_Types.cs:
+    schema: get-schema/common_schema.graphql
     plugins:
       - c-sharp
