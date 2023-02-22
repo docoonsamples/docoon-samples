@@ -6,6 +6,9 @@ generates:
   sample_java/Types.java:
     plugins:
       - java
+  sample_java/Types-resolvers.java:
+    plugins:
+      - java-resolvers
   sample_c-sharp/Types.cs:
     plugins:
       - c-sharp

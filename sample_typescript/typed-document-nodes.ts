@@ -461,6 +461,9 @@ export enum ArrayElementFilterOperator {
   EqualOrUndefined = 'EQUAL_OR_UNDEFINED',
   GreaterThan = 'GREATER_THAN',
   GreaterThanOrEqual = 'GREATER_THAN_OR_EQUAL',
+  InArray = 'IN_ARRAY',
+  IsNotNull = 'IS_NOT_NULL',
+  IsNull = 'IS_NULL',
   LowerThan = 'LOWER_THAN',
   LowerThanOrEqual = 'LOWER_THAN_OR_EQUAL',
   NotContain = 'NOT_CONTAIN',
@@ -478,8 +481,13 @@ export type AttachmentInput = {
 };
 
 export enum BoolFilterOperator {
+  Defined = 'DEFINED',
   Equal = 'EQUAL',
-  NotEqual = 'NOT_EQUAL'
+  EqualOrUndefined = 'EQUAL_OR_UNDEFINED',
+  IsNotNull = 'IS_NOT_NULL',
+  IsNull = 'IS_NULL',
+  NotEqual = 'NOT_EQUAL',
+  Undefined = 'UNDEFINED'
 }
 
 export type BusinessSchemaMutation = {
@@ -490,8 +498,8 @@ export type BusinessSchemaMutation = {
   addContact?: Maybe<Contact>;
   addContactFunction?: Maybe<ContactFunction>;
   addDashboardRight?: Maybe<DashboardRight>;
-  addDocumentJob?: Maybe<DocumentJob>;
-  addDocumentProbativeJob?: Maybe<DocumentProbativeJob>;
+  addDocumentJob?: Maybe<JobCreationResult>;
+  addDocumentProbativeJob?: Maybe<JobCreationResult>;
   addDocumentType?: Maybe<DocumentType>;
   addDocumentTypeMetadata?: Maybe<DocumentType>;
   addDomainUser?: Maybe<DomainUser>;
@@ -503,7 +511,7 @@ export type BusinessSchemaMutation = {
   addListOfValues?: Maybe<ListOfValues>;
   addMetadata?: Maybe<Metadata>;
   addNote?: Maybe<Note>;
-  addPaperMailJob?: Maybe<PaperMailJob>;
+  addPaperMailJob?: Maybe<JobCreationResult>;
   addPowerBiAuthToken?: Maybe<PowerBiAuthToken>;
   addPushJob?: Maybe<JobResult>;
   addService?: Maybe<Service>;
@@ -1087,6 +1095,8 @@ export type BusinessSchemaQuery = {
   documentProbativeJobItems?: Maybe<Array<Maybe<DocumentProbativeJob>>>;
   documentProbativeJobList?: Maybe<DocumentProbativeJobTypeConnection>;
   documentSizeStatistics?: Maybe<DocumentSizeStatistics>;
+  documentSubTypeItems?: Maybe<Array<Maybe<DocumentSubType>>>;
+  documentSubTypeList?: Maybe<DocumentSubTypeTypeConnection>;
   documentTypeItems?: Maybe<Array<Maybe<DocumentType>>>;
   documentTypeList?: Maybe<DocumentTypeTypeConnection>;
   domainUserItems?: Maybe<Array<Maybe<DomainUser>>>;
@@ -1109,6 +1119,8 @@ export type BusinessSchemaQuery = {
   inboundSmsList?: Maybe<InboundSmsTypeConnection>;
   jobItemItems?: Maybe<Array<Maybe<JobItem>>>;
   jobItemList?: Maybe<JobItemTypeConnection>;
+  jobItems?: Maybe<Array<Maybe<Job>>>;
+  jobList?: Maybe<JobTypeConnection>;
   jobMessageItems?: Maybe<Array<Maybe<JobMessage>>>;
   jobMessageList?: Maybe<JobMessageTypeConnection>;
   jobSummaryItems?: Maybe<Array<Maybe<JobSummary>>>;
@@ -1123,6 +1135,8 @@ export type BusinessSchemaQuery = {
   natureList?: Maybe<NatureTypeConnection>;
   noteItems?: Maybe<Array<Maybe<Note>>>;
   noteList?: Maybe<NoteTypeConnection>;
+  postalJobItems?: Maybe<Array<Maybe<PaperMailJob>>>;
+  postalJobList?: Maybe<PostalJobTypeConnection>;
   processingJobCountStatistics?: Maybe<JobCountStatistics>;
   rightInitialValueList?: Maybe<RightInitialValueTypeConnection>;
   schema?: Maybe<Scalars['String']>;
@@ -1330,6 +1344,19 @@ export type BusinessSchemaQueryDocumentSizeStatisticsArgs = {
 };
 
 
+export type BusinessSchemaQueryDocumentSubTypeItemsArgs = {
+  idList: Array<Scalars['String']>;
+  language?: InputMaybe<Language>;
+};
+
+
+export type BusinessSchemaQueryDocumentSubTypeListArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  language?: InputMaybe<Language>;
+  params?: InputMaybe<DocumentSubTypeQueryParams>;
+};
+
+
 export type BusinessSchemaQueryDocumentTypeItemsArgs = {
   idList: Array<Scalars['String']>;
   tenantId?: InputMaybe<Scalars['String']>;
@@ -1467,6 +1494,19 @@ export type BusinessSchemaQueryJobItemListArgs = {
 };
 
 
+export type BusinessSchemaQueryJobItemsArgs = {
+  idList: Array<Scalars['String']>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryJobListArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  params?: InputMaybe<JobQueryParams>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
 export type BusinessSchemaQueryJobMessageItemsArgs = {
   idList: Array<Scalars['String']>;
   tenantId?: InputMaybe<Scalars['String']>;
@@ -1557,6 +1597,19 @@ export type BusinessSchemaQueryNoteItemsArgs = {
 export type BusinessSchemaQueryNoteListArgs = {
   after?: InputMaybe<Scalars['String']>;
   params?: InputMaybe<NoteQueryParams>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryPostalJobItemsArgs = {
+  idList: Array<Scalars['String']>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryPostalJobListArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  params?: InputMaybe<PostalJobQueryParams>;
   tenantId?: InputMaybe<Scalars['String']>;
 };
 
@@ -1800,17 +1853,17 @@ export type ContactFunctionTypeConnection = {
 export type ContactInput = {
   civility: Scalars['String'];
   culture?: InputMaybe<Scalars['String']>;
-  documentTransmissionMode: DocumentTransmissionMode;
+  documentTransmissionMode?: InputMaybe<DocumentTransmissionMode>;
   email: Scalars['String'];
   firstName: Scalars['String'];
-  functionIds: Array<Scalars['String']>;
+  functionIds?: InputMaybe<Array<Scalars['String']>>;
   id?: InputMaybe<Scalars['String']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
-  isFavorite: Scalars['Boolean'];
-  isPrincipal: Scalars['Boolean'];
+  isFavorite?: InputMaybe<Scalars['Boolean']>;
+  isPrincipal?: InputMaybe<Scalars['Boolean']>;
   lastName: Scalars['String'];
   phone: Scalars['String'];
-  thirdPartyId?: InputMaybe<Scalars['String']>;
+  thirdPartyId: Scalars['String'];
   timeZone?: InputMaybe<Scalars['String']>;
 };
 
@@ -1964,22 +2017,40 @@ export type Document = {
   creationDate?: Maybe<Scalars['DateTime']>;
   creationUserId?: Maybe<Scalars['String']>;
   creationUserLabel?: Maybe<Scalars['String']>;
+  documentSubTypeCode?: Maybe<Scalars['String']>;
   documentTypeCode: Scalars['String'];
   fileContent?: Maybe<Scalars['String']>;
   fileName: Scalars['String'];
+  hash: Scalars['String'];
   id: Scalars['String'];
   jobIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   lastModificationDate?: Maybe<Scalars['DateTime']>;
   lastModificationUserId?: Maybe<Scalars['String']>;
   lastModificationUserLabel?: Maybe<Scalars['String']>;
   metadata?: Maybe<Array<Maybe<KeyValue>>>;
+  readDate?: Maybe<Scalars['DateTime']>;
+  sentDate?: Maybe<Scalars['DateTime']>;
   signRequired: Scalars['Boolean'];
+  signType?: Maybe<DocumentTypeSignType>;
+  signedDate?: Maybe<Scalars['DateTime']>;
   status: DocumentStatus;
   tenantId: Scalars['String'];
 };
 
 export enum DocumentArrayElementFilterField {
   Metadata = 'METADATA'
+}
+
+export type DocumentBoolFilter = {
+  field: DocumentBooleanFilterField;
+  filterValue1: Scalars['Boolean'];
+  operator: BoolFilterOperator;
+};
+
+export enum DocumentBooleanFilterField {
+  IsRead = 'IS_READ',
+  IsSent = 'IS_SENT',
+  IsSigned = 'IS_SIGNED'
 }
 
 export type DocumentCountStatistics = {
@@ -2025,14 +2096,25 @@ export type DocumentDateFilter = {
 };
 
 export enum DocumentDateFilterField {
-  CreationDate = 'CREATION_DATE'
+  CreationDate = 'CREATION_DATE',
+  ReadDate = 'READ_DATE',
+  SentDate = 'SENT_DATE',
+  SignDate = 'SIGN_DATE'
 }
 
 export type DocumentDocumentArrayElementFilterFieldArrayElementFilter = {
   field: DocumentArrayElementFilterField;
   filterArrayElementName: Scalars['String'];
-  filterValue1: Scalars['String'];
-  filterValue2?: InputMaybe<Scalars['String']>;
+  filterBoolValue1?: InputMaybe<Scalars['Boolean']>;
+  filterBoolValue2?: InputMaybe<Scalars['Boolean']>;
+  filterDateValue1?: InputMaybe<Scalars['DateTime']>;
+  filterDateValue2?: InputMaybe<Scalars['DateTime']>;
+  filterDoubleValue1?: InputMaybe<Scalars['Float']>;
+  filterDoubleValue2?: InputMaybe<Scalars['Float']>;
+  filterIntValue1?: InputMaybe<Scalars['Int']>;
+  filterIntValue2?: InputMaybe<Scalars['Int']>;
+  filterStringValue1?: InputMaybe<Scalars['String']>;
+  filterStringValue2?: InputMaybe<Scalars['String']>;
   operator: ArrayElementFilterOperator;
 };
 
@@ -2043,24 +2125,39 @@ export type DocumentDocumentStatusEnumFilter = {
   operator: NumberFilterOperator;
 };
 
+export type DocumentDocumentTypeSignTypeEnumFilter = {
+  field: DocumentSignTypeFilterField;
+  filterValue1: DocumentTypeSignType;
+  filterValue2?: InputMaybe<DocumentTypeSignType>;
+  operator: NumberFilterOperator;
+};
+
 export type DocumentIdOrNewInput = {
   existingDocumentId?: InputMaybe<Scalars['String']>;
   newDocument?: InputMaybe<DocumentInput>;
 };
 
+export type DocumentInfo = {
+  __typename?: 'DocumentInfo';
+  hash: Scalars['String'];
+  id: Scalars['String'];
+};
+
 export type DocumentInput = {
   base64?: InputMaybe<Scalars['String']>;
+  documentSubTypeCode?: InputMaybe<Scalars['String']>;
   documentTypeCode: Scalars['String'];
   fileName: Scalars['String'];
   gedFields?: InputMaybe<Array<InputMaybe<GedFieldInput>>>;
   gedXml?: InputMaybe<Scalars['String']>;
+  hash?: InputMaybe<Scalars['String']>;
   tempFileId?: InputMaybe<Scalars['String']>;
 };
 
 export type DocumentJob = {
   __typename?: 'DocumentJob';
-  attachmentsId?: Maybe<Array<Maybe<Scalars['String']>>>;
-  documentsId?: Maybe<Array<Maybe<Scalars['String']>>>;
+  attachmentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  documentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   id: Scalars['String'];
   note?: Maybe<Scalars['String']>;
   serviceId?: Maybe<Scalars['String']>;
@@ -2070,15 +2167,11 @@ export type DocumentJob = {
 };
 
 export type DocumentJobDateFilter = {
-  field: DocumentJobDateFilterField;
+  field: JobDateFilterField;
   filterValue1?: InputMaybe<Scalars['DateTime']>;
   filterValue2?: InputMaybe<Scalars['DateTime']>;
   operator: NumberFilterOperator;
 };
-
-export enum DocumentJobDateFilterField {
-  CreationDate = 'CREATION_DATE'
-}
 
 export type DocumentJobInput = {
   adhocRecipientsFiles?: InputMaybe<Array<InputMaybe<FileIdOrBase64Input>>>;
@@ -2096,7 +2189,7 @@ export type DocumentJobInput = {
 };
 
 export type DocumentJobJobBaseStatusEnumFilter = {
-  field: DocumentJobStatusFilterField;
+  field: JobStatusFilterField;
   filterValue1: JobBaseStatus;
   filterValue2?: InputMaybe<JobBaseStatus>;
   operator: NumberFilterOperator;
@@ -2105,32 +2198,16 @@ export type DocumentJobJobBaseStatusEnumFilter = {
 export type DocumentJobQueryParams = {
   dateFilters?: InputMaybe<Array<InputMaybe<DocumentJobDateFilter>>>;
   sortDirection?: InputMaybe<SortDirection>;
-  sortField?: InputMaybe<DocumentJobSortField>;
+  sortField?: InputMaybe<JobSortField>;
   statusFilters?: InputMaybe<Array<InputMaybe<DocumentJobJobBaseStatusEnumFilter>>>;
   stringFilters?: InputMaybe<Array<InputMaybe<DocumentJobStringFilter>>>;
 };
 
-export enum DocumentJobSortField {
-  Id = 'ID',
-  ServiceId = 'SERVICE_ID',
-  TrackingId = 'TRACKING_ID'
-}
-
-export enum DocumentJobStatusFilterField {
-  Status = 'STATUS'
-}
-
 export type DocumentJobStringFilter = {
-  field: DocumentJobStringFilterField;
+  field: JobStringFilterField;
   filterValue1: Scalars['String'];
   operator: StringFilterOperator;
 };
-
-export enum DocumentJobStringFilterField {
-  ServiceId = 'SERVICE_ID',
-  TenantId = 'TENANT_ID',
-  TrackingId = 'TRACKING_ID'
-}
 
 export type DocumentJobTypeConnection = {
   __typename?: 'DocumentJobTypeConnection';
@@ -2160,15 +2237,11 @@ export type DocumentProbativeJob = {
 };
 
 export type DocumentProbativeJobDateFilter = {
-  field: DocumentProbativeJobDateFilterField;
+  field: JobDateFilterField;
   filterValue1?: InputMaybe<Scalars['DateTime']>;
   filterValue2?: InputMaybe<Scalars['DateTime']>;
   operator: NumberFilterOperator;
 };
-
-export enum DocumentProbativeJobDateFilterField {
-  CreationDate = 'CREATION_DATE'
-}
 
 export type DocumentProbativeJobInput = {
   adhocRecipientsFiles?: InputMaybe<Array<InputMaybe<FileIdOrBase64Input>>>;
@@ -2188,7 +2261,7 @@ export type DocumentProbativeJobInput = {
 };
 
 export type DocumentProbativeJobJobBaseStatusEnumFilter = {
-  field: DocumentProbativeJobStatusFilterField;
+  field: JobStatusFilterField;
   filterValue1: JobBaseStatus;
   filterValue2?: InputMaybe<JobBaseStatus>;
   operator: NumberFilterOperator;
@@ -2197,30 +2270,16 @@ export type DocumentProbativeJobJobBaseStatusEnumFilter = {
 export type DocumentProbativeJobQueryParams = {
   dateFilters?: InputMaybe<Array<InputMaybe<DocumentProbativeJobDateFilter>>>;
   sortDirection?: InputMaybe<SortDirection>;
-  sortField?: InputMaybe<DocumentProbativeJobSortField>;
+  sortField?: InputMaybe<JobSortField>;
   statusFilters?: InputMaybe<Array<InputMaybe<DocumentProbativeJobJobBaseStatusEnumFilter>>>;
   stringFilters?: InputMaybe<Array<InputMaybe<DocumentProbativeJobStringFilter>>>;
 };
 
-export enum DocumentProbativeJobSortField {
-  Id = 'ID',
-  ServiceId = 'SERVICE_ID',
-  TrackingId = 'TRACKING_ID'
-}
-
-export enum DocumentProbativeJobStatusFilterField {
-  Status = 'STATUS'
-}
-
 export type DocumentProbativeJobStringFilter = {
-  field: DocumentProbativeJobStringFilterField;
+  field: JobStringFilterField;
   filterValue1: Scalars['String'];
   operator: StringFilterOperator;
 };
-
-export enum DocumentProbativeJobStringFilterField {
-  TenantId = 'TENANT_ID'
-}
 
 export enum DocumentProbativeJobType {
   Certified = 'CERTIFIED',
@@ -2237,13 +2296,19 @@ export type DocumentProbativeJobTypeConnection = {
 
 export type DocumentQueryParams = {
   arrayElementFilters?: InputMaybe<Array<InputMaybe<DocumentDocumentArrayElementFilterFieldArrayElementFilter>>>;
+  boolFilters?: InputMaybe<Array<InputMaybe<DocumentBoolFilter>>>;
   dateFilters?: InputMaybe<Array<InputMaybe<DocumentDateFilter>>>;
+  signTypeFilters?: InputMaybe<Array<InputMaybe<DocumentDocumentTypeSignTypeEnumFilter>>>;
   sortArrayElementName?: InputMaybe<Scalars['String']>;
   sortDirection?: InputMaybe<SortDirection>;
   sortField?: InputMaybe<DocumentSortField>;
   statusFilters?: InputMaybe<Array<InputMaybe<DocumentDocumentStatusEnumFilter>>>;
   stringFilters?: InputMaybe<Array<InputMaybe<DocumentStringFilter>>>;
 };
+
+export enum DocumentSignTypeFilterField {
+  SignType = 'SIGN_TYPE'
+}
 
 export type DocumentSizeStatistics = {
   __typename?: 'DocumentSizeStatistics';
@@ -2269,25 +2334,19 @@ export enum DocumentSortField {
   CreationDate = 'CREATION_DATE',
   FileName = 'FILE_NAME',
   Id = 'ID',
-  Metadata = 'METADATA'
+  Metadata = 'METADATA',
+  ReadDate = 'READ_DATE',
+  SentDate = 'SENT_DATE',
+  SignDate = 'SIGN_DATE',
+  SignType = 'SIGN_TYPE'
 }
 
 export enum DocumentStatus {
-  Archived = 'ARCHIVED',
   Canceled = 'CANCELED',
-  Disputed = 'DISPUTED',
+  Completed = 'COMPLETED',
   Draft = 'DRAFT',
-  EdiNotTranslated = 'EDI_NOT_TRANSLATED',
-  EdiProcessed = 'EDI_PROCESSED',
-  EdiSubmit = 'EDI_SUBMIT',
-  EdiTransmitted = 'EDI_TRANSMITTED',
   Error = 'ERROR',
-  Late = 'LATE',
-  Paid = 'PAID',
-  Read = 'READ',
-  Sent = 'SENT',
-  Signed = 'SIGNED',
-  ToPay = 'TO_PAY'
+  Processing = 'PROCESSING'
 }
 
 export enum DocumentStatusFilterField {
@@ -2301,10 +2360,61 @@ export type DocumentStringFilter = {
 };
 
 export enum DocumentStringFilterField {
+  DocumentSubTypeCode = 'DOCUMENT_SUB_TYPE_CODE',
   DocumentTypeCode = 'DOCUMENT_TYPE_CODE',
   FileName = 'FILE_NAME',
   TenantId = 'TENANT_ID'
 }
+
+export type DocumentSubType = {
+  __typename?: 'DocumentSubType';
+  chorusAttachmentTypeCode: Scalars['String'];
+  chorusAttachmentTypeId: Scalars['String'];
+  code: Scalars['String'];
+  creationDate?: Maybe<Scalars['DateTime']>;
+  creationUserId?: Maybe<Scalars['String']>;
+  creationUserLabel?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lastModificationDate?: Maybe<Scalars['DateTime']>;
+  lastModificationUserId?: Maybe<Scalars['String']>;
+  lastModificationUserLabel?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  natureCodes?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type DocumentSubTypeQueryParams = {
+  sortDirection?: InputMaybe<SortDirection>;
+  sortField?: InputMaybe<DocumentSubTypeSortField>;
+  stringFilters?: InputMaybe<Array<InputMaybe<DocumentSubTypeStringFilter>>>;
+};
+
+export enum DocumentSubTypeSortField {
+  ChorusAttachmentTypeCode = 'CHORUS_ATTACHMENT_TYPE_CODE',
+  ChorusAttachmentTypeId = 'CHORUS_ATTACHMENT_TYPE_ID',
+  Code = 'CODE',
+  CreationDate = 'CREATION_DATE',
+  Name = 'NAME'
+}
+
+export type DocumentSubTypeStringFilter = {
+  field: DocumentSubTypeStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
+
+export enum DocumentSubTypeStringFilterField {
+  ChorusAttachmentTypeCode = 'CHORUS_ATTACHMENT_TYPE_CODE',
+  ChorusAttachmentTypeId = 'CHORUS_ATTACHMENT_TYPE_ID',
+  Code = 'CODE',
+  Name = 'NAME',
+  NatureCodes = 'NATURE_CODES'
+}
+
+export type DocumentSubTypeTypeConnection = {
+  __typename?: 'DocumentSubTypeTypeConnection';
+  edges?: Maybe<Array<Maybe<DocumentSubType>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
 
 export enum DocumentTransmissionMode {
   EmailWithAttachment = 'EMAIL_WITH_ATTACHMENT',
@@ -2387,6 +2497,8 @@ export enum DomainRightType {
   AddTenant = 'ADD_TENANT',
   /** Create or edit domains */
   ChangeDomain = 'CHANGE_DOMAIN',
+  /** Create, edit or renew Domain Api users */
+  ChangeDomainApiUser = 'CHANGE_DOMAIN_API_USER',
   /** Create or edit domain administrators */
   ChangeDomainUser = 'CHANGE_DOMAIN_USER',
   /** Create or edit tenant internal info */
@@ -2399,6 +2511,8 @@ export enum DomainRightType {
   GrantInternalRight = 'GRANT_INTERNAL_RIGHT',
   /** Grant user rights */
   GrantRight = 'GRANT_RIGHT',
+  /** Get or list Domain Api users */
+  ReadDomainApiUser = 'READ_DOMAIN_API_USER',
   /** Get or list tenants with internal info */
   ReadTenantEdcOmsInfo = 'READ_TENANT_EDC_OMS_INFO',
   /** Synchronize EDC resources */
@@ -2456,7 +2570,7 @@ export enum DomainUserBoolFilterField {
 }
 
 export type DomainUserInput = {
-  civility: Scalars['String'];
+  civility?: InputMaybe<Scalars['String']>;
   culture?: InputMaybe<Scalars['String']>;
   domainId: Scalars['String'];
   email: Scalars['String'];
@@ -2464,7 +2578,7 @@ export type DomainUserInput = {
   id?: InputMaybe<Scalars['String']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
   lastName: Scalars['String'];
-  phone: Scalars['String'];
+  phone?: InputMaybe<Scalars['String']>;
   timeZone?: InputMaybe<Scalars['String']>;
 };
 
@@ -2589,12 +2703,16 @@ export enum EnvelopeType {
 export enum EnvironmentRightType {
   /** Create, edit or delete contact functions */
   ChangeContactFunction = 'CHANGE_CONTACT_FUNCTION',
+  /** Create, edit or renew Environment Api users */
+  ChangeEnvironmentApiUser = 'CHANGE_ENVIRONMENT_API_USER',
   /** Create or edit environment administrators */
   ChangeEnvironmentUser = 'CHANGE_ENVIRONMENT_USER',
   /** Create, edit or delete third party types */
   ChangeThirdPartyType = 'CHANGE_THIRD_PARTY_TYPE',
   /** Get or list contact functions */
   ReadContactFunction = 'READ_CONTACT_FUNCTION',
+  /** Get or list Environment Api users */
+  ReadEnvironmentApiUser = 'READ_ENVIRONMENT_API_USER',
   /** Get or list third party types */
   ReadThirdPartyType = 'READ_THIRD_PARTY_TYPE'
 }
@@ -2648,14 +2766,14 @@ export enum EnvironmentUserBoolFilterField {
 }
 
 export type EnvironmentUserInput = {
-  civility: Scalars['String'];
+  civility?: InputMaybe<Scalars['String']>;
   culture?: InputMaybe<Scalars['String']>;
   email: Scalars['String'];
   firstName: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
   lastName: Scalars['String'];
-  phone: Scalars['String'];
+  phone?: InputMaybe<Scalars['String']>;
   timeZone?: InputMaybe<Scalars['String']>;
 };
 
@@ -2701,13 +2819,14 @@ export type ErrorQueueMessage = {
   __typename?: 'ErrorQueueMessage';
   action: EngineEventAction;
   errorCode: Scalars['Int'];
-  errorFunctionName: Scalars['String'];
+  errorFunctionName?: Maybe<Scalars['String']>;
   errorMessage: Scalars['String'];
+  errorServiceName?: Maybe<Scalars['String']>;
   errorStackTrace: Scalars['String'];
   id: Scalars['String'];
   jobId: Scalars['String'];
-  resourceId: Scalars['String'];
-  resourceType: ErrorQueueMessageResourceType;
+  resourceId?: Maybe<Scalars['String']>;
+  resourceType?: Maybe<ErrorQueueMessageResourceType>;
   status: ErrorQueueMessageStatus;
   tenantId: Scalars['String'];
   tenantName: Scalars['String'];
@@ -2743,6 +2862,7 @@ export type ErrorQueueMessageInput = {
   errorCode: Scalars['Int'];
   errorFunctionName: Scalars['String'];
   errorMessage: Scalars['String'];
+  errorServiceName: Scalars['String'];
   errorStackTrace: Scalars['String'];
   id: Scalars['String'];
   jobId: Scalars['String'];
@@ -2790,6 +2910,7 @@ export enum ErrorQueueMessageSortField {
   ErrorCode = 'ERROR_CODE',
   ErrorFunctionName = 'ERROR_FUNCTION_NAME',
   ErrorMessage = 'ERROR_MESSAGE',
+  ErrorServiceName = 'ERROR_SERVICE_NAME',
   ErrorStackTrace = 'ERROR_STACK_TRACE',
   JobId = 'JOB_ID',
   ResourceId = 'RESOURCE_ID',
@@ -2818,6 +2939,7 @@ export type ErrorQueueMessageStringFilter = {
 export enum ErrorQueueMessageStringFilterField {
   ErrorFunctionName = 'ERROR_FUNCTION_NAME',
   ErrorMessage = 'ERROR_MESSAGE',
+  ErrorServiceName = 'ERROR_SERVICE_NAME',
   ErrorStackTrace = 'ERROR_STACK_TRACE',
   JobId = 'JOB_ID',
   ResourceId = 'RESOURCE_ID',
@@ -3060,20 +3182,85 @@ export type InboundSmsTypeConnection = {
   pageInfo?: Maybe<PageInfo>;
 };
 
+export type Job = {
+  __typename?: 'Job';
+  completedDate?: Maybe<Scalars['DateTime']>;
+  creationDate?: Maybe<Scalars['DateTime']>;
+  documentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  id: Scalars['String'];
+  jobType?: Maybe<JobBaseType>;
+  note?: Maybe<Scalars['String']>;
+  serviceId?: Maybe<Scalars['String']>;
+  status: JobBaseStatus;
+  tenantId: Scalars['String'];
+  trackingId: Scalars['String'];
+};
+
+export type JobBaseDateFilter = {
+  field: JobDateFilterField;
+  filterValue1?: InputMaybe<Scalars['DateTime']>;
+  filterValue2?: InputMaybe<Scalars['DateTime']>;
+  operator: NumberFilterOperator;
+};
+
+export type JobBaseJobBaseStatusEnumFilter = {
+  field: JobStatusFilterField;
+  filterValue1: JobBaseStatus;
+  filterValue2?: InputMaybe<JobBaseStatus>;
+  operator: NumberFilterOperator;
+};
+
+export type JobBaseJobBaseTypeEnumFilter = {
+  field: JobTypeFilterField;
+  filterValue1: JobBaseType;
+  filterValue2?: InputMaybe<JobBaseType>;
+  operator: NumberFilterOperator;
+};
+
 export enum JobBaseStatus {
-  AwaitingJobVisa = 'AWAITING_JOB_VISA',
-  AwaitingNewThirdPartyVisa = 'AWAITING_NEW_THIRD_PARTY_VISA',
   Canceled = 'CANCELED',
-  Complete = 'COMPLETE',
+  Completed = 'COMPLETED',
   Created = 'CREATED',
   Error = 'ERROR',
   Processing = 'PROCESSING'
+}
+
+export type JobBaseStringFilter = {
+  field: JobStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
+
+export enum JobBaseType {
+  Document = 'DOCUMENT',
+  DocumentProbative = 'DOCUMENT_PROBATIVE',
+  Email = 'EMAIL',
+  Fax = 'FAX',
+  None = 'NONE',
+  Postal = 'POSTAL',
+  Push = 'PUSH',
+  Sms = 'SMS',
+  Voice = 'VOICE'
 }
 
 export type JobCountStatistics = {
   __typename?: 'JobCountStatistics';
   count: Scalars['Int'];
 };
+
+export type JobCreationResult = {
+  __typename?: 'JobCreationResult';
+  attachments?: Maybe<Array<Maybe<DocumentInfo>>>;
+  documents?: Maybe<Array<Maybe<DocumentInfo>>>;
+  id: Scalars['String'];
+  tenantId: Scalars['String'];
+  trackingId: Scalars['String'];
+};
+
+export enum JobDateFilterField {
+  CompletedDate = 'COMPLETED_DATE',
+  CreationDate = 'CREATION_DATE'
+}
 
 export type JobItem = {
   __typename?: 'JobItem';
@@ -3283,6 +3470,7 @@ export enum JobMessageStringFilterField {
 }
 
 export enum JobMessageTransmissionStatus {
+  InvalidDocument = 'INVALID_DOCUMENT',
   Pending = 'PENDING',
   Success = 'SUCCESS',
   UnknownEmailTransmissionError = 'UNKNOWN_EMAIL_TRANSMISSION_ERROR',
@@ -3308,10 +3496,29 @@ export type JobMessageTypeConnection = {
   pageInfo?: Maybe<PageInfo>;
 };
 
+export type JobQueryParams = {
+  dateFilters?: InputMaybe<Array<InputMaybe<JobBaseDateFilter>>>;
+  jobTypeFilters?: InputMaybe<Array<InputMaybe<JobBaseJobBaseTypeEnumFilter>>>;
+  sortDirection?: InputMaybe<SortDirection>;
+  sortField?: InputMaybe<JobSortField>;
+  statusFilters?: InputMaybe<Array<InputMaybe<JobBaseJobBaseStatusEnumFilter>>>;
+  stringFilters?: InputMaybe<Array<InputMaybe<JobBaseStringFilter>>>;
+};
+
 export type JobResult = {
   __typename?: 'JobResult';
   jobNumber: Scalars['Int'];
 };
+
+export enum JobSortField {
+  CompletedDate = 'COMPLETED_DATE',
+  CreationDate = 'CREATION_DATE',
+  Id = 'ID',
+  JobType = 'JOB_TYPE',
+  ServiceId = 'SERVICE_ID',
+  Status = 'STATUS',
+  TrackingId = 'TRACKING_ID'
+}
 
 export enum JobStatus {
   Active = 'ACTIVE',
@@ -3335,6 +3542,16 @@ export enum JobStatus {
   ResubmitInProcess = 'RESUBMIT_IN_PROCESS',
   Suspended = 'SUSPENDED',
   SuspendedDuringLaunch = 'SUSPENDED_DURING_LAUNCH'
+}
+
+export enum JobStatusFilterField {
+  Status = 'STATUS'
+}
+
+export enum JobStringFilterField {
+  ServiceId = 'SERVICE_ID',
+  TenantId = 'TENANT_ID',
+  TrackingId = 'TRACKING_ID'
 }
 
 export type JobSummary = {
@@ -3435,6 +3652,16 @@ export type JobSummaryTypeConnection = {
   edges?: Maybe<Array<Maybe<JobSummary>>>;
   pageInfo?: Maybe<PageInfo>;
 };
+
+export type JobTypeConnection = {
+  __typename?: 'JobTypeConnection';
+  edges?: Maybe<Array<Maybe<Job>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export enum JobTypeFilterField {
+  JobType = 'JOB_TYPE'
+}
 
 export type KeyValue = {
   __typename?: 'KeyValue';
@@ -3728,12 +3955,17 @@ export type NoteTypeConnection = {
 
 export enum NumberFilterOperator {
   Between = 'BETWEEN',
+  Defined = 'DEFINED',
   Equal = 'EQUAL',
+  EqualOrUndefined = 'EQUAL_OR_UNDEFINED',
   GreaterThan = 'GREATER_THAN',
   GreaterThanOrEqual = 'GREATER_THAN_OR_EQUAL',
+  IsNotNull = 'IS_NOT_NULL',
+  IsNull = 'IS_NULL',
   LowerThan = 'LOWER_THAN',
   LowerThanOrEqual = 'LOWER_THAN_OR_EQUAL',
-  NotEqual = 'NOT_EQUAL'
+  NotEqual = 'NOT_EQUAL',
+  Undefined = 'UNDEFINED'
 }
 
 export type PageInfo = {
@@ -3744,19 +3976,22 @@ export type PageInfo = {
 
 export type PaperMailJob = {
   __typename?: 'PaperMailJob';
+  completedDate?: Maybe<Scalars['DateTime']>;
+  documentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   id: Scalars['String'];
-  tenantId: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
+  serviceId?: Maybe<Scalars['String']>;
+  status: JobBaseStatus;
   trackingId: Scalars['String'];
 };
 
 export type PaperMailJobInput = {
   adhocRecipientFiles?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
-  deDuplicate?: InputMaybe<Scalars['Boolean']>;
   documents?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
+  note?: InputMaybe<Scalars['String']>;
   parameter?: InputMaybe<PostalParameter>;
   postalAdhocRecipients?: InputMaybe<Array<InputMaybe<PostalAdhocRecipientInput>>>;
-  scheduledStartTime?: InputMaybe<Scalars['DateTime']>;
-  tenantId: Scalars['String'];
+  serviceId?: InputMaybe<Scalars['String']>;
   trackingId?: InputMaybe<Scalars['String']>;
 };
 
@@ -3790,7 +4025,40 @@ export type PostalAdhocRecipientInput = {
   country: Scalars['String'];
   name: Scalars['String'];
   postalCode: Scalars['String'];
-  printOptions?: InputMaybe<PrintOptionsInput>;
+};
+
+export type PostalJobDateFilter = {
+  field: JobDateFilterField;
+  filterValue1?: InputMaybe<Scalars['DateTime']>;
+  filterValue2?: InputMaybe<Scalars['DateTime']>;
+  operator: NumberFilterOperator;
+};
+
+export type PostalJobJobBaseStatusEnumFilter = {
+  field: JobStatusFilterField;
+  filterValue1: JobBaseStatus;
+  filterValue2?: InputMaybe<JobBaseStatus>;
+  operator: NumberFilterOperator;
+};
+
+export type PostalJobQueryParams = {
+  dateFilters?: InputMaybe<Array<InputMaybe<PostalJobDateFilter>>>;
+  sortDirection?: InputMaybe<SortDirection>;
+  sortField?: InputMaybe<JobSortField>;
+  statusFilters?: InputMaybe<Array<InputMaybe<PostalJobJobBaseStatusEnumFilter>>>;
+  stringFilters?: InputMaybe<Array<InputMaybe<PostalJobStringFilter>>>;
+};
+
+export type PostalJobStringFilter = {
+  field: JobStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
+
+export type PostalJobTypeConnection = {
+  __typename?: 'PostalJobTypeConnection';
+  edges?: Maybe<Array<Maybe<PaperMailJob>>>;
+  pageInfo?: Maybe<PageInfo>;
 };
 
 export type PostalParameter = {
@@ -3813,20 +4081,6 @@ export type PowerBiAuthToken = {
   lastModificationUserId?: Maybe<Scalars['String']>;
   lastModificationUserLabel?: Maybe<Scalars['String']>;
 };
-
-export type PrintOptionsInput = {
-  addAddressPage: Scalars['Boolean'];
-  color: Scalars['Boolean'];
-  doubleSided: Scalars['Boolean'];
-  type: PrintType;
-};
-
-export enum PrintType {
-  FrIndustriel = 'FR_INDUSTRIEL',
-  FrIndustrielPlus_4 = 'FR_INDUSTRIEL_PLUS_4',
-  FrLettreVerte = 'FR_LETTRE_VERTE',
-  Normal = 'NORMAL'
-}
 
 export type PushJob = {
   adhocRecipientFiles?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
@@ -3927,8 +4181,6 @@ export enum RightType {
   AddTenant = 'ADD_TENANT',
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
-  /** Create, edit or renew Api users */
-  ChangeApiUser = 'CHANGE_API_USER',
   /** Create or edit configurations */
   ChangeConfiguration = 'CHANGE_CONFIGURATION',
   /** Create, edit or delete contacts */
@@ -3945,8 +4197,12 @@ export enum RightType {
   ChangeDocumentType = 'CHANGE_DOCUMENT_TYPE',
   /** Create or edit domains */
   ChangeDomain = 'CHANGE_DOMAIN',
+  /** Create, edit or renew Domain Api users */
+  ChangeDomainApiUser = 'CHANGE_DOMAIN_API_USER',
   /** Create or edit domain administrators */
   ChangeDomainUser = 'CHANGE_DOMAIN_USER',
+  /** Create, edit or renew Environment Api users */
+  ChangeEnvironmentApiUser = 'CHANGE_ENVIRONMENT_API_USER',
   /** Create or edit environment administrators */
   ChangeEnvironmentUser = 'CHANGE_ENVIRONMENT_USER',
   /** Create, edit or delete jobMessage */
@@ -3973,6 +4229,8 @@ export enum RightType {
   ChangeTemplateContent = 'CHANGE_TEMPLATE_CONTENT',
   /** Create, edit or delete template structures */
   ChangeTemplateStructure = 'CHANGE_TEMPLATE_STRUCTURE',
+  /** Create, edit or renew Api users */
+  ChangeTenantApiUser = 'CHANGE_TENANT_API_USER',
   /** Create or edit tenant internal info */
   ChangeTenantEdcOmsInfo = 'CHANGE_TENANT_EDC_OMS_INFO',
   /** Create or edit tenant users */
@@ -3991,8 +4249,6 @@ export enum RightType {
   GrantRight = 'GRANT_RIGHT',
   /** Get or list activities */
   ReadActivity = 'READ_ACTIVITY',
-  /** Get or list Api users */
-  ReadApiUser = 'READ_API_USER',
   /** Get or list configurations */
   ReadConfiguration = 'READ_CONFIGURATION',
   /** Get or list contacts */
@@ -4011,10 +4267,14 @@ export enum RightType {
   ReadDocumentType = 'READ_DOCUMENT_TYPE',
   /** Get or list domains */
   ReadDomain = 'READ_DOMAIN',
+  /** Get or list Domain Api users */
+  ReadDomainApiUser = 'READ_DOMAIN_API_USER',
   /** Get or list domain administrators */
   ReadDomainUser = 'READ_DOMAIN_USER',
   /** Get or list environments */
   ReadEnvironment = 'READ_ENVIRONMENT',
+  /** Get or list Environment Api users */
+  ReadEnvironmentApiUser = 'READ_ENVIRONMENT_API_USER',
   /** Get or list environment administrators */
   ReadEnvironmentUser = 'READ_ENVIRONMENT_USER',
   /** Get or list documentJobs */
@@ -4043,6 +4303,8 @@ export enum RightType {
   ReadTemplateStructure = 'READ_TEMPLATE_STRUCTURE',
   /** Get or list tenants */
   ReadTenant = 'READ_TENANT',
+  /** Get or list Api users */
+  ReadTenantApiUser = 'READ_TENANT_API_USER',
   /** Get or list tenants with internal info */
   ReadTenantEdcOmsInfo = 'READ_TENANT_EDC_OMS_INFO',
   /** Get or list tenant users */
@@ -4202,8 +4464,8 @@ export type SmtpConfigInput = {
   errorAddress?: InputMaybe<Scalars['String']>;
   hasSmtpSsl?: InputMaybe<Scalars['Boolean']>;
   replyAddress?: InputMaybe<Scalars['String']>;
-  senderAddress?: InputMaybe<Scalars['String']>;
-  senderName?: InputMaybe<Scalars['String']>;
+  senderAddress: Scalars['String'];
+  senderName: Scalars['String'];
   smtpLogin?: InputMaybe<Scalars['String']>;
   smtpPassword?: InputMaybe<Scalars['String']>;
   smtpPort?: InputMaybe<Scalars['Int']>;
@@ -4230,6 +4492,8 @@ export enum StringFilterOperator {
   Equal = 'EQUAL',
   EqualOrUndefined = 'EQUAL_OR_UNDEFINED',
   InArray = 'IN_ARRAY',
+  IsNotNull = 'IS_NOT_NULL',
+  IsNull = 'IS_NULL',
   NotContain = 'NOT_CONTAIN',
   NotEndWith = 'NOT_END_WITH',
   NotEqual = 'NOT_EQUAL',
@@ -4326,8 +4590,6 @@ export type TemporaryDocumentHeaderTypeConnection = {
 export enum TenantRightType {
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
-  /** Create, edit or renew Api users */
-  ChangeApiUser = 'CHANGE_API_USER',
   /** Create, edit or delete contacts */
   ChangeContact = 'CHANGE_CONTACT',
   /** Create, edit or delete contact functions */
@@ -4358,6 +4620,8 @@ export enum TenantRightType {
   ChangeTemplateContent = 'CHANGE_TEMPLATE_CONTENT',
   /** Create, edit or delete template structures */
   ChangeTemplateStructure = 'CHANGE_TEMPLATE_STRUCTURE',
+  /** Create, edit or renew Api users */
+  ChangeTenantApiUser = 'CHANGE_TENANT_API_USER',
   /** Create or edit tenant internal info */
   ChangeTenantEdcOmsInfo = 'CHANGE_TENANT_EDC_OMS_INFO',
   /** Create or edit tenant users */
@@ -4374,8 +4638,6 @@ export enum TenantRightType {
   GrantRight = 'GRANT_RIGHT',
   /** Get or list activities */
   ReadActivity = 'READ_ACTIVITY',
-  /** Get or list Api users */
-  ReadApiUser = 'READ_API_USER',
   /** Get or list contacts */
   ReadContact = 'READ_CONTACT',
   /** Get or list contact functions */
@@ -4408,6 +4670,8 @@ export enum TenantRightType {
   ReadTemplateStructure = 'READ_TEMPLATE_STRUCTURE',
   /** Get or list tenants */
   ReadTenant = 'READ_TENANT',
+  /** Get or list Api users */
+  ReadTenantApiUser = 'READ_TENANT_API_USER',
   /** Get or list tenants with internal info */
   ReadTenantEdcOmsInfo = 'READ_TENANT_EDC_OMS_INFO',
   /** Get or list third parties */
@@ -4474,7 +4738,7 @@ export enum TenantUserDocumentAccessType {
 }
 
 export type TenantUserInput = {
-  civility: Scalars['String'];
+  civility?: InputMaybe<Scalars['String']>;
   culture?: InputMaybe<Scalars['String']>;
   documentAccessType: TenantUserDocumentAccessType;
   email: Scalars['String'];
@@ -4482,7 +4746,7 @@ export type TenantUserInput = {
   id?: InputMaybe<Scalars['String']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
   lastName: Scalars['String'];
-  phone: Scalars['String'];
+  phone?: InputMaybe<Scalars['String']>;
   services?: InputMaybe<Array<InputMaybe<IdNameInput>>>;
   timeZone?: InputMaybe<Scalars['String']>;
   weeklyReport: Scalars['Boolean'];

@@ -1331,6 +1331,9 @@ namespace GraphQLCodeGen {
       EQUAL_OR_UNDEFINED,
       GREATER_THAN,
       GREATER_THAN_OR_EQUAL,
+      IN_ARRAY,
+      IS_NOT_NULL,
+      IS_NULL,
       LOWER_THAN,
       LOWER_THAN_OR_EQUAL,
       NOT_CONTAIN,
@@ -1376,8 +1379,13 @@ namespace GraphQLCodeGen {
     }
     #endregion
     public enum BoolFilterOperator {
+      DEFINED,
       EQUAL,
-      NOT_EQUAL
+      EQUAL_OR_UNDEFINED,
+      IS_NOT_NULL,
+      IS_NULL,
+      NOT_EQUAL,
+      UNDEFINED
     }
     
     
@@ -1403,10 +1411,10 @@ namespace GraphQLCodeGen {
       public DashboardRight addDashboardRight { get; set; }
     
       [JsonProperty("addDocumentJob")]
-      public DocumentJob addDocumentJob { get; set; }
+      public JobCreationResult addDocumentJob { get; set; }
     
       [JsonProperty("addDocumentProbativeJob")]
-      public DocumentProbativeJob addDocumentProbativeJob { get; set; }
+      public JobCreationResult addDocumentProbativeJob { get; set; }
     
       [JsonProperty("addDocumentType")]
       public DocumentType addDocumentType { get; set; }
@@ -1442,7 +1450,7 @@ namespace GraphQLCodeGen {
       public Note addNote { get; set; }
     
       [JsonProperty("addPaperMailJob")]
-      public PaperMailJob addPaperMailJob { get; set; }
+      public JobCreationResult addPaperMailJob { get; set; }
     
       [JsonProperty("addPowerBiAuthToken")]
       public PowerBiAuthToken addPowerBiAuthToken { get; set; }
@@ -1720,6 +1728,12 @@ namespace GraphQLCodeGen {
       [JsonProperty("documentSizeStatistics")]
       public DocumentSizeStatistics documentSizeStatistics { get; set; }
     
+      [JsonProperty("documentSubTypeItems")]
+      public List<DocumentSubType> documentSubTypeItems { get; set; }
+    
+      [JsonProperty("documentSubTypeList")]
+      public DocumentSubTypeTypeConnection documentSubTypeList { get; set; }
+    
       [JsonProperty("documentTypeItems")]
       public List<DocumentType> documentTypeItems { get; set; }
     
@@ -1786,6 +1800,12 @@ namespace GraphQLCodeGen {
       [JsonProperty("jobItemList")]
       public JobItemTypeConnection jobItemList { get; set; }
     
+      [JsonProperty("jobItems")]
+      public List<Job> jobItems { get; set; }
+    
+      [JsonProperty("jobList")]
+      public JobTypeConnection jobList { get; set; }
+    
       [JsonProperty("jobMessageItems")]
       public List<JobMessage> jobMessageItems { get; set; }
     
@@ -1827,6 +1847,12 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("noteList")]
       public NoteTypeConnection noteList { get; set; }
+    
+      [JsonProperty("postalJobItems")]
+      public List<PaperMailJob> postalJobItems { get; set; }
+    
+      [JsonProperty("postalJobList")]
+      public PostalJobTypeConnection postalJobList { get; set; }
     
       [JsonProperty("processingJobCountStatistics")]
       public JobCountStatistics processingJobCountStatistics { get; set; }
@@ -2315,9 +2341,7 @@ namespace GraphQLCodeGen {
     
       public string culture { get; set; }
     
-      [Required]
-      [JsonRequired]
-      public DocumentTransmissionMode documentTransmissionMode { get; set; }
+      public DocumentTransmissionMode? documentTransmissionMode { get; set; }
     
       [Required]
       [JsonRequired]
@@ -2327,21 +2351,15 @@ namespace GraphQLCodeGen {
       [JsonRequired]
       public string firstName { get; set; }
     
-      [Required]
-      [JsonRequired]
       public List<string> functionIds { get; set; }
     
       public string id { get; set; }
     
       public bool? isEnabled { get; set; }
     
-      [Required]
-      [JsonRequired]
-      public bool isFavorite { get; set; }
+      public bool? isFavorite { get; set; }
     
-      [Required]
-      [JsonRequired]
-      public bool isPrincipal { get; set; }
+      public bool? isPrincipal { get; set; }
     
       [Required]
       [JsonRequired]
@@ -2351,6 +2369,8 @@ namespace GraphQLCodeGen {
       [JsonRequired]
       public string phone { get; set; }
     
+      [Required]
+      [JsonRequired]
       public string thirdPartyId { get; set; }
     
       public string timeZone { get; set; }
@@ -2863,6 +2883,9 @@ namespace GraphQLCodeGen {
       [JsonProperty("creationUserLabel")]
       public string creationUserLabel { get; set; }
     
+      [JsonProperty("documentSubTypeCode")]
+      public string documentSubTypeCode { get; set; }
+    
       [JsonProperty("documentTypeCode")]
       public string documentTypeCode { get; set; }
     
@@ -2871,6 +2894,9 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("fileName")]
       public string fileName { get; set; }
+    
+      [JsonProperty("hash")]
+      public string hash { get; set; }
     
       [JsonProperty("id")]
       public string id { get; set; }
@@ -2890,8 +2916,20 @@ namespace GraphQLCodeGen {
       [JsonProperty("metadata")]
       public List<KeyValue> metadata { get; set; }
     
+      [JsonProperty("readDate")]
+      public any readDate { get; set; }
+    
+      [JsonProperty("sentDate")]
+      public any sentDate { get; set; }
+    
       [JsonProperty("signRequired")]
       public bool signRequired { get; set; }
+    
+      [JsonProperty("signType")]
+      public DocumentTypeSignType? signType { get; set; }
+    
+      [JsonProperty("signedDate")]
+      public any signedDate { get; set; }
     
       [JsonProperty("status")]
       public DocumentStatus status { get; set; }
@@ -2903,6 +2941,52 @@ namespace GraphQLCodeGen {
     #endregion
     public enum DocumentArrayElementFilterField {
       METADATA
+    }
+    
+    
+    #region DocumentBoolFilter
+    public class DocumentBoolFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public DocumentBooleanFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public bool filterValue1 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public BoolFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum DocumentBooleanFilterField {
+      IS_READ,
+      IS_SENT,
+      IS_SIGNED
     }
     
     
@@ -3086,7 +3170,10 @@ namespace GraphQLCodeGen {
     }
     #endregion
     public enum DocumentDateFilterField {
-      CREATION_DATE
+      CREATION_DATE,
+      READ_DATE,
+      SENT_DATE,
+      SIGN_DATE
     }
     
     
@@ -3101,11 +3188,25 @@ namespace GraphQLCodeGen {
       [JsonRequired]
       public string filterArrayElementName { get; set; }
     
-      [Required]
-      [JsonRequired]
-      public string filterValue1 { get; set; }
+      public bool? filterBoolValue1 { get; set; }
     
-      public string filterValue2 { get; set; }
+      public bool? filterBoolValue2 { get; set; }
+    
+      public any filterDateValue1 { get; set; }
+    
+      public any filterDateValue2 { get; set; }
+    
+      public double? filterDoubleValue1 { get; set; }
+    
+      public double? filterDoubleValue2 { get; set; }
+    
+      public int? filterIntValue1 { get; set; }
+    
+      public int? filterIntValue2 { get; set; }
+    
+      public string filterStringValue1 { get; set; }
+    
+      public string filterStringValue2 { get; set; }
     
       [Required]
       [JsonRequired]
@@ -3178,6 +3279,48 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
+    #region DocumentDocumentTypeSignTypeEnumFilter
+    public class DocumentDocumentTypeSignTypeEnumFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public DocumentSignTypeFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public DocumentTypeSignType filterValue1 { get; set; }
+    
+      public DocumentTypeSignType? filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
     #region DocumentIdOrNewInput
     public class DocumentIdOrNewInput {
       #region members
@@ -3210,10 +3353,24 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
+    #region DocumentInfo
+    public class DocumentInfo {
+      #region members
+      [JsonProperty("hash")]
+      public string hash { get; set; }
+    
+      [JsonProperty("id")]
+      public string id { get; set; }
+      #endregion
+    }
+    #endregion
+    
     #region DocumentInput
     public class DocumentInput {
       #region members
       public string base64 { get; set; }
+    
+      public string documentSubTypeCode { get; set; }
     
       [Required]
       [JsonRequired]
@@ -3226,6 +3383,8 @@ namespace GraphQLCodeGen {
       public List<GedFieldInput> gedFields { get; set; }
     
       public string gedXml { get; set; }
+    
+      public string hash { get; set; }
     
       public string tempFileId { get; set; }
       #endregion
@@ -3257,11 +3416,11 @@ namespace GraphQLCodeGen {
     #region DocumentJob
     public class DocumentJob {
       #region members
-      [JsonProperty("attachmentsId")]
-      public List<string> attachmentsId { get; set; }
+      [JsonProperty("attachmentIds")]
+      public List<string> attachmentIds { get; set; }
     
-      [JsonProperty("documentsId")]
-      public List<string> documentsId { get; set; }
+      [JsonProperty("documentIds")]
+      public List<string> documentIds { get; set; }
     
       [JsonProperty("id")]
       public string id { get; set; }
@@ -3289,7 +3448,7 @@ namespace GraphQLCodeGen {
       #region members
       [Required]
       [JsonRequired]
-      public DocumentJobDateFilterField field { get; set; }
+      public JobDateFilterField field { get; set; }
     
       public any filterValue1 { get; set; }
     
@@ -3323,10 +3482,6 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
-    public enum DocumentJobDateFilterField {
-      CREATION_DATE
-    }
-    
     
     #region DocumentJobInput
     public class DocumentJobInput {
@@ -3389,7 +3544,7 @@ namespace GraphQLCodeGen {
       #region members
       [Required]
       [JsonRequired]
-      public DocumentJobStatusFilterField field { get; set; }
+      public JobStatusFilterField field { get; set; }
     
       [Required]
       [JsonRequired]
@@ -3433,7 +3588,7 @@ namespace GraphQLCodeGen {
     
       public SortDirection? sortDirection { get; set; }
     
-      public DocumentJobSortField? sortField { get; set; }
+      public JobSortField? sortField { get; set; }
     
       public List<DocumentJobJobBaseStatusEnumFilter> statusFilters { get; set; }
     
@@ -3463,23 +3618,13 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
-    public enum DocumentJobSortField {
-      ID,
-      SERVICE_ID,
-      TRACKING_ID
-    }
-    
-    public enum DocumentJobStatusFilterField {
-      STATUS
-    }
-    
     
     #region DocumentJobStringFilter
     public class DocumentJobStringFilter {
       #region members
       [Required]
       [JsonRequired]
-      public DocumentJobStringFilterField field { get; set; }
+      public JobStringFilterField field { get; set; }
     
       [Required]
       [JsonRequired]
@@ -3513,12 +3658,6 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
-    public enum DocumentJobStringFilterField {
-      SERVICE_ID,
-      TENANT_ID,
-      TRACKING_ID
-    }
-    
     
     #region DocumentJobTypeConnection
     public class DocumentJobTypeConnection {
@@ -3582,7 +3721,7 @@ namespace GraphQLCodeGen {
       #region members
       [Required]
       [JsonRequired]
-      public DocumentProbativeJobDateFilterField field { get; set; }
+      public JobDateFilterField field { get; set; }
     
       public any filterValue1 { get; set; }
     
@@ -3616,10 +3755,6 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
-    public enum DocumentProbativeJobDateFilterField {
-      CREATION_DATE
-    }
-    
     
     #region DocumentProbativeJobInput
     public class DocumentProbativeJobInput {
@@ -3688,7 +3823,7 @@ namespace GraphQLCodeGen {
       #region members
       [Required]
       [JsonRequired]
-      public DocumentProbativeJobStatusFilterField field { get; set; }
+      public JobStatusFilterField field { get; set; }
     
       [Required]
       [JsonRequired]
@@ -3732,7 +3867,7 @@ namespace GraphQLCodeGen {
     
       public SortDirection? sortDirection { get; set; }
     
-      public DocumentProbativeJobSortField? sortField { get; set; }
+      public JobSortField? sortField { get; set; }
     
       public List<DocumentProbativeJobJobBaseStatusEnumFilter> statusFilters { get; set; }
     
@@ -3762,23 +3897,13 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
-    public enum DocumentProbativeJobSortField {
-      ID,
-      SERVICE_ID,
-      TRACKING_ID
-    }
-    
-    public enum DocumentProbativeJobStatusFilterField {
-      STATUS
-    }
-    
     
     #region DocumentProbativeJobStringFilter
     public class DocumentProbativeJobStringFilter {
       #region members
       [Required]
       [JsonRequired]
-      public DocumentProbativeJobStringFilterField field { get; set; }
+      public JobStringFilterField field { get; set; }
     
       [Required]
       [JsonRequired]
@@ -3812,10 +3937,6 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
-    public enum DocumentProbativeJobStringFilterField {
-      TENANT_ID
-    }
-    
     public enum DocumentProbativeJobType {
       CERTIFIED,
       EIDAS_REGISTERED,
@@ -3841,7 +3962,11 @@ namespace GraphQLCodeGen {
       #region members
       public List<DocumentDocumentArrayElementFilterFieldArrayElementFilter> arrayElementFilters { get; set; }
     
+      public List<DocumentBoolFilter> boolFilters { get; set; }
+    
       public List<DocumentDateFilter> dateFilters { get; set; }
+    
+      public List<DocumentDocumentTypeSignTypeEnumFilter> signTypeFilters { get; set; }
     
       public string sortArrayElementName { get; set; }
     
@@ -3877,6 +4002,10 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    public enum DocumentSignTypeFilterField {
+      SIGN_TYPE
+    }
+    
     
     #region DocumentSizeStatistics
     public class DocumentSizeStatistics {
@@ -3964,25 +4093,19 @@ namespace GraphQLCodeGen {
       CREATION_DATE,
       FILE_NAME,
       ID,
-      METADATA
+      METADATA,
+      READ_DATE,
+      SENT_DATE,
+      SIGN_DATE,
+      SIGN_TYPE
     }
     
     public enum DocumentStatus {
-      ARCHIVED,
       CANCELED,
-      DISPUTED,
+      COMPLETED,
       DRAFT,
-      EDI_NOT_TRANSLATED,
-      EDI_PROCESSED,
-      EDI_SUBMIT,
-      EDI_TRANSMITTED,
       ERROR,
-      LATE,
-      PAID,
-      READ,
-      SENT,
-      SIGNED,
-      TO_PAY
+      PROCESSING
     }
     
     public enum DocumentStatusFilterField {
@@ -4030,11 +4153,156 @@ namespace GraphQLCodeGen {
     }
     #endregion
     public enum DocumentStringFilterField {
+      DOCUMENT_SUB_TYPE_CODE,
       DOCUMENT_TYPE_CODE,
       FILE_NAME,
       TENANT_ID
     }
     
+    
+    #region DocumentSubType
+    public class DocumentSubType {
+      #region members
+      [JsonProperty("chorusAttachmentTypeCode")]
+      public string chorusAttachmentTypeCode { get; set; }
+    
+      [JsonProperty("chorusAttachmentTypeId")]
+      public string chorusAttachmentTypeId { get; set; }
+    
+      [JsonProperty("code")]
+      public string code { get; set; }
+    
+      [JsonProperty("creationDate")]
+      public any creationDate { get; set; }
+    
+      [JsonProperty("creationUserId")]
+      public string creationUserId { get; set; }
+    
+      [JsonProperty("creationUserLabel")]
+      public string creationUserLabel { get; set; }
+    
+      [JsonProperty("id")]
+      public string id { get; set; }
+    
+      [JsonProperty("lastModificationDate")]
+      public any lastModificationDate { get; set; }
+    
+      [JsonProperty("lastModificationUserId")]
+      public string lastModificationUserId { get; set; }
+    
+      [JsonProperty("lastModificationUserLabel")]
+      public string lastModificationUserLabel { get; set; }
+    
+      [JsonProperty("name")]
+      public string name { get; set; }
+    
+      [JsonProperty("natureCodes")]
+      public List<string> natureCodes { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region DocumentSubTypeQueryParams
+    public class DocumentSubTypeQueryParams {
+      #region members
+      public SortDirection? sortDirection { get; set; }
+    
+      public DocumentSubTypeSortField? sortField { get; set; }
+    
+      public List<DocumentSubTypeStringFilter> stringFilters { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum DocumentSubTypeSortField {
+      CHORUS_ATTACHMENT_TYPE_CODE,
+      CHORUS_ATTACHMENT_TYPE_ID,
+      CODE,
+      CREATION_DATE,
+      NAME
+    }
+    
+    
+    #region DocumentSubTypeStringFilter
+    public class DocumentSubTypeStringFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public DocumentSubTypeStringFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string filterValue1 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public StringFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum DocumentSubTypeStringFilterField {
+      CHORUS_ATTACHMENT_TYPE_CODE,
+      CHORUS_ATTACHMENT_TYPE_ID,
+      CODE,
+      NAME,
+      NATURE_CODES
+    }
+    
+    
+    #region DocumentSubTypeTypeConnection
+    public class DocumentSubTypeTypeConnection {
+      #region members
+      [JsonProperty("edges")]
+      public List<DocumentSubType> edges { get; set; }
+    
+      [JsonProperty("pageInfo")]
+      public PageInfo pageInfo { get; set; }
+      #endregion
+    }
+    #endregion
     public enum DocumentTransmissionMode {
       EMAIL_WITH_ATTACHMENT,
       EMAIL_WITH_LINK,
@@ -4262,6 +4530,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_DOMAIN,
       /// <summary>
+      /// Create, edit or renew Domain Api users
+      /// </summary>
+      CHANGE_DOMAIN_API_USER,
+      /// <summary>
       /// Create or edit domain administrators
       /// </summary>
       CHANGE_DOMAIN_USER,
@@ -4285,6 +4557,10 @@ namespace GraphQLCodeGen {
       /// Grant user rights
       /// </summary>
       GRANT_RIGHT,
+      /// <summary>
+      /// Get or list Domain Api users
+      /// </summary>
+      READ_DOMAIN_API_USER,
       /// <summary>
       /// Get or list tenants with internal info
       /// </summary>
@@ -4464,8 +4740,6 @@ namespace GraphQLCodeGen {
     #region DomainUserInput
     public class DomainUserInput {
       #region members
-      [Required]
-      [JsonRequired]
       public string civility { get; set; }
     
       public string culture { get; set; }
@@ -4490,8 +4764,6 @@ namespace GraphQLCodeGen {
       [JsonRequired]
       public string lastName { get; set; }
     
-      [Required]
-      [JsonRequired]
       public string phone { get; set; }
     
       public string timeZone { get; set; }
@@ -4849,6 +5121,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_CONTACT_FUNCTION,
       /// <summary>
+      /// Create, edit or renew Environment Api users
+      /// </summary>
+      CHANGE_ENVIRONMENT_API_USER,
+      /// <summary>
       /// Create or edit environment administrators
       /// </summary>
       CHANGE_ENVIRONMENT_USER,
@@ -4860,6 +5136,10 @@ namespace GraphQLCodeGen {
       /// Get or list contact functions
       /// </summary>
       READ_CONTACT_FUNCTION,
+      /// <summary>
+      /// Get or list Environment Api users
+      /// </summary>
+      READ_ENVIRONMENT_API_USER,
       /// <summary>
       /// Get or list third party types
       /// </summary>
@@ -5029,8 +5309,6 @@ namespace GraphQLCodeGen {
     #region EnvironmentUserInput
     public class EnvironmentUserInput {
       #region members
-      [Required]
-      [JsonRequired]
       public string civility { get; set; }
     
       public string culture { get; set; }
@@ -5051,8 +5329,6 @@ namespace GraphQLCodeGen {
       [JsonRequired]
       public string lastName { get; set; }
     
-      [Required]
-      [JsonRequired]
       public string phone { get; set; }
     
       public string timeZone { get; set; }
@@ -5204,6 +5480,9 @@ namespace GraphQLCodeGen {
       [JsonProperty("errorMessage")]
       public string errorMessage { get; set; }
     
+      [JsonProperty("errorServiceName")]
+      public string errorServiceName { get; set; }
+    
       [JsonProperty("errorStackTrace")]
       public string errorStackTrace { get; set; }
     
@@ -5217,7 +5496,7 @@ namespace GraphQLCodeGen {
       public string resourceId { get; set; }
     
       [JsonProperty("resourceType")]
-      public ErrorQueueMessageResourceType resourceType { get; set; }
+      public ErrorQueueMessageResourceType? resourceType { get; set; }
     
       [JsonProperty("status")]
       public ErrorQueueMessageStatus status { get; set; }
@@ -5382,6 +5661,10 @@ namespace GraphQLCodeGen {
     
       [Required]
       [JsonRequired]
+      public string errorServiceName { get; set; }
+    
+      [Required]
+      [JsonRequired]
       public string errorStackTrace { get; set; }
     
       [Required]
@@ -5540,6 +5823,7 @@ namespace GraphQLCodeGen {
       ERROR_CODE,
       ERROR_FUNCTION_NAME,
       ERROR_MESSAGE,
+      ERROR_SERVICE_NAME,
       ERROR_STACK_TRACE,
       JOB_ID,
       RESOURCE_ID,
@@ -5602,6 +5886,7 @@ namespace GraphQLCodeGen {
     public enum ErrorQueueMessageStringFilterField {
       ERROR_FUNCTION_NAME,
       ERROR_MESSAGE,
+      ERROR_SERVICE_NAME,
       ERROR_STACK_TRACE,
       JOB_ID,
       RESOURCE_ID,
@@ -6442,14 +6727,224 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    
+    #region Job
+    public class Job {
+      #region members
+      [JsonProperty("completedDate")]
+      public any completedDate { get; set; }
+    
+      [JsonProperty("creationDate")]
+      public any creationDate { get; set; }
+    
+      [JsonProperty("documentIds")]
+      public List<string> documentIds { get; set; }
+    
+      [JsonProperty("id")]
+      public string id { get; set; }
+    
+      [JsonProperty("jobType")]
+      public JobBaseType? jobType { get; set; }
+    
+      [JsonProperty("note")]
+      public string note { get; set; }
+    
+      [JsonProperty("serviceId")]
+      public string serviceId { get; set; }
+    
+      [JsonProperty("status")]
+      public JobBaseStatus status { get; set; }
+    
+      [JsonProperty("tenantId")]
+      public string tenantId { get; set; }
+    
+      [JsonProperty("trackingId")]
+      public string trackingId { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region JobBaseDateFilter
+    public class JobBaseDateFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public JobDateFilterField field { get; set; }
+    
+      public any filterValue1 { get; set; }
+    
+      public any filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region JobBaseJobBaseStatusEnumFilter
+    public class JobBaseJobBaseStatusEnumFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public JobStatusFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public JobBaseStatus filterValue1 { get; set; }
+    
+      public JobBaseStatus? filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region JobBaseJobBaseTypeEnumFilter
+    public class JobBaseJobBaseTypeEnumFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public JobTypeFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public JobBaseType filterValue1 { get; set; }
+    
+      public JobBaseType? filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
     public enum JobBaseStatus {
-      AWAITING_JOB_VISA,
-      AWAITING_NEW_THIRD_PARTY_VISA,
       CANCELED,
-      COMPLETE,
+      COMPLETED,
       CREATED,
       ERROR,
       PROCESSING
+    }
+    
+    
+    #region JobBaseStringFilter
+    public class JobBaseStringFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public JobStringFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string filterValue1 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public StringFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum JobBaseType {
+      DOCUMENT,
+      DOCUMENT_PROBATIVE,
+      EMAIL,
+      FAX,
+      NONE,
+      POSTAL,
+      PUSH,
+      SMS,
+      VOICE
     }
     
     
@@ -6461,6 +6956,32 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    
+    #region JobCreationResult
+    public class JobCreationResult {
+      #region members
+      [JsonProperty("attachments")]
+      public List<DocumentInfo> attachments { get; set; }
+    
+      [JsonProperty("documents")]
+      public List<DocumentInfo> documents { get; set; }
+    
+      [JsonProperty("id")]
+      public string id { get; set; }
+    
+      [JsonProperty("tenantId")]
+      public string tenantId { get; set; }
+    
+      [JsonProperty("trackingId")]
+      public string trackingId { get; set; }
+      #endregion
+    }
+    #endregion
+    public enum JobDateFilterField {
+      COMPLETED_DATE,
+      CREATION_DATE
+    }
+    
     
     #region JobItem
     public class JobItem {
@@ -7145,6 +7666,7 @@ namespace GraphQLCodeGen {
     }
     
     public enum JobMessageTransmissionStatus {
+      INVALID_DOCUMENT,
       PENDING,
       SUCCESS,
       UNKNOWN_EMAIL_TRANSMISSION_ERROR,
@@ -7177,6 +7699,46 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
+    #region JobQueryParams
+    public class JobQueryParams {
+      #region members
+      public List<JobBaseDateFilter> dateFilters { get; set; }
+    
+      public List<JobBaseJobBaseTypeEnumFilter> jobTypeFilters { get; set; }
+    
+      public SortDirection? sortDirection { get; set; }
+    
+      public JobSortField? sortField { get; set; }
+    
+      public List<JobBaseJobBaseStatusEnumFilter> statusFilters { get; set; }
+    
+      public List<JobBaseStringFilter> stringFilters { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
     #region JobResult
     public class JobResult {
       #region members
@@ -7185,6 +7747,16 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    public enum JobSortField {
+      COMPLETED_DATE,
+      CREATION_DATE,
+      ID,
+      JOB_TYPE,
+      SERVICE_ID,
+      STATUS,
+      TRACKING_ID
+    }
+    
     public enum JobStatus {
       ACTIVE,
       ARCHIVED,
@@ -7207,6 +7779,16 @@ namespace GraphQLCodeGen {
       RESUBMIT_IN_PROCESS,
       SUSPENDED,
       SUSPENDED_DURING_LAUNCH
+    }
+    
+    public enum JobStatusFilterField {
+      STATUS
+    }
+    
+    public enum JobStringFilterField {
+      SERVICE_ID,
+      TENANT_ID,
+      TRACKING_ID
     }
     
     
@@ -7525,6 +8107,22 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    
+    #region JobTypeConnection
+    public class JobTypeConnection {
+      #region members
+      [JsonProperty("edges")]
+      public List<Job> edges { get; set; }
+    
+      [JsonProperty("pageInfo")]
+      public PageInfo pageInfo { get; set; }
+      #endregion
+    }
+    #endregion
+    public enum JobTypeFilterField {
+      JOB_TYPE
+    }
+    
     
     #region KeyValue
     public class KeyValue {
@@ -8419,12 +9017,17 @@ namespace GraphQLCodeGen {
     #endregion
     public enum NumberFilterOperator {
       BETWEEN,
+      DEFINED,
       EQUAL,
+      EQUAL_OR_UNDEFINED,
       GREATER_THAN,
       GREATER_THAN_OR_EQUAL,
+      IS_NOT_NULL,
+      IS_NULL,
       LOWER_THAN,
       LOWER_THAN_OR_EQUAL,
-      NOT_EQUAL
+      NOT_EQUAL,
+      UNDEFINED
     }
     
     
@@ -8443,11 +9046,23 @@ namespace GraphQLCodeGen {
     #region PaperMailJob
     public class PaperMailJob {
       #region members
+      [JsonProperty("completedDate")]
+      public any completedDate { get; set; }
+    
+      [JsonProperty("documentIds")]
+      public List<string> documentIds { get; set; }
+    
       [JsonProperty("id")]
       public string id { get; set; }
     
-      [JsonProperty("tenantId")]
-      public string tenantId { get; set; }
+      [JsonProperty("note")]
+      public string note { get; set; }
+    
+      [JsonProperty("serviceId")]
+      public string serviceId { get; set; }
+    
+      [JsonProperty("status")]
+      public JobBaseStatus status { get; set; }
     
       [JsonProperty("trackingId")]
       public string trackingId { get; set; }
@@ -8460,19 +9075,15 @@ namespace GraphQLCodeGen {
       #region members
       public List<FileIdOrNewInputType> adhocRecipientFiles { get; set; }
     
-      public bool? deDuplicate { get; set; }
-    
       public List<FileIdOrNewInputType> documents { get; set; }
+    
+      public string note { get; set; }
     
       public PostalParameter parameter { get; set; }
     
       public List<PostalAdhocRecipientInput> postalAdhocRecipients { get; set; }
     
-      public any scheduledStartTime { get; set; }
-    
-      [Required]
-      [JsonRequired]
-      public string tenantId { get; set; }
+      public string serviceId { get; set; }
     
       public string trackingId { get; set; }
       #endregion
@@ -8601,8 +9212,6 @@ namespace GraphQLCodeGen {
       [Required]
       [JsonRequired]
       public string postalCode { get; set; }
-    
-      public PrintOptionsInput printOptions { get; set; }
       #endregion
     
       #region methods
@@ -8625,6 +9234,178 @@ namespace GraphQLCodeGen {
         }
         return d;
       }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalJobDateFilter
+    public class PostalJobDateFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public JobDateFilterField field { get; set; }
+    
+      public any filterValue1 { get; set; }
+    
+      public any filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalJobJobBaseStatusEnumFilter
+    public class PostalJobJobBaseStatusEnumFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public JobStatusFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public JobBaseStatus filterValue1 { get; set; }
+    
+      public JobBaseStatus? filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalJobQueryParams
+    public class PostalJobQueryParams {
+      #region members
+      public List<PostalJobDateFilter> dateFilters { get; set; }
+    
+      public SortDirection? sortDirection { get; set; }
+    
+      public JobSortField? sortField { get; set; }
+    
+      public List<PostalJobJobBaseStatusEnumFilter> statusFilters { get; set; }
+    
+      public List<PostalJobStringFilter> stringFilters { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalJobStringFilter
+    public class PostalJobStringFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public JobStringFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string filterValue1 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public StringFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalJobTypeConnection
+    public class PostalJobTypeConnection {
+      #region members
+      [JsonProperty("edges")]
+      public List<PaperMailJob> edges { get; set; }
+    
+      [JsonProperty("pageInfo")]
+      public PageInfo pageInfo { get; set; }
       #endregion
     }
     #endregion
@@ -8698,57 +9479,6 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
-    
-    #region PrintOptionsInput
-    public class PrintOptionsInput {
-      #region members
-      [Required]
-      [JsonRequired]
-      public bool addAddressPage { get; set; }
-    
-      [Required]
-      [JsonRequired]
-      public bool color { get; set; }
-    
-      [Required]
-      [JsonRequired]
-      public bool doubleSided { get; set; }
-    
-      [Required]
-      [JsonRequired]
-      public PrintType type { get; set; }
-      #endregion
-    
-      #region methods
-      public dynamic GetInputObject()
-      {
-        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
-    
-        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
-        foreach (var propertyInfo in properties)
-        {
-          var value = propertyInfo.GetValue(this);
-          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
-    
-          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
-    
-          if (requiredProp || value != defaultValue)
-          {
-            d[propertyInfo.Name] = value;
-          }
-        }
-        return d;
-      }
-      #endregion
-    }
-    #endregion
-    public enum PrintType {
-      FR_INDUSTRIEL,
-      FR_INDUSTRIEL_PLUS_4,
-      FR_LETTRE_VERTE,
-      NORMAL
-    }
-    
     
     #region PushJob
     public class PushJob {
@@ -9105,10 +9835,6 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_ACTIVITY,
       /// <summary>
-      /// Create, edit or renew Api users
-      /// </summary>
-      CHANGE_API_USER,
-      /// <summary>
       /// Create or edit configurations
       /// </summary>
       CHANGE_CONFIGURATION,
@@ -9141,9 +9867,17 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_DOMAIN,
       /// <summary>
+      /// Create, edit or renew Domain Api users
+      /// </summary>
+      CHANGE_DOMAIN_API_USER,
+      /// <summary>
       /// Create or edit domain administrators
       /// </summary>
       CHANGE_DOMAIN_USER,
+      /// <summary>
+      /// Create, edit or renew Environment Api users
+      /// </summary>
+      CHANGE_ENVIRONMENT_API_USER,
       /// <summary>
       /// Create or edit environment administrators
       /// </summary>
@@ -9197,6 +9931,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_TEMPLATE_STRUCTURE,
       /// <summary>
+      /// Create, edit or renew Api users
+      /// </summary>
+      CHANGE_TENANT_API_USER,
+      /// <summary>
       /// Create or edit tenant internal info
       /// </summary>
       CHANGE_TENANT_EDC_OMS_INFO,
@@ -9232,10 +9970,6 @@ namespace GraphQLCodeGen {
       /// Get or list activities
       /// </summary>
       READ_ACTIVITY,
-      /// <summary>
-      /// Get or list Api users
-      /// </summary>
-      READ_API_USER,
       /// <summary>
       /// Get or list configurations
       /// </summary>
@@ -9273,6 +10007,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_DOMAIN,
       /// <summary>
+      /// Get or list Domain Api users
+      /// </summary>
+      READ_DOMAIN_API_USER,
+      /// <summary>
       /// Get or list domain administrators
       /// </summary>
       READ_DOMAIN_USER,
@@ -9280,6 +10018,10 @@ namespace GraphQLCodeGen {
       /// Get or list environments
       /// </summary>
       READ_ENVIRONMENT,
+      /// <summary>
+      /// Get or list Environment Api users
+      /// </summary>
+      READ_ENVIRONMENT_API_USER,
       /// <summary>
       /// Get or list environment administrators
       /// </summary>
@@ -9336,6 +10078,10 @@ namespace GraphQLCodeGen {
       /// Get or list tenants
       /// </summary>
       READ_TENANT,
+      /// <summary>
+      /// Get or list Api users
+      /// </summary>
+      READ_TENANT_API_USER,
       /// <summary>
       /// Get or list tenants with internal info
       /// </summary>
@@ -9863,8 +10609,12 @@ namespace GraphQLCodeGen {
     
       public string replyAddress { get; set; }
     
+      [Required]
+      [JsonRequired]
       public string senderAddress { get; set; }
     
+      [Required]
+      [JsonRequired]
       public string senderName { get; set; }
     
       public string smtpLogin { get; set; }
@@ -9919,6 +10669,8 @@ namespace GraphQLCodeGen {
       EQUAL,
       EQUAL_OR_UNDEFINED,
       IN_ARRAY,
+      IS_NOT_NULL,
+      IS_NULL,
       NOT_CONTAIN,
       NOT_END_WITH,
       NOT_EQUAL,
@@ -10212,10 +10964,6 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_ACTIVITY,
       /// <summary>
-      /// Create, edit or renew Api users
-      /// </summary>
-      CHANGE_API_USER,
-      /// <summary>
       /// Create, edit or delete contacts
       /// </summary>
       CHANGE_CONTACT,
@@ -10276,6 +11024,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_TEMPLATE_STRUCTURE,
       /// <summary>
+      /// Create, edit or renew Api users
+      /// </summary>
+      CHANGE_TENANT_API_USER,
+      /// <summary>
       /// Create or edit tenant internal info
       /// </summary>
       CHANGE_TENANT_EDC_OMS_INFO,
@@ -10307,10 +11059,6 @@ namespace GraphQLCodeGen {
       /// Get or list activities
       /// </summary>
       READ_ACTIVITY,
-      /// <summary>
-      /// Get or list Api users
-      /// </summary>
-      READ_API_USER,
       /// <summary>
       /// Get or list contacts
       /// </summary>
@@ -10375,6 +11123,10 @@ namespace GraphQLCodeGen {
       /// Get or list tenants
       /// </summary>
       READ_TENANT,
+      /// <summary>
+      /// Get or list Api users
+      /// </summary>
+      READ_TENANT_API_USER,
       /// <summary>
       /// Get or list tenants with internal info
       /// </summary>
@@ -10569,8 +11321,6 @@ namespace GraphQLCodeGen {
     #region TenantUserInput
     public class TenantUserInput {
       #region members
-      [Required]
-      [JsonRequired]
       public string civility { get; set; }
     
       public string culture { get; set; }
@@ -10595,8 +11345,6 @@ namespace GraphQLCodeGen {
       [JsonRequired]
       public string lastName { get; set; }
     
-      [Required]
-      [JsonRequired]
       public string phone { get; set; }
     
       public List<IdNameInput> services { get; set; }
