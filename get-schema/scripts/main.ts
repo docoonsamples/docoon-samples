@@ -14,15 +14,29 @@ process.on('unhandledRejection', (err) => {
 });
 
 
-async function launchScripts(endpoint: string, fileName: string) {
+async function launchScripts(businnesSchema : boolean) {
 
   let api_key = '';
   //Sync mode
+
+  let endpoint : string;
+  let envVar : string;
+  let fileName : string;
+  if (businnesSchema) {
+    endpoint = "https://graphqlapi.docoon.com/api/BusinessApi";
+    envVar = "Endpoint=";
+    fileName= "./schema.graphql";
+  } else {
+    endpoint = "https://graphqlcommonapi.docoon.com/api/CommonApi";
+    envVar = "EndpointCommon=";
+    fileName= "./common_schema.graphql";
+  }
+
   process.argv.forEach((value, index) => {
     if (value.startsWith("ApiKey=")) {
       api_key = value.substring(7);
-    } else if (value.startsWith("Endpoint=")) {
-      endpoint = value.substring(9);
+    } else if (value.startsWith(envVar)) {
+      endpoint = value.substring(envVar.length);
     }
   });
 
@@ -53,5 +67,5 @@ async function launchScripts(endpoint: string, fileName: string) {
 
 }
 
-launchScripts("https://graphqlapi.docoon.com/api/BusinessApi", "./schema.graphql");
-launchScripts("https://graphqlcommonapi.docoon.com/api/CommonApi", "./common_schema.graphql");
+launchScripts(true);
+launchScripts(false);

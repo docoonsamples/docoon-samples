@@ -46,20 +46,29 @@ var sync = false;
 process.on('unhandledRejection', function (err) {
     throw err;
 });
-function launchScripts(endpoint, fileName) {
+function launchScripts(businnesSchema) {
     return __awaiter(this, void 0, void 0, function () {
-        var api_key, options, valret, schema, valret2;
+        var api_key, endpoint, envVar, fileName, options, valret, schema, valret2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     api_key = '';
-                    //Sync mode
+                    if (businnesSchema) {
+                        endpoint = "https://graphqlapi.docoon.com/api/BusinessApi";
+                        envVar = "Endpoint=";
+                        fileName = "./schema.graphql";
+                    }
+                    else {
+                        endpoint = "https://graphqlcommonapi.docoon.com/api/CommonApi";
+                        envVar = "EndpointCommon=";
+                        fileName = "./common_schema.graphql";
+                    }
                     process.argv.forEach(function (value, index) {
                         if (value.startsWith("ApiKey=")) {
                             api_key = value.substring(7);
                         }
-                        else if (value.startsWith("Endpoint=")) {
-                            endpoint = value.substring(9);
+                        else if (value.startsWith(envVar)) {
+                            endpoint = value.substring(envVar.length);
                         }
                     });
                     console.log('ApiKey =' + api_key + ', Endpoint=' + endpoint);
@@ -94,5 +103,5 @@ function launchScripts(endpoint, fileName) {
         });
     });
 }
-launchScripts("https://graphqlapi.docoon.com/api/BusinessApi", "./schema.graphql");
-launchScripts("https://graphqlcommonapi.docoon.com/api/CommonApi", "./common_schema.graphql");
+launchScripts(true);
+launchScripts(false);

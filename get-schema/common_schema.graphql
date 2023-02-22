@@ -1,167 +1,20 @@
 schema {
-  query: BusinessSchemaQuery
-  mutation: BusinessSchemaMutation
+  query: CommonSchemaQuery
+  mutation: CommonSchemaMutation
 }
 
-type Activity {
-  creationDate: DateTime
-  lastModificationDate: DateTime
-  id: String!
-  date: DateTime!
-  activityType: ActivityCategory!
-  detail: String
-  source: ActivitySource
-  producer: IdNameType
-  consumer: IdNameType
-  additionalFields: [KeyValue]
+enum AccountBillingParameterBillingType {
+  NONE
+  PREPAID
+  POSTPAID
 }
 
-input ActivityActivityActorTypeEnumFilter {
-  field: ActivityActorTypeFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: ActivityActorType!
-  filterValue2: ActivityActorType
+enum AccountBillingParameterPricingModelType {
+  PAGE
+  DURATION
 }
 
-input ActivityActivityCategoryEnumFilter {
-  field: ActivityCategoryFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: ActivityCategory!
-  filterValue2: ActivityCategory
-}
-
-input ActivityActivitySourceTypeEnumFilter {
-  field: ActivitySourceTypeFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: ActivitySourceType!
-  filterValue2: ActivitySourceType
-}
-
-enum ActivityActorType {
-  SYSTEM
-  EXTERNAL
-  SERVICE
-  TENANT_USER
-  THIRD_PARTY
-  CONTACT
-  EMAIL_ADDRESS
-}
-
-enum ActivityActorTypeFilterField {
-  PRODUCER_TYPE
-  CONSUMER_TYPE
-}
-
-enum ActivityCategory {
-  DOCUMENT_SIGNED
-  DOCUMENT_ARCHIVED
-  DOCUMENT_CANCELED
-  DOCUMENT_READ
-  JOB_CREATED
-  JOB_LAUNCHED
-  JOB_PROCESSING
-  NOTIFICATION_SENT
-  EXTERNAL_PROCESS
-  ERROR
-}
-
-enum ActivityCategoryFilterField {
-  ACTIVITY_TYPE
-}
-
-input ActivityDateFilter {
-  field: ActivityDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum ActivityDateFilterField {
-  DATE
-}
-
-input ActivityQueryParams {
-  sortField: ActivitySortField
-  sortDirection: SortDirection
-  stringFilters: [ActivityStringFilter]
-  dateFilters: [ActivityDateFilter]
-  eventTypeFilters: [ActivityActivityCategoryEnumFilter]
-  sourceTypeFilters: [ActivityActivitySourceTypeEnumFilter]
-  actorTypeFilters: [ActivityActivityActorTypeEnumFilter]
-}
-
-enum ActivitySortField {
-  ACTIVITY_TYPE
-  DATE
-  PRODUCER
-  CONSUMER
-  DETAIL
-  DOCUMENT_SOURCE_NAME
-  JOB_SOURCE_NAME
-  JOB_MESSAGE_SOURCE_NAME
-  CONTACT_SOURCE_NAME
-  THIRD_PARTY_SOURCE_NAME
-  TENANT_USER_SOURCE_NAME
-  TENANT_SOURCE_NAME
-}
-
-type ActivitySource {
-  document: IdName
-  job: IdName
-  jobMessage: IdName
-  contact: IdName
-  thirdParty: IdName
-  tenantUser: IdName
-  tenant: IdName
-}
-
-enum ActivitySourceType {
-  DOCUMENT
-  JOB
-  JOB_MESSAGE
-  CONTACT
-  THIRD_PARTY
-  TENANT_USER
-  TENANT
-}
-
-enum ActivitySourceTypeFilterField {
-  SOURCE_TYPE
-}
-
-input ActivityStringFilter {
-  field: ActivityStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ActivityStringFilterField {
-  PRODUCER_ID
-  PRODUCER_NAME
-  CONSUMER_ID
-  CONSUMER_NAME
-  DOCUMENT_SOURCE_ID
-  DOCUMENT_SOURCE_NAME
-  JOB_SOURCE_ID
-  JOB_SOURCE_NAME
-  JOB_MESSAGE_SOURCE_ID
-  JOB_MESSAGE_SOURCE_NAME
-  CONTACT_SOURCE_ID
-  CONTACT_SOURCE_NAME
-  THIRD_PARTY_SOURCE_ID
-  THIRD_PARTY_SOURCE_NAME
-  TENANT_USER_SOURCE_ID
-  TENANT_USER_SOURCE_NAME
-  TENANT_SOURCE_ID
-  TENANT_SOURCE_NAME
-}
-
-type ActivityTypeConnection {
-  edges: [Activity]
-  pageInfo: PageInfo
-}
-
-type ApiDomainUser {
+type ApiUser {
   creationDate: DateTime
   creationUserId: String
   creationUserLabel: String
@@ -172,284 +25,89 @@ type ApiDomainUser {
   name: String!
   keyPreview: String!
   isEnabled: Boolean!
-  lastConnectionDate: DateTime
+  role: Role!
   authorizedIPs: [String]
-  domainId: String!
-  domainName: String!
 }
 
-input ApiDomainUserBoolFilter {
-  field: ApiDomainUserBoolFilterField!
+input ApiUserBoolFilter {
+  field: ApiUserBoolFilterField!
   operator: BoolFilterOperator!
   filterValue1: Boolean!
 }
 
-enum ApiDomainUserBoolFilterField {
+enum ApiUserBoolFilterField {
   IS_ENABLED
 }
 
-input ApiDomainUserDateFilter {
-  field: ApiDomainUserDateFilterField!
+input ApiUserDateFilter {
+  field: ApiUserDateFilterField!
   operator: NumberFilterOperator!
   filterValue1: DateTime
   filterValue2: DateTime
 }
 
-enum ApiDomainUserDateFilterField {
+enum ApiUserDateFilterField {
   CREATION_DATE
   LAST_CONNECTION_DATE
 }
 
-input ApiDomainUserInput {
+input ApiUserInput {
   id: String
   name: String!
   isEnabled: Boolean
+  role: RoleInput
   authorizedIPs: [String]
-  domainId: String!
 }
 
-input ApiDomainUserQueryParams {
-  sortField: ApiDomainUserSortField
+enum ApiUserProfileFilterField {
+  PROFILE
+}
+
+input ApiUserQueryParams {
+  sortField: ApiUserSortField
   sortDirection: SortDirection
-  stringFilters: [ApiDomainUserStringFilter]
-  dateFilters: [ApiDomainUserDateFilter]
-  boolFilters: [ApiDomainUserBoolFilter]
+  stringFilters: [ApiUserStringFilter]
+  dateFilters: [ApiUserDateFilter]
+  boolFilters: [ApiUserBoolFilter]
+  profileFilters: [ApiUserUserProfileEnumFilter]
 }
 
-enum ApiDomainUserSortField {
+enum ApiUserSortField {
   NAME
   CREATION_USER_LABEL
   CREATION_DATE
   LAST_CONNECTION_DATE
   IS_ENABLED
+  ENVIRONMENT_ID
   DOMAIN_ID
-}
-
-input ApiDomainUserStringFilter {
-  field: ApiDomainUserStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ApiDomainUserStringFilterField {
-  NAME
-  CREATION_USER_ID
-  CREATION_USER_LABEL
-  DOMAIN_ID
-}
-
-type ApiDomainUserTypeConnection {
-  edges: [ApiDomainUser]
-  pageInfo: PageInfo
-}
-
-type ApiEnvironmentUser {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  name: String!
-  keyPreview: String!
-  isEnabled: Boolean!
-  lastConnectionDate: DateTime
-  authorizedIPs: [String]
-}
-
-input ApiEnvironmentUserBoolFilter {
-  field: ApiEnvironmentUserBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum ApiEnvironmentUserBoolFilterField {
-  IS_ENABLED
-}
-
-input ApiEnvironmentUserDateFilter {
-  field: ApiEnvironmentUserDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum ApiEnvironmentUserDateFilterField {
-  CREATION_DATE
-  LAST_CONNECTION_DATE
-}
-
-input ApiEnvironmentUserInput {
-  id: String
-  name: String!
-  isEnabled: Boolean
-  authorizedIPs: [String]
-}
-
-input ApiEnvironmentUserQueryParams {
-  sortField: ApiEnvironmentUserSortField
-  sortDirection: SortDirection
-  stringFilters: [ApiEnvironmentUserStringFilter]
-  dateFilters: [ApiEnvironmentUserDateFilter]
-  boolFilters: [ApiEnvironmentUserBoolFilter]
-}
-
-enum ApiEnvironmentUserSortField {
-  NAME
-  CREATION_USER_LABEL
-  CREATION_DATE
-  LAST_CONNECTION_DATE
-  IS_ENABLED
-}
-
-input ApiEnvironmentUserStringFilter {
-  field: ApiEnvironmentUserStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ApiEnvironmentUserStringFilterField {
-  NAME
-  CREATION_USER_ID
-  CREATION_USER_LABEL
-}
-
-type ApiEnvironmentUserTypeConnection {
-  edges: [ApiEnvironmentUser]
-  pageInfo: PageInfo
-}
-
-type ApiTenantUser {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  name: String!
-  keyPreview: String!
-  isEnabled: Boolean!
-  lastConnectionDate: DateTime
-  authorizedIPs: [String]
-  tenantId: String!
-}
-
-input ApiTenantUserBoolFilter {
-  field: ApiTenantUserBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum ApiTenantUserBoolFilterField {
-  IS_ENABLED
-}
-
-input ApiTenantUserDateFilter {
-  field: ApiTenantUserDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum ApiTenantUserDateFilterField {
-  CREATION_DATE
-  LAST_CONNECTION_DATE
-}
-
-input ApiTenantUserInput {
-  id: String
-  name: String!
-  isEnabled: Boolean
-  authorizedIPs: [String]
-}
-
-input ApiTenantUserQueryParams {
-  sortField: ApiTenantUserSortField
-  sortDirection: SortDirection
-  stringFilters: [ApiTenantUserStringFilter]
-  dateFilters: [ApiTenantUserDateFilter]
-  boolFilters: [ApiTenantUserBoolFilter]
-}
-
-enum ApiTenantUserSortField {
-  NAME
-  CREATION_USER_LABEL
-  CREATION_DATE
-  LAST_CONNECTION_DATE
-  IS_ENABLED
   TENANT_ID
 }
 
-input ApiTenantUserStringFilter {
-  field: ApiTenantUserStringFilterField!
+input ApiUserStringFilter {
+  field: ApiUserStringFilterField!
   operator: StringFilterOperator!
   filterValue1: String!
 }
 
-enum ApiTenantUserStringFilterField {
+enum ApiUserStringFilterField {
   NAME
   CREATION_USER_ID
   CREATION_USER_LABEL
+  ENVIRONMENT_ID
+  DOMAIN_ID
   TENANT_ID
 }
 
-type ApiTenantUserTypeConnection {
-  edges: [ApiTenantUser]
+type ApiUserTypeConnection {
+  edges: [ApiUser]
   pageInfo: PageInfo
 }
 
-type ArchiveConfiguration {
-  provider: ArchiverProvider!
-  billingMode: ArchiveConfigurationBillingMode!
-  durationInMonth: Int!
-  archiveMetadata: Boolean!
-}
-
-enum ArchiveConfigurationBillingMode {
-  GIGA
-  FILES
-}
-
-input ArchiveConfigurationInput {
-  provider: ArchiverProvider!
-  billingMode: ArchiveConfigurationBillingMode!
-  archiveMetadata: Boolean!
-  durationInMonth: Int!
-}
-
-enum ArchiverProvider {
-  DOCOON
-  XELIANS
-}
-
-enum ArrayElementFilterOperator {
-  EQUAL
-  NOT_EQUAL
-  START_WITH
-  NOT_START_WITH
-  END_WITH
-  NOT_END_WITH
-  CONTAIN
-  NOT_CONTAIN
-  BETWEEN
-  GREATER_THAN_OR_EQUAL
-  GREATER_THAN
-  LOWER_THAN_OR_EQUAL
-  LOWER_THAN
-  EQUAL_OR_UNDEFINED
-  DEFINED
-  UNDEFINED
-  IN_ARRAY
-  IS_NULL
-  IS_NOT_NULL
-}
-
-input AttachmentInput {
-  documentTransmissionMode: DocumentTransmissionMode
-  existingDocumentId: String
-  newDocument: DocumentInput
+input ApiUserUserProfileEnumFilter {
+  field: ApiUserProfileFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: UserProfile!
+  filterValue2: UserProfile
 }
 
 enum BoolFilterOperator {
@@ -462,459 +120,53 @@ enum BoolFilterOperator {
   IS_NOT_NULL
 }
 
-type BusinessSchemaMutation {
-  addApiDomainUser(item: ApiDomainUserInput!): ApiDomainUser
-  editApiDomainUser(id: String!, item: ApiDomainUserInput!): ApiDomainUser
-  renewApiDomainUser(id: String!): ApiDomainUser
-  editApiDomainUserRight(apiUserId: String!, item: [DomainRightValueInput!]): [DomainRightValue!]
-  addApiEnvironmentUser(item: ApiEnvironmentUserInput!): ApiEnvironmentUser
-  editApiEnvironmentUser(id: String!, item: ApiEnvironmentUserInput!): ApiEnvironmentUser
-  renewApiEnvironmentUser(id: String!): ApiEnvironmentUser
-  editApiEnvironmentUserRight(apiUserId: String!, item: [EnvironmentRightValueInput!]): [EnvironmentRightValue!]
-  addApiTenantUser(item: ApiTenantUserInput!, tenantId: String): ApiTenantUser
-  editApiTenantUser(id: String!, item: ApiTenantUserInput!, tenantId: String): ApiTenantUser
-  renewApiTenantUser(id: String!, tenantId: String): ApiTenantUser
-  editApiTenantUserRight(apiUserId: String!, item: [TenantRightValueInput!]): [TenantRightValue!]
-  addContactFunction(item: ContactFunctionInput!, tenantId: String): ContactFunction
-  editContactFunction(id: String!, item: ContactFunctionInput!, tenantId: String): ContactFunction
-  deleteContactFunction(id: String!, tenantId: String): Void
-  addContact(item: ContactInput!, tenantId: String): Contact
-  editContact(id: String!, item: ContactInput!, tenantId: String): Contact
-  deleteContact(id: String!, tenantId: String): Void
-  addDashboardRight(item: DashboardRightInput!): DashboardRight
-  deleteDashboardRight(id: String!): Void
-  addDocumentJob(item: DocumentJobInput!, tenantId: String): JobCreationResult
-  addDocumentProbativeJob(item: DocumentProbativeJobInput!, tenantId: String): JobCreationResult
-  readDocument(tenantId: String!, jobId: String!, jobMessageId: String!): Void
-  addDocumentType(item: DocumentTypeInput!, tenantId: String): DocumentType
-  editDocumentType(id: String!, item: DocumentTypeInput!, tenantId: String): DocumentType
-  deleteDocumentType(id: String!, tenantId: String): Void
-  addDocumentTypeMetadata(documentTypeId: String!, item: MetadataConfigInput!, tenantId: String): DocumentType
-  editDocumentTypeMetadata(documentTypeId: String!, id: String!, item: MetadataConfigInput!, tenantId: String): DocumentType
-  deleteDocumentTypeMetadata(documentTypeId: String!, id: String!, tenantId: String): Void
-  addDomainUser(item: DomainUserInput!): DomainUser
-  editDomainUser(id: String!, item: DomainUserInput!): DomainUser
-  resendInviteDomainUser(id: String!): Void
-  validateDomainUser(key: String!): DomainUser
-  editDomainUserRight(domainUserId: String!, item: [DomainRightValueInput!]): [DomainRightValue!]
-  addEnvironmentUser(item: EnvironmentUserInput!): EnvironmentUser
-  editEnvironmentUser(id: String!, item: EnvironmentUserInput!): EnvironmentUser
-  resendInviteEnvironmentUser(id: String!): Void
-  validateEnvironmentUser(key: String!): EnvironmentUser
-  editEnvironmentUserRight(environmentUserId: String!, item: [EnvironmentRightValueInput!]): [EnvironmentRightValue!]
-  editErrorQueueMessage(id: String!, item: ErrorQueueMessageInput!): ErrorQueueMessage
-  addHostedDocumentFile(item: FileContentInput!, tenantId: String): FileContent
-  deleteHostedDocumentFile(id: String!, tenantId: String): Void
-  deleteHostedInboundFile(inboundFolder: String!, id: String!, tenantId: String): Void
-  addHostedListFile(item: FileContentInput!, tenantId: String): FileContent
-  deleteHostedListFile(id: String!, tenantId: String): Void
-  deleteHostedReportFile(id: String!, tenantId: String): Void
-  addFaxJob(item: FaxJob!, tenantId: String): JobResult
-  addSmsJob(item: SmsJob!, tenantId: String): JobResult
-  addVoiceJob(item: VoiceJob!, tenantId: String): JobResult
-  addPushJob(item: PushJob!, tenantId: String): JobResult
-  addEmailJob(item: EmailJob!, tenantId: String): JobResult
-  addListOfValues(item: ListOfValuesInput!, tenantId: String): ListOfValues
-  editListOfValues(id: String!, item: ListOfValuesInput!, tenantId: String): ListOfValues
-  deleteListOfValues(id: String!, tenantId: String): Void
-  addMetadata(item: MetadataInput!, tenantId: String): Metadata
-  editMetadata(id: String!, item: MetadataInput!, tenantId: String): Metadata
-  deleteMetadata(id: String!, tenantId: String): Void
-  addNote(item: NoteInput!, tenantId: String): Note
-  editNote(id: String!, item: NoteInput!, tenantId: String): Note
-  deleteNote(id: String!, tenantId: String): Void
-  addPaperMailJob(item: PaperMailJobInput!, tenantId: String): JobCreationResult
-  addPowerBiAuthToken(id: String!): PowerBiAuthToken
-  addService(item: ServiceInput!, tenantId: String): Service
-  editService(id: String!, item: ServiceInput!, tenantId: String): Service
-  deleteService(id: String!, tenantId: String): Void
-  addTemporaryDocument(item: TemporaryDocumentContentInput!): TemporaryDocumentContent
-  deleteTemporaryDocument(id: String!): Void
-  addTenantUser(item: TenantUserInput!, tenantId: String): TenantUser
-  editTenantUser(id: String!, item: TenantUserInput!, tenantId: String): TenantUser
-  resendInviteTenantUser(id: String!, tenantId: String): Void
-  validateTenantUser(key: String!): TenantUser
-  editTenantUserRight(tenantUserId: String!, item: [TenantRightValueInput!], tenantId: String): [TenantRightValue!]
-  addThirdParty(item: ThirdPartyInput!, tenantId: String): ThirdParty
-  editThirdParty(id: String!, item: ThirdPartyInput!, tenantId: String): ThirdParty
-  deleteThirdParty(id: String!, tenantId: String): Void
-  addThirdPartyType(item: ThirdPartyTypeInput!, tenantId: String): ThirdPartyType
-  editThirdPartyType(id: String!, item: ThirdPartyTypeInput!, tenantId: String): ThirdPartyType
-  deleteThirdPartyType(id: String!, tenantId: String): Void
-  addValueOfList(item: ValueOfListInput!, tenantId: String): ValueOfList
-  editValueOfList(id: String!, item: ValueOfListInput!, tenantId: String): ValueOfList
-  deleteValueOfList(id: String!, tenantId: String): Void
+type ChorusB2GConfig {
+  technicalAccount: String
+  login: String
+  password: String
 }
 
-type BusinessSchemaQuery {
+input ChorusB2GConfigInput {
+  technicalAccount: String
+  login: String
+  password: String
+}
+
+type CommonSchemaMutation {
+  addApiUser(item: ApiUserInput!): ApiUser
+  editApiUser(id: String!, item: ApiUserInput!): ApiUser
+  renewApiKey(id: String!): ApiUser
+  addDomain(item: DomainInput!): Domain
+  editDomain(id: String!, item: DomainInput!): Domain
+  addEnvironment(item: EnvironmentInput!): Environment
+  editEnvironment(id: String!, item: EnvironmentInput!): Environment
+  addProductInstall(item: ProductInstallInput!): ProductInstall
+  editProductInstall(id: String!, item: ProductInstallInput!): ProductInstall
+  addProduct(item: ProductInput!): Product
+  editProduct(id: String!, item: ProductInput!): Product
+  addTenant(item: TenantInput!, domainId: String): Tenant
+  editTenant(id: String!, item: TenantInput!, domainId: String): Tenant
+}
+
+type CommonSchemaQuery {
   schema: String
-  activityItems(idList: [String!]!, tenantId: String, language: Language): [Activity]
-  activityList(params: ActivityQueryParams, after: String, tenantId: String, language: Language): ActivityTypeConnection
-  apiDomainUserItems(idList: [String!]!): [ApiDomainUser]
-  apiDomainUserList(params: ApiDomainUserQueryParams, after: String): ApiDomainUserTypeConnection
-  apiDomainUserRightList(apiUserId: String!, params: RightValueQueryParams, after: String): DomainRightValueTypeConnection
-  apiEnvironmentUserItems(idList: [String!]!): [ApiEnvironmentUser]
-  apiEnvironmentUserList(params: ApiEnvironmentUserQueryParams, after: String): ApiEnvironmentUserTypeConnection
-  apiEnvironmentUserRightList(apiUserId: String!, params: RightValueQueryParams, after: String): EnvironmentRightValueTypeConnection
-  apiTenantUserItems(idList: [String!]!, tenantId: String): [ApiTenantUser]
-  apiTenantUserList(params: ApiTenantUserQueryParams, after: String, tenantId: String): ApiTenantUserTypeConnection
-  apiTenantUserRightList(apiUserId: String!, params: RightValueQueryParams, after: String): TenantRightValueTypeConnection
-  clickedLinkDocumentItems(id: String!): ClickedLinkDocument
-  contactFunctionItems(idList: [String!]!, tenantId: String, language: Language): [ContactFunction]
-  contactFunctionList(params: ContactFunctionQueryParams, after: String, tenantId: String): ContactFunctionTypeConnection
-  contactFunctionSystemList(params: ContactFunctionQueryParams, after: String, language: Language): ContactFunctionTypeConnection
-  contactItems(idList: [String!]!, tenantId: String): [Contact]
-  contactList(params: ContactQueryParams, after: String, tenantId: String): ContactTypeConnection
-  dashboardItems(idList: [String!]!, language: Language): [Dashboard]
-  dashboardList(params: DashboardQueryParams, after: String, language: Language): DashboardTypeConnection
-  dashboardRightItems(idList: [String!]!): [DashboardRight]
-  dashboardRightList(params: DashboardRightQueryParams, after: String): DashboardRightTypeConnection
-  documentCountStatisticsList(params: DocumentCountStatisticsQueryParams, tenantId: String): [DocumentCountStatistics]
-  documentJobItems(idList: [String!]!, tenantId: String): [DocumentJob]
-  documentJobList(params: DocumentJobQueryParams, after: String, tenantId: String): DocumentJobTypeConnection
-  documentProbativeJobItems(idList: [String!]!, tenantId: String): [DocumentProbativeJob]
-  documentProbativeJobList(params: DocumentProbativeJobQueryParams, after: String, tenantId: String): DocumentProbativeJobTypeConnection
-  documentItems(idList: [String!]!, tenantId: String): [Document]
-  documentList(params: DocumentQueryParams, after: String, tenantId: String): DocumentTypeConnection
-  documentSizeStatistics(params: DocumentSizeStatisticsQueryParams, tenantId: String): DocumentSizeStatistics
-  documentSubTypeItems(idList: [String!]!, language: Language): [DocumentSubType]
-  documentSubTypeList(params: DocumentSubTypeQueryParams, after: String, language: Language): DocumentSubTypeTypeConnection
-  documentTypeItems(idList: [String!]!, tenantId: String): [DocumentType]
-  documentTypeList(params: DocumentTypeQueryParams, after: String, tenantId: String): DocumentTypeTypeConnection
-  domainUserItems(idList: [String!]!): [DomainUser]
-  domainUserList(params: DomainUserQueryParams, after: String): DomainUserTypeConnection
-  domainUserRightList(domainUserId: String!, params: RightValueQueryParams, after: String): DomainRightValueTypeConnection
-  environmentUserItems(idList: [String!]!): [EnvironmentUser]
-  environmentUserList(params: EnvironmentUserQueryParams, after: String): EnvironmentUserTypeConnection
-  environmentUserRightList(environmentUserId: String!, params: RightValueQueryParams, after: String): EnvironmentRightValueTypeConnection
-  errorQueueMessageItems(idList: [String!]!): [ErrorQueueMessage]
-  errorQueueMessageList(params: ErrorQueueMessageQueryParams, after: String): ErrorQueueMessageTypeConnection
-  hostedDocumentFileItems(idList: [String!]!, tenantId: String): [FileContent]
-  hostedDocumentFileList(after: String, tenantId: String): FileHeaderTypeConnection
-  hostedInboundFileItems(inboundFolder: String!, idList: [String!]!, tenantId: String): [FileContent]
-  hostedInboundFileList(inboundFolder: String!, after: String, tenantId: String): FileHeaderTypeConnection
-  hostedListFileItems(idList: [String!]!, tenantId: String): [FileContent]
-  hostedListFileList(after: String, tenantId: String): FileHeaderTypeConnection
-  hostedReportFileItems(idList: [String!]!, tenantId: String): [FileContent]
-  hostedReportFileList(after: String, tenantId: String): FileHeaderTypeConnection
-  inboundFaxList(params: InboundFaxQueryParams, after: String, tenantId: String): InboundFaxTypeConnection
-  inboundSmsList(params: InboundSmsQueryParams, after: String, tenantId: String): InboundSmsTypeConnection
-  jobItemItems(idList: [JobItemId]!, tenantId: String): [JobItem]
-  jobItemList(params: JobItemQueryParams, after: String, tenantId: String): JobItemTypeConnection
-  jobMessageItems(idList: [String!]!, tenantId: String): [JobMessage]
-  jobMessageList(params: JobMessageQueryParams, after: String, tenantId: String): JobMessageTypeConnection
-  jobItems(idList: [String!]!, tenantId: String): [Job]
-  jobList(params: JobQueryParams, after: String, tenantId: String): JobTypeConnection
-  processingJobCountStatistics(tenantId: String): JobCountStatistics
-  jobSummaryItems(idList: [Int!]!, tenantId: String): [JobSummary]
-  jobSummaryList(params: JobSummaryQueryParams, after: String, tenantId: String): JobSummaryTypeConnection
-  listOfValuesItems(idList: [String!]!, tenantId: String, language: Language): [ListOfValues]
-  listOfValuesList(params: ListOfValuesQueryParams, after: String, tenantId: String): ListOfValuesTypeConnection
-  listOfValuesSystemList(params: ListOfValuesQueryParams, after: String, language: Language): ListOfValuesTypeConnection
-  metadataItems(idList: [String!]!, tenantId: String, language: Language): [Metadata]
-  metadataList(params: MetadataQueryParams, after: String, tenantId: String): MetadataTypeConnection
-  metadataSystemList(params: MetadataQueryParams, after: String, language: Language): MetadataTypeConnection
-  natureItems(idList: [String!]!, language: Language): [Nature]
-  natureList(params: NatureQueryParams, after: String, language: Language): NatureTypeConnection
-  noteItems(idList: [String!]!, tenantId: String): [Note]
-  noteList(params: NoteQueryParams, after: String, tenantId: String): NoteTypeConnection
-  postalJobItems(idList: [String!]!, tenantId: String): [PaperMailJob]
-  postalJobList(params: PostalJobQueryParams, after: String, tenantId: String): PostalJobTypeConnection
-  rightInitialValueList(profile: UserProfile!, params: RightInitialValueQueryParams, after: String): RightInitialValueTypeConnection
-  serviceItems(idList: [String!]!, tenantId: String): [Service]
-  serviceList(params: ServiceQueryParams, after: String, tenantId: String): ServiceTypeConnection
-  temporaryDocumentItems(idList: [String!]!): [TemporaryDocumentContent]
-  temporaryDocumentList(params: TemporaryDocumentHeaderQueryParams, after: String): TemporaryDocumentHeaderTypeConnection
-  tenantUserItems(idList: [String!]!, tenantId: String): [TenantUser]
-  tenantUserList(params: TenantUserQueryParams, after: String, tenantId: String): TenantUserTypeConnection
-  tenantUserRightList(tenantUserId: String!, params: RightValueQueryParams, after: String, tenantId: String): TenantRightValueTypeConnection
+  apiUserItems(idList: [String!]!): [ApiUser]
+  apiUserList(params: ApiUserQueryParams, after: String): ApiUserTypeConnection
+  configurationItems(nameList: [String!]!, environmentId: String): [String]
+  domainItems(idList: [String!]!): [Domain]
+  domainList(params: DomainQueryParams, after: String): DomainTypeConnection
+  environmentItems(idList: [String!]!): [Environment]
+  environmentList(params: EnvironmentQueryParams, after: String): EnvironmentTypeConnection
+  omsAccountInfoItems(idList: [Int!]!): [OmsAccountData]
+  omsAccountInfoList(params: OmsAccountInfoQueryParams, after: String): OmsAccountInfoTypeConnection
+  productInstallItems(idList: [String!]!): [ProductInstall]
+  productInstallList(params: ProductInstallQueryParams, after: String): ProductInstallTypeConnection
+  productItems(idList: [String!]!): [Product]
+  productList(params: ProductQueryParams, after: String): ProductTypeConnection
+  tenantItems(idList: [String!]!, domainId: String): [Tenant]
+  tenantList(params: TenantQueryParams, after: String, domainId: String): TenantTypeConnection
   test: String
-  thirdPartyItems(idList: [String!]!, tenantId: String): [ThirdParty]
-  thirdPartyList(params: ThirdPartyQueryParams, after: String, tenantId: String): ThirdPartyTypeConnection
-  thirdPartyTypeItems(idList: [String!]!, tenantId: String, language: Language): [ThirdPartyType]
-  thirdPartyTypeList(params: ThirdPartyTypeQueryParams, after: String, tenantId: String): ThirdPartyTypeTypeConnection
-  thirdPartyTypeSystemList(params: ThirdPartyTypeQueryParams, after: String, language: Language): ThirdPartyTypeTypeConnection
-  valueOfListItems(idList: [String!]!, tenantId: String, language: Language): [ValueOfList]
-  valueOfListList(params: ValueOfListQueryParams, after: String, tenantId: String): ValueOfListTypeConnection
-  valueOfListSystemList(params: ValueOfListQueryParams, after: String, language: Language): ValueOfListTypeConnection
-}
-
-scalar Byte
-
-input ChorusB2GAdhocRecipientInput {
-  name: String!
-  service: String!
-}
-
-type ClickedLinkDocument {
-  id: String!
-  tenantId: String!
-  jobId: String!
-  jobMessageId: String!
-  documentName: String!
-  expirationDate: DateTime
-  isCountExpired: Boolean!
-  content: String!
-}
-
-type Contact {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  civility: String!
-  firstName: String!
-  lastName: String!
-  email: String!
-  phone: String!
-  culture: String!
-  timeZone: String!
-  isFavorite: Boolean!
-  isPrincipal: Boolean!
-  documentTransmissionMode: DocumentTransmissionMode!
-  functionIds: [String]
-  thirdPartyId: String
-  thirdPartyName: String
-  isEnabled: Boolean!
-}
-
-input ContactBoolFilter {
-  field: ContactBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum ContactBoolFilterField {
-  IS_ENABLED
-  IS_FAVORITE
-  IS_PRINCIPAL
-}
-
-type ContactFunction {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  code: String!
-  name: String!
-  ownerId: String
-  ownerType: ContactFunctionOwnerType!
-  isEnabled: Boolean!
-}
-
-input ContactFunctionBoolFilter {
-  field: ContactFunctionBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum ContactFunctionBoolFilterField {
-  IS_ENABLED
-}
-
-input ContactFunctionInput {
-  id: String
-  code: String!
-  name: String!
-  ownerId: String
-  ownerType: ContactFunctionOwnerType!
-  isEnabled: Boolean
-}
-
-enum ContactFunctionOwnerType {
-  SYSTEM
-  TENANT
-}
-
-input ContactFunctionQueryParams {
-  sortField: ContactFunctionSortField
-  sortDirection: SortDirection
-  stringFilters: [ContactFunctionStringFilter]
-  boolFilters: [ContactFunctionBoolFilter]
-}
-
-enum ContactFunctionSortField {
-  CODE
-  NAME
-  OWNER_TYPE
-  IS_ENABLED
-}
-
-input ContactFunctionStringFilter {
-  field: ContactFunctionStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ContactFunctionStringFilterField {
-  CODE
-  NAME
-}
-
-type ContactFunctionTypeConnection {
-  edges: [ContactFunction]
-  pageInfo: PageInfo
-}
-
-input ContactInput {
-  id: String
-  civility: String!
-  firstName: String!
-  lastName: String!
-  email: String!
-  phone: String!
-  culture: String
-  timeZone: String
-  isFavorite: Boolean
-  isPrincipal: Boolean
-  documentTransmissionMode: DocumentTransmissionMode
-  functionIds: [String!]
-  thirdPartyId: String!
-  isEnabled: Boolean
-}
-
-input ContactQueryParams {
-  sortField: ContactSortField
-  sortDirection: SortDirection
-  stringFilters: [ContactStringFilter]
-  boolFilters: [ContactBoolFilter]
-}
-
-input ContactRecipientInput {
-  contactId: String!
-}
-
-enum ContactSortField {
-  CIVILITY
-  FIRST_NAME
-  LAST_NAME
-  EMAIL
-  USER_ID
-  PHONE
-  CULTURE
-  TIME_ZONE
-  DOCUMENT_TRANSMISSION_MODE
-  IS_FAVORITE
-  IS_PRINCIPAL
-  IS_ENABLED
-  THIRD_PARTY_ID
-  THIRD_PARTY_NAME
-}
-
-input ContactStringFilter {
-  field: ContactStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ContactStringFilterField {
-  FIRST_NAME
-  LAST_NAME
-  EMAIL
-  USER_ID
-  THIRD_PARTY_ID
-  THIRD_PARTY_NAME
-}
-
-type ContactTypeConnection {
-  edges: [Contact]
-  pageInfo: PageInfo
-}
-
-type Dashboard {
-  id: String!
-  name: String
-  reportId: String!
-  datasetId: String!
-  dashboardVisibility: DashboardVisibilityType!
-  dashboardType: String!
-}
-
-input DashboardDashboardVisibilityTypeEnumFilter {
-  field: DashboardVisibilityFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DashboardVisibilityType!
-  filterValue2: DashboardVisibilityType
-}
-
-input DashboardQueryParams {
-  sortField: DashboardSortField
-  sortDirection: SortDirection
-  stringFilters: [DashboardStringFilter]
-  dashboardVisibilityFilters: [DashboardDashboardVisibilityTypeEnumFilter]
-}
-
-type DashboardRight {
-  id: String!
-  userId: String!
-  dashboardType: String!
-}
-
-input DashboardRightInput {
-  userId: String!
-  dashboardType: String!
-}
-
-input DashboardRightQueryParams {
-  sortField: DashboardRightSortField
-  sortDirection: SortDirection
-  stringFilters: [DashboardRightStringFilter]
-}
-
-enum DashboardRightSortField {
-  ID
-  USER_ID
-}
-
-input DashboardRightStringFilter {
-  field: DashboardRightStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum DashboardRightStringFilterField {
-  USER_ID
-}
-
-type DashboardRightTypeConnection {
-  edges: [DashboardRight]
-  pageInfo: PageInfo
-}
-
-enum DashboardSortField {
-  NAME
-}
-
-input DashboardStringFilter {
-  field: DashboardStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum DashboardStringFilterField {
-  NAME
-  DASHBOARD_TYPE
-}
-
-type DashboardTypeConnection {
-  edges: [Dashboard]
-  pageInfo: PageInfo
-}
-
-enum DashboardVisibilityFilterField {
-  DASHBOARD_VISIBILITY
-}
-
-enum DashboardVisibilityType {
-  INTERNAL
-  PUBLIC_CUSTOM
-  PUBLIC_STANDARD
+  userItems(idList: [String!]!): [User]
 }
 
 """
@@ -924,7 +176,7 @@ timestamps to be formatted in accordance with the
 """
 scalar DateTime
 
-type Document {
+type Domain {
   creationDate: DateTime
   creationUserId: String
   creationUserLabel: String
@@ -932,721 +184,117 @@ type Document {
   lastModificationUserId: String
   lastModificationUserLabel: String
   id: String!
-  tenantId: String!
-  fileName: String!
-  documentTypeCode: String!
-  documentSubTypeCode: String
-  status: DocumentStatus!
-  jobIds: [String]
-  metadata: [KeyValue]
-  fileContent: String
-  archiveId: String!
-  archiver: ArchiverProvider
-  signRequired: Boolean!
-  hash: String!
-  readDate: DateTime
-  signedDate: DateTime
-  sentDate: DateTime
-  signType: DocumentTypeSignType
-}
-
-enum DocumentArrayElementFilterField {
-  METADATA
-}
-
-enum DocumentBooleanFilterField {
-  IS_READ
-  IS_SIGNED
-  IS_SENT
-}
-
-input DocumentBoolFilter {
-  field: DocumentBooleanFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-type DocumentCountStatistics {
-  year: Int!
-  month: Int!
-  documentTypeCode: String!
-  count: Long!
-}
-
-enum DocumentCountStatisticsCycleFilterField {
-  CYCLE
-}
-
-input DocumentCountStatisticsDateFilter {
-  field: DocumentCountStatisticsDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum DocumentCountStatisticsDateFilterField {
-  FIRST_JOB_DATE
-}
-
-input DocumentCountStatisticsNatureCycleEnumFilter {
-  field: DocumentCountStatisticsCycleFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: NatureCycle!
-  filterValue2: NatureCycle
-}
-
-input DocumentCountStatisticsQueryParams {
-  dateFilters: [DocumentCountStatisticsDateFilter]
-  cycleFilters: [DocumentCountStatisticsNatureCycleEnumFilter]
-}
-
-input DocumentDateFilter {
-  field: DocumentDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum DocumentDateFilterField {
-  CREATION_DATE
-  READ_DATE
-  SIGN_DATE
-  SENT_DATE
-}
-
-input DocumentDocumentArrayElementFilterFieldArrayElementFilter {
-  field: DocumentArrayElementFilterField!
-  filterArrayElementName: String!
-  operator: ArrayElementFilterOperator!
-  filterStringValue1: String
-  filterStringValue2: String
-  filterIntValue1: Int
-  filterIntValue2: Int
-  filterDoubleValue1: Float
-  filterDoubleValue2: Float
-  filterBoolValue1: Boolean
-  filterBoolValue2: Boolean
-  filterDateValue1: DateTime
-  filterDateValue2: DateTime
-}
-
-input DocumentDocumentStatusEnumFilter {
-  field: DocumentStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DocumentStatus!
-  filterValue2: DocumentStatus
-}
-
-input DocumentDocumentTypeSignTypeEnumFilter {
-  field: DocumentSignTypeFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DocumentTypeSignType!
-  filterValue2: DocumentTypeSignType
-}
-
-input DocumentIdOrNewInput {
-  existingDocumentId: String
-  newDocument: DocumentInput
-}
-
-type DocumentInfo {
-  id: String!
-  hash: String!
-}
-
-input DocumentInput {
-  documentTypeCode: String!
-  documentSubTypeCode: String
-  fileName: String!
-  gedFields: [GedFieldInput]
-  gedXml: String
-  tempFileId: String
-  base64: String
-  hash: String
-}
-
-type DocumentJob {
-  id: String!
-  tenantId: String!
-  trackingId: String!
-  serviceId: String
-  note: String
-  validationType: DocumentJobValidationType!
-  documentIds: [String]
-  attachmentIds: [String]
-}
-
-input DocumentJobDateFilter {
-  field: JobDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-input DocumentJobInput {
-  trackingId: String
-  serviceId: String
-  note: String
-  validationType: DocumentJobValidationType!
-  document: DocumentIdOrNewInput!
-  attachments: [AttachmentInput]
-  contactRecipients: [ContactRecipientInput]
-  thirdPartyRecipients: [ThirdPartyRecipientInput]
-  adhocRecipientsFiles: [FileIdOrBase64Input]
-  paperMailAdhocRecipients: [PostalAdhocRecipientInput]
-  emailAdhocRecipients: [EmailAdhocRecipientInput]
-  chorusB2GAdhocRecipient: ChorusB2GAdhocRecipientInput
-}
-
-input DocumentJobJobBaseStatusEnumFilter {
-  field: JobStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: JobBaseStatus!
-  filterValue2: JobBaseStatus
-}
-
-input DocumentJobQueryParams {
-  sortField: JobSortField
-  sortDirection: SortDirection
-  stringFilters: [DocumentJobStringFilter]
-  dateFilters: [DocumentJobDateFilter]
-  statusFilters: [DocumentJobJobBaseStatusEnumFilter]
-}
-
-input DocumentJobStringFilter {
-  field: JobStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-type DocumentJobTypeConnection {
-  edges: [DocumentJob]
-  pageInfo: PageInfo
-}
-
-enum DocumentJobValidationType {
-  NONE
-  WITH_VALIDATION
-  FOR_NEW_THIRDPARTY
-}
-
-type DocumentProbativeJob {
-  id: String!
-  tenantId: String!
-  trackingId: String!
-  serviceId: String
-  note: String
-  validationType: DocumentJobValidationType!
-  joinedMessage: String!
-  subject: String!
-  registeredPostalOptions: RegisteredPostalOptions
-  documentsId: [String]
-  attachmentsId: [String]
-}
-
-input DocumentProbativeJobDateFilter {
-  field: JobDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-input DocumentProbativeJobInput {
-  probativeType: DocumentProbativeJobType!
-  trackingId: String
-  serviceId: String
-  note: String
-  validationType: DocumentJobValidationType!
-  document: DocumentIdOrNewInput!
-  attachments: [AttachmentInput]
-  registeredPostalOptions: RegisteredPostalOptionsInput
-  joinedMessage: String
-  subject: String
-  contactRecipients: [ContactRecipientInput]
-  thirdPartyRecipients: [ThirdPartyRecipientInput]
-  adhocRecipientsFiles: [FileIdOrBase64Input]
-  emailAdhocRecipients: [EmailAdhocRecipientInput]
-}
-
-input DocumentProbativeJobJobBaseStatusEnumFilter {
-  field: JobStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: JobBaseStatus!
-  filterValue2: JobBaseStatus
-}
-
-input DocumentProbativeJobQueryParams {
-  sortField: JobSortField
-  sortDirection: SortDirection
-  stringFilters: [DocumentProbativeJobStringFilter]
-  dateFilters: [DocumentProbativeJobDateFilter]
-  statusFilters: [DocumentProbativeJobJobBaseStatusEnumFilter]
-}
-
-input DocumentProbativeJobStringFilter {
-  field: JobStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum DocumentProbativeJobType {
-  SIMPLE
-  CERTIFIED
-  REGISTERED
-  EIDAS_REGISTERED
-}
-
-type DocumentProbativeJobTypeConnection {
-  edges: [DocumentProbativeJob]
-  pageInfo: PageInfo
-}
-
-input DocumentQueryParams {
-  sortField: DocumentSortField
-  sortArrayElementName: String
-  sortDirection: SortDirection
-  stringFilters: [DocumentStringFilter]
-  dateFilters: [DocumentDateFilter]
-  boolFilters: [DocumentBoolFilter]
-  statusFilters: [DocumentDocumentStatusEnumFilter]
-  arrayElementFilters: [DocumentDocumentArrayElementFilterFieldArrayElementFilter]
-  signTypeFilters: [DocumentDocumentTypeSignTypeEnumFilter]
-}
-
-enum DocumentSignTypeFilterField {
-  SIGN_TYPE
-}
-
-type DocumentSizeStatistics {
-  size: Long!
-}
-
-input DocumentSizeStatisticsDateFilter {
-  field: DocumentSizeStatisticsDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum DocumentSizeStatisticsDateFilterField {
-  FIRST_JOB_DATE
-}
-
-input DocumentSizeStatisticsQueryParams {
-  dateFilters: [DocumentSizeStatisticsDateFilter]
-}
-
-enum DocumentSortField {
-  ID
-  FILE_NAME
-  METADATA
-  CREATION_DATE
-  READ_DATE
-  SIGN_DATE
-  SENT_DATE
-  SIGN_TYPE
-}
-
-enum DocumentStatus {
-  DRAFT
-  PROCESSING
-  COMPLETED
-  ERROR
-  CANCELED
-}
-
-enum DocumentStatusFilterField {
-  STATUS
-}
-
-input DocumentStringFilter {
-  field: DocumentStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum DocumentStringFilterField {
-  TENANT_ID
-  DOCUMENT_TYPE_CODE
-  FILE_NAME
-  DOCUMENT_SUB_TYPE_CODE
-}
-
-type DocumentSubType {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  code: String!
+  environmentId: String!
   name: String!
-  chorusAttachmentTypeId: String!
-  chorusAttachmentTypeCode: String!
-  natureCodes: [String]
-}
-
-input DocumentSubTypeQueryParams {
-  sortField: DocumentSubTypeSortField
-  sortDirection: SortDirection
-  stringFilters: [DocumentSubTypeStringFilter]
-}
-
-enum DocumentSubTypeSortField {
-  CODE
-  NAME
-  CHORUS_ATTACHMENT_TYPE_ID
-  CHORUS_ATTACHMENT_TYPE_CODE
-  CREATION_DATE
-}
-
-input DocumentSubTypeStringFilter {
-  field: DocumentSubTypeStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum DocumentSubTypeStringFilterField {
-  CODE
-  NAME
-  NATURE_CODES
-  CHORUS_ATTACHMENT_TYPE_ID
-  CHORUS_ATTACHMENT_TYPE_CODE
-}
-
-type DocumentSubTypeTypeConnection {
-  edges: [DocumentSubType]
-  pageInfo: PageInfo
-}
-
-enum DocumentTransmissionMode {
-  NONE
-  EMAIL_WITH_ATTACHMENT
-  EMAIL_WITH_LINK
-}
-
-type DocumentType {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  tenantId: String!
-  code: String!
-  name: String!
-  natureCode: String!
-  metadataConfigs: [MetadataConfig]
-  sign: DocumentTypeSignType
-  archiveConfiguration: ArchiveConfiguration
-}
-
-type DocumentTypeConnection {
-  edges: [Document]
-  pageInfo: PageInfo
-}
-
-input DocumentTypeInput {
-  id: String
-  code: String!
-  name: String!
-  natureCode: String
-  sign: DocumentTypeSignType
-  archiveConfiguration: ArchiveConfigurationInput
-}
-
-input DocumentTypeQueryParams {
-  sortField: DocumentTypeSortField
-  sortDirection: SortDirection
-  stringFilters: [DocumentTypeStringFilter]
-}
-
-enum DocumentTypeSignType {
-  NONE
-  QUALIFIED_EIDAS_CERTIFICATE
-}
-
-enum DocumentTypeSortField {
-  CODE
-  NAME
-  NATURE_CODE
-  CREATION_DATE
-}
-
-input DocumentTypeStringFilter {
-  field: DocumentTypeStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum DocumentTypeStringFilterField {
-  CODE
-  NAME
-  NATURE_CODE
-}
-
-type DocumentTypeTypeConnection {
-  edges: [DocumentType]
-  pageInfo: PageInfo
-}
-
-"""The application rights for domain user."""
-enum DomainRightType {
-  """Create or edit domains"""
-  CHANGE_DOMAIN
-
-  """Create tenants"""
-  ADD_TENANT
-
-  """Edit tenants"""
-  EDIT_TENANT
-
-  """Grant user rights"""
-  GRANT_RIGHT
-
-  """Grant internal user rights"""
-  GRANT_INTERNAL_RIGHT
-
-  """Create or edit tenant users"""
-  CHANGE_TENANT_USER
-
-  """Create or edit domain administrators"""
-  CHANGE_DOMAIN_USER
-
-  """Get or list tenants with internal info"""
-  READ_TENANT_EDC_OMS_INFO
-
-  """Create or edit tenant internal info"""
-  CHANGE_TENANT_EDC_OMS_INFO
-
-  """Synchronize EDC resources"""
-  SYNCHRONIZE_EDC_RESOURCES
-
-  """Get or list Domain Api users"""
-  READ_DOMAIN_API_USER
-
-  """Create, edit or renew Domain Api users"""
-  CHANGE_DOMAIN_API_USER
-}
-
-type DomainRightValue {
-  right: DomainRightType
-  value: Boolean!
-}
-
-input DomainRightValueInput {
-  right: DomainRightType
-  value: Boolean!
-}
-
-type DomainRightValueTypeConnection {
-  edges: [DomainRightValue]
-  pageInfo: PageInfo
-}
-
-type DomainUser {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  civility: String!
-  firstName: String!
-  lastName: String!
-  email: String!
-  userId: String!
-  phone: String!
-  culture: String!
-  timeZone: String!
-  isEnabled: Boolean!
-  lastConnectionDate: DateTime
-  domainId: String!
-  domainName: String!
-}
-
-input DomainUserBoolFilter {
-  field: DomainUserBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum DomainUserBoolFilterField {
-  IS_ENABLED
-}
-
-input DomainUserInput {
-  id: String
-  civility: String
-  firstName: String!
-  lastName: String!
-  email: String!
+  email: String
   phone: String
-  culture: String
-  timeZone: String
+  isEnabled: Boolean!
+  address: PostalAddress
+  authorizedProductIds: [String]
+  isSubDomainAllowed: Boolean!
+  parentDomainId: String
+  parentDomainName: String
+  ancestorDomains: [IdName]
+}
+
+input DomainBoolFilter {
+  field: DomainBoolFilterField!
+  operator: BoolFilterOperator!
+  filterValue1: Boolean!
+}
+
+enum DomainBoolFilterField {
+  IS_ENABLED
+  IS_SUB_DOMAIN_ALLOWED
+}
+
+input DomainInput {
+  id: String
+  environmentId: String!
+  name: String!
+  email: String
+  phone: String
   isEnabled: Boolean
-  domainId: String!
+  address: PostalAddressInput
+  authorizedProductIds: [String]
+  isSubDomainAllowed: Boolean
+  parentDomainId: String
 }
 
-input DomainUserQueryParams {
-  sortField: DomainUserSortField
+input DomainQueryParams {
+  sortField: DomainSortField
   sortDirection: SortDirection
-  stringFilters: [DomainUserStringFilter]
-  boolFilters: [DomainUserBoolFilter]
+  stringFilters: [DomainStringFilter]
+  boolFilters: [DomainBoolFilter]
 }
 
-enum DomainUserSortField {
-  CIVILITY
-  FIRST_NAME
-  LAST_NAME
+enum DomainSortField {
+  NAME
   EMAIL
-  USER_ID
   PHONE
-  CULTURE
-  TIME_ZONE
+  ENVIRONMENT_ID
   IS_ENABLED
-  DOMAIN_ID
-  DOMAIN_NAME
+  PARENT_DOMAIN_ID
+  PARENT_DOMAIN_NAME
 }
 
-input DomainUserStringFilter {
-  field: DomainUserStringFilterField!
+input DomainStringFilter {
+  field: DomainStringFilterField!
   operator: StringFilterOperator!
   filterValue1: String!
 }
 
-enum DomainUserStringFilterField {
-  FIRST_NAME
-  LAST_NAME
+enum DomainStringFilterField {
+  NAME
   EMAIL
-  USER_ID
-  DOMAIN_ID
-  DOMAIN_NAME
+  PHONE
+  ENVIRONMENT_ID
+  ADDRESS_ADDRESS_LINE_1
+  ADDRESS_ADDRESS_LINE_2
+  ADDRESS_POSTAL_CODE
+  ADDRESS_CITY
+  ADDRESS_STATE
+  ADDRESS_COUNTRY
+  PARENT_DOMAIN_ID
+  PARENT_DOMAIN_NAME
+  ANCESTOR_DOMAIN_ID
+  ANCESTOR_DOMAIN_NAME
 }
 
-type DomainUserTypeConnection {
-  edges: [DomainUser]
+type DomainTypeConnection {
+  edges: [Domain]
   pageInfo: PageInfo
 }
 
-input EmailAdhocRecipientInput {
-  name: String!
-  documentTransmissionMode: DocumentTransmissionMode!
-  email: String!
+type EdcUserAccount {
+  accountId: Int!
+  accountIdDest: Int!
+  accountCodeDest: String!
+  gedSchema: String!
+  login: String
+  loginDest: String
 }
 
-input EmailJob {
-  jobType: String
-  trackingId: String
-  scheduledStartTime: DateTime
-  adhocRecipientFiles: [FileIdOrNewInputType]
-  deDuplicate: Boolean
-  emailAdhocRecipients: [EmailJobRecipient]
-  emailBody: FileIdOrNewInputType
-  emailAltBody: FileIdOrNewInputType
-  attachments: [FileIdOrNewInputType]
-  parameter: EmailParameter
+input EdcUserAccountInput {
+  accountId: Int!
+  accountIdDest: Int!
+  accountCodeDest: String!
+  gedSchema: String!
 }
 
-input EmailJobRecipient {
-  email: String!
-  name: String
-  optionalFields: [String]
+type EmailConfig {
+  replyAddress: String
+  senderAddress: String
+  senderName: String
 }
 
-input EmailParameter {
-  subject: String
-  from: String
-  replyTo: String
-  envelopeSender: String
-  activateAutoPull: Boolean
-  activateEmbeddedImageInHTML: Boolean
-  activateTracking: Boolean
-  trackingType: EmailTrackingType
-  preHeader: String
-  priorityFlag: EmailPriorityFlagType
+input EmailConfigInput {
+  replyAddress: String
+  senderAddress: String
+  senderName: String
 }
 
-enum EmailPriorityFlagType {
-  STANDARD
-  HIGH
-  LOW
-}
-
-enum EmailTrackingType {
-  ALL
-  OPEN_ONLY
-  CLICK_ONLY
-}
-
-enum EngineEventAction {
-  SIGN_DOCUMENT
-  ARCHIVE_DOCUMENT
-  READ_DOCUMENT
-  CANCEL_DOCUMENT
-  CREATE_JOB
-  PROCESS_JOB
-  LAUNCH_JOB
-  SEND_NOTIFICATION
-  READ_ERE_NOTIFICATION
-  ACCEPT_ERE
-  REFUSE_ERE
-  NOT_READ_ERE
-  RELAUNCH_ERE
-  GENERATE_PROOF
-  SEND_POSTAL
-  UNDELIVERED_POSTAL
-}
-
-enum EnvelopeType {
-  C_4
-  C_5
-  DL_2
-}
-
-"""The application rights for environment user."""
-enum EnvironmentRightType {
-  """Create or edit environment administrators"""
-  CHANGE_ENVIRONMENT_USER
-
-  """Get or list third party types"""
-  READ_THIRD_PARTY_TYPE
-
-  """Create, edit or delete third party types"""
-  CHANGE_THIRD_PARTY_TYPE
-
-  """Get or list contact functions"""
-  READ_CONTACT_FUNCTION
-
-  """Create, edit or delete contact functions"""
-  CHANGE_CONTACT_FUNCTION
-
-  """Get or list Environment Api users"""
-  READ_ENVIRONMENT_API_USER
-
-  """Create, edit or renew Environment Api users"""
-  CHANGE_ENVIRONMENT_API_USER
-}
-
-type EnvironmentRightValue {
-  right: EnvironmentRightType
-  value: Boolean!
-}
-
-input EnvironmentRightValueInput {
-  right: EnvironmentRightType
-  value: Boolean!
-}
-
-type EnvironmentRightValueTypeConnection {
-  edges: [EnvironmentRightValue]
-  pageInfo: PageInfo
-}
-
-type EnvironmentUser {
+type Environment {
   creationDate: DateTime
   creationUserId: String
   creationUserLabel: String
@@ -1654,982 +302,56 @@ type EnvironmentUser {
   lastModificationUserId: String
   lastModificationUserLabel: String
   id: String!
-  civility: String!
-  firstName: String!
-  lastName: String!
-  email: String!
-  userId: String!
-  phone: String!
-  culture: String!
-  timeZone: String!
+  name: String!
   isEnabled: Boolean!
-  lastConnectionDate: DateTime
 }
 
-input EnvironmentUserBoolFilter {
-  field: EnvironmentUserBoolFilterField!
+input EnvironmentBoolFilter {
+  field: EnvironmentBoolFilterField!
   operator: BoolFilterOperator!
   filterValue1: Boolean!
 }
 
-enum EnvironmentUserBoolFilterField {
+enum EnvironmentBoolFilterField {
   IS_ENABLED
 }
 
-input EnvironmentUserInput {
+input EnvironmentInput {
   id: String
-  civility: String
-  firstName: String!
-  lastName: String!
-  email: String!
-  phone: String
-  culture: String
-  timeZone: String
+  name: String!
   isEnabled: Boolean
 }
 
-input EnvironmentUserQueryParams {
-  sortField: EnvironmentUserSortField
+input EnvironmentQueryParams {
+  sortField: EnvironmentSortField
   sortDirection: SortDirection
-  stringFilters: [EnvironmentUserStringFilter]
-  boolFilters: [EnvironmentUserBoolFilter]
+  stringFilters: [EnvironmentStringFilter]
+  boolFilters: [EnvironmentBoolFilter]
 }
 
-enum EnvironmentUserSortField {
-  CIVILITY
-  FIRST_NAME
-  LAST_NAME
-  EMAIL
-  USER_ID
-  PHONE
-  CULTURE
-  TIME_ZONE
+enum EnvironmentSortField {
+  NAME
   IS_ENABLED
 }
 
-input EnvironmentUserStringFilter {
-  field: EnvironmentUserStringFilterField!
+input EnvironmentStringFilter {
+  field: EnvironmentStringFilterField!
   operator: StringFilterOperator!
   filterValue1: String!
 }
 
-enum EnvironmentUserStringFilterField {
-  FIRST_NAME
-  LAST_NAME
-  EMAIL
-  USER_ID
+enum EnvironmentStringFilterField {
+  NAME
 }
 
-type EnvironmentUserTypeConnection {
-  edges: [EnvironmentUser]
+type EnvironmentTypeConnection {
+  edges: [Environment]
   pageInfo: PageInfo
-}
-
-type ErrorQueueMessage {
-  id: String!
-  tenantId: String!
-  tenantName: String!
-  jobId: String!
-  resourceId: String
-  resourceType: ErrorQueueMessageResourceType
-  status: ErrorQueueMessageStatus!
-  action: EngineEventAction!
-  errorCode: Int!
-  errorMessage: String!
-  errorStackTrace: String!
-  errorFunctionName: String
-  errorServiceName: String
-}
-
-enum ErrorQueueMessageActionFilterField {
-  ACTION
-}
-
-input ErrorQueueMessageEngineEventActionEnumFilter {
-  field: ErrorQueueMessageActionFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: EngineEventAction!
-  filterValue2: EngineEventAction
-}
-
-input ErrorQueueMessageErrorQueueMessageResourceTypeEnumFilter {
-  field: ErrorQueueMessageResourceTypeFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: ErrorQueueMessageResourceType!
-  filterValue2: ErrorQueueMessageResourceType
-}
-
-input ErrorQueueMessageErrorQueueMessageStatusEnumFilter {
-  field: ErrorQueueMessageStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: ErrorQueueMessageStatus!
-  filterValue2: ErrorQueueMessageStatus
-}
-
-input ErrorQueueMessageInput {
-  id: String!
-  tenantId: String!
-  tenantName: String!
-  jobId: String!
-  resourceId: String!
-  resourceType: ErrorQueueMessageResourceType!
-  status: ErrorQueueMessageStatus!
-  action: EngineEventAction!
-  errorCode: Int!
-  errorMessage: String!
-  errorStackTrace: String!
-  errorFunctionName: String!
-  errorServiceName: String!
-}
-
-input ErrorQueueMessageIntFilter {
-  field: ErrorQueueMessageIntFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: Int!
-  filterValue2: Int
-}
-
-enum ErrorQueueMessageIntFilterField {
-  ERROR_CODE
-}
-
-input ErrorQueueMessageQueryParams {
-  sortField: ErrorQueueMessageSortField
-  sortDirection: SortDirection
-  stringFilters: [ErrorQueueMessageStringFilter]
-  intFilters: [ErrorQueueMessageIntFilter]
-  resourceTypeFilters: [ErrorQueueMessageErrorQueueMessageResourceTypeEnumFilter]
-  statusFilters: [ErrorQueueMessageErrorQueueMessageStatusEnumFilter]
-  actionFilters: [ErrorQueueMessageEngineEventActionEnumFilter]
-}
-
-enum ErrorQueueMessageResourceType {
-  JOB_MESSAGE
-  JOB
-  DOCUMENT
-  ARCHIVE_BATCH
-}
-
-enum ErrorQueueMessageResourceTypeFilterField {
-  RESOURCE_TYPE
-}
-
-enum ErrorQueueMessageSortField {
-  TENANT_ID
-  TENANT_NAME
-  JOB_ID
-  RESOURCE_ID
-  RESOURCE_TYPE
-  STATUS
-  ACTION
-  ERROR_CODE
-  ERROR_MESSAGE
-  ERROR_FUNCTION_NAME
-  ERROR_STACK_TRACE
-  ERROR_SERVICE_NAME
-}
-
-enum ErrorQueueMessageStatus {
-  TO_PROCESS
-  IN_PROGRESS
-  COMPLETED
-}
-
-enum ErrorQueueMessageStatusFilterField {
-  STATUS
-}
-
-input ErrorQueueMessageStringFilter {
-  field: ErrorQueueMessageStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ErrorQueueMessageStringFilterField {
-  TENANT_ID
-  TENANT_NAME
-  JOB_ID
-  RESOURCE_ID
-  ERROR_MESSAGE
-  ERROR_FUNCTION_NAME
-  ERROR_STACK_TRACE
-  ERROR_SERVICE_NAME
-}
-
-type ErrorQueueMessageTypeConnection {
-  edges: [ErrorQueueMessage]
-  pageInfo: PageInfo
-}
-
-input FaxJob {
-  jobType: String
-  trackingId: String
-  scheduledStartTime: DateTime
-  adhocRecipientFiles: [FileIdOrNewInputType]
-  deDuplicate: Boolean
-  adhocRecipients: [Recipient]
-  documents: [FileIdOrNewInputType]
-  parameter: FaxParameter
-}
-
-enum FaxMode {
-  STANDARD
-  FINE
-}
-
-input FaxParameter {
-  resolution: FaxMode
-  coverSheetMemo: String
-  csid: String
-  shouldFaxEmailBody: Boolean
-  shouldSuppressFaxConversion: Boolean
-  useBadNumberDns: Boolean
-}
-
-type FileContent {
-  creationDateTime: DateTime!
-  lastModificationDateTime: DateTime!
-  name: String!
-  size: Long!
-  content: String!
-}
-
-input FileContentInput {
-  name: String!
-  content: String!
-}
-
-type FileHeader {
-  creationDateTime: DateTime!
-  lastModificationDateTime: DateTime!
-  name: String!
-  size: Long!
-}
-
-type FileHeaderTypeConnection {
-  edges: [FileHeader]
-  pageInfo: PageInfo
-}
-
-input FileIdOrBase64Input {
-  tempFileId: String
-  base64: String
-}
-
-input FileIdOrNewInputType {
-  existingFileId: String
-  newFile: FileInputType
-}
-
-input FileInputType {
-  fileName: String!
-  tempFileId: String
-  base64: String
-}
-
-input FileReferenceBase {
-  name: String!
-  hosted: Boolean
-  content: String
-}
-
-input GedFieldInput {
-  key: String!
-  value: String!
 }
 
 type IdName {
   id: String!
   name: String
-}
-
-input IdNameInput {
-  id: String!
-}
-
-type IdNameType {
-  id: String
-  name: String
-  type: ActivityActorType
-}
-
-type InboundFax {
-  customerNumber: Int!
-  messageId: String
-  receivedDate: DateTime!
-  to: String
-  from: String
-  folder: String
-  fileName: String
-  isDeleted: Boolean!
-  callTime: Int!
-  pages: Int!
-  baudRate: Int!
-}
-
-input InboundFaxDateFilter {
-  field: InboundFaxDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum InboundFaxDateFilterField {
-  RECEIVED_DATE
-}
-
-input InboundFaxQueryParams {
-  sortField: InboundFaxSortField
-  sortDirection: SortDirection
-  stringFilters: [InboundFaxStringFilter]
-  dateFilters: [InboundFaxDateFilter]
-}
-
-enum InboundFaxSortField {
-  RECEIVED_DATE
-  MESSAGE_ID
-  FROM
-  TO
-  FOLDER
-  FILE_NAME
-  CALL_TIME
-  PAGES
-  BAUD_RATE
-  CUSTOMER_NUMBER
-}
-
-input InboundFaxStringFilter {
-  field: InboundFaxStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum InboundFaxStringFilterField {
-  FROM
-  TO
-  LOGIN
-}
-
-type InboundFaxTypeConnection {
-  edges: [InboundFax]
-  pageInfo: PageInfo
-}
-
-type InboundSms {
-  customerNumber: Int!
-  jobNumber: Int!
-  jobItemNumber: Int!
-  receivedDate: DateTime!
-  toAddress: String
-  fromAddress: String
-  recipient: String
-  message: String
-}
-
-input InboundSmsDateFilter {
-  field: InboundSmsDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum InboundSmsDateFilterField {
-  RECEIVED_DATE
-}
-
-input InboundSmsIntFilter {
-  field: InboundSmsIntFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: Int!
-  filterValue2: Int
-}
-
-enum InboundSmsIntFilterField {
-  JOB_NUMBER
-}
-
-input InboundSmsQueryParams {
-  sortField: InboundSmsSortField
-  sortDirection: SortDirection
-  stringFilters: [InboundSmsStringFilter]
-  dateFilters: [InboundSmsDateFilter]
-  intFilters: [InboundSmsIntFilter]
-}
-
-enum InboundSmsSortField {
-  JOB_NUMBER
-  JOB_ITEM
-  RECEIVED_DATE
-  FROM_ADDRESS
-  TO_ADDRESS
-  CUSTOMER_NUMBER
-}
-
-input InboundSmsStringFilter {
-  field: InboundSmsStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum InboundSmsStringFilterField {
-  FROM_ADDRESS
-  TO_ADDRESS
-}
-
-type InboundSmsTypeConnection {
-  edges: [InboundSms]
-  pageInfo: PageInfo
-}
-
-type Job {
-  id: String!
-  tenantId: String!
-  trackingId: String!
-  completedDate: DateTime
-  status: JobBaseStatus!
-  documentIds: [String]
-  serviceId: String
-  note: String
-  creationDate: DateTime
-  jobType: JobBaseType
-}
-
-input JobBaseDateFilter {
-  field: JobDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-input JobBaseJobBaseStatusEnumFilter {
-  field: JobStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: JobBaseStatus!
-  filterValue2: JobBaseStatus
-}
-
-input JobBaseJobBaseTypeEnumFilter {
-  field: JobTypeFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: JobBaseType!
-  filterValue2: JobBaseType
-}
-
-enum JobBaseStatus {
-  CREATED
-  PROCESSING
-  COMPLETED
-  ERROR
-  CANCELED
-}
-
-input JobBaseStringFilter {
-  field: JobStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum JobBaseType {
-  NONE
-  DOCUMENT
-  DOCUMENT_PROBATIVE
-  POSTAL
-  EMAIL
-  SMS
-  VOICE
-  FAX
-  PUSH
-}
-
-type JobCountStatistics {
-  count: Int!
-}
-
-type JobCreationResult {
-  id: String!
-  tenantId: String!
-  trackingId: String!
-  documents: [DocumentInfo]
-  attachments: [DocumentInfo]
-}
-
-enum JobDateFilterField {
-  CREATION_DATE
-  COMPLETED_DATE
-}
-
-type JobItem {
-  address: String
-  answerBack: String
-  attempts: Int!
-  baudRate: Int!
-  bytes: Int!
-  callAnalysis: String
-  callTime: Int!
-  connectionDuration: Float!
-  faxResolution: FaxMode!
-  finishDate: DateTime!
-  firstDate: DateTime!
-  isSent: Boolean!
-  jobItemNumber: Int!
-  jobNumber: Int!
-  lastCall: Float!
-  lastConnectionDuration: Float!
-  media: Media!
-  outcome: String
-  outcomes: String
-  pages: Int!
-  priority: Byte!
-  recipient: String
-  sentPages: Int!
-  status: Int
-  statusText: String
-  trackingId: String
-  uD1: String
-  uD2: String
-  uD3: String
-  uD4: String
-  uD5: String
-}
-
-input JobItemBoolFilter {
-  field: JobItemBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum JobItemBoolFilterField {
-  FAILED
-}
-
-input JobItemDateFilter {
-  field: JobItemDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum JobItemDateFilterField {
-  FINISH_DATE
-}
-
-input JobItemId {
-  jobNumber: Int!
-  jobItemNumber: Int!
-}
-
-input JobItemIntFilter {
-  field: JobItemIntFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: Int!
-  filterValue2: Int
-}
-
-enum JobItemIntFilterField {
-  JOB_NUMBER
-}
-
-input JobItemQueryParams {
-  sortField: JobItemSortField
-  sortDirection: SortDirection
-  stringFilters: [JobItemStringFilter]
-  dateFilters: [JobItemDateFilter]
-  intFilters: [JobItemIntFilter]
-  boolFilters: [JobItemBoolFilter]
-}
-
-enum JobItemSortField {
-  JOB_NUMBER
-  JOB_ITEM
-  TRACKING_ID
-  ADDRESS
-  RECIPIENT
-  PAGES
-  SENT_PAGES
-  ATTEMPTS
-  FIRST_DATE
-  FINISH_DATE
-  BYTES
-  ANSWER_BACK
-  BAUD_RATE
-  OUTCOME
-  OUTCOMES
-  STATUS
-  CALL_TIME
-}
-
-input JobItemStringFilter {
-  field: JobItemStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum JobItemStringFilterField {
-  TRACKING_ID
-  OUTCOME
-  ADDRESS
-}
-
-type JobItemTypeConnection {
-  edges: [JobItem]
-  pageInfo: PageInfo
-}
-
-type JobMessage {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  tenantId: String!
-  trackingId: String!
-  name: String
-  jobId: String!
-  documentIds: [String]!
-  thirdPartyId: String
-  contactId: String
-  messageType: JobMessageType!
-  status: JobMessageStatus!
-  transmissionStatus: JobMessageTransmissionStatus!
-  emailAddress: String!
-  recipientName: String!
-}
-
-input JobMessageDateFilter {
-  field: JobMessageDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum JobMessageDateFilterField {
-  CREATION_DATE
-}
-
-input JobMessageJobMessageStatusEnumFilter {
-  field: JobMessageStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: JobMessageStatus!
-  filterValue2: JobMessageStatus
-}
-
-input JobMessageJobMessageTransmissionStatusEnumFilter {
-  field: JobMessageTransmissionStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: JobMessageTransmissionStatus!
-  filterValue2: JobMessageTransmissionStatus
-}
-
-input JobMessageQueryParams {
-  sortField: JobMessageSortField
-  sortDirection: SortDirection
-  stringFilters: [JobMessageStringFilter]
-  dateFilters: [JobMessageDateFilter]
-  statusFilters: [JobMessageJobMessageStatusEnumFilter]
-  transmissionStatusFilters: [JobMessageJobMessageTransmissionStatusEnumFilter]
-}
-
-enum JobMessageSortField {
-  ID
-  TRACKING_ID
-  NAME
-}
-
-enum JobMessageStatus {
-  PROCESSING
-  COMPLETE
-  ERROR
-  CANCELED
-}
-
-enum JobMessageStatusFilterField {
-  STATUS
-}
-
-input JobMessageStringFilter {
-  field: JobMessageStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum JobMessageStringFilterField {
-  TENANT_ID
-  TRACKING_ID
-  JOB_ID
-  DOCUMENT_ID
-  EXTERNAL_ID
-}
-
-enum JobMessageTransmissionStatus {
-  PENDING
-  SUCCESS
-  UNKNOWN_EMAIL_TRANSMISSION_ERROR
-  UNKNOWN_WEB_NOTIFICATION_TRANSMISSION_ERROR
-  UNKNOWN_POSTAL_TRANSMISSION_ERROR
-  WRONG_DELIVERY_ADDRESS
-  INVALID_DOCUMENT
-}
-
-enum JobMessageTransmissionStatusFilterField {
-  TRANSMISSION_STATUS
-}
-
-enum JobMessageType {
-  EMAIL
-  POSTAL
-  WEB_NOTIFICATION
-  CHORUS
-}
-
-type JobMessageTypeConnection {
-  edges: [JobMessage]
-  pageInfo: PageInfo
-}
-
-input JobQueryParams {
-  sortField: JobSortField
-  sortDirection: SortDirection
-  stringFilters: [JobBaseStringFilter]
-  dateFilters: [JobBaseDateFilter]
-  statusFilters: [JobBaseJobBaseStatusEnumFilter]
-  jobTypeFilters: [JobBaseJobBaseTypeEnumFilter]
-}
-
-type JobResult {
-  jobNumber: Int!
-}
-
-enum JobSortField {
-  ID
-  TRACKING_ID
-  SERVICE_ID
-  COMPLETED_DATE
-  CREATION_DATE
-  STATUS
-  JOB_TYPE
-}
-
-enum JobStatus {
-  NEW_JOB_SETUP
-  PROCESSING_PREVIEW
-  PROOF_PENDING
-  PROOF_TRANSMITED
-  AWAITING_TIMEOUT_TO_LAUNCH
-  PROOF_FAILED
-  LAUNCH_IN_PROGRESS
-  SUSPENDED_DURING_LAUNCH
-  CANCELED_DURING_LAUNCH
-  QUOTA_LAUNCH_ERROR
-  LAUNCH_FAILED
-  ACTIVE
-  QUOTA_REACHED
-  SUSPENDED
-  CANCELED
-  CANCEL_IN_PROGRESS
-  PROOF_CANCELED
-  RESUBMIT_IN_PROCESS
-  COMPLETED
-  FINISHED
-  ARCHIVED
-}
-
-enum JobStatusFilterField {
-  STATUS
-}
-
-enum JobStringFilterField {
-  TENANT_ID
-  TRACKING_ID
-  SERVICE_ID
-}
-
-type JobSummary {
-  jobNumber: Int!
-  jobType: String!
-  customerNumber: Int!
-  login: String!
-  mostRecentDate: DateTime!
-  status: JobStatus!
-  tID: String
-  total: Int!
-  sent: Int!
-  failed: Int!
-  remaining: Int!
-  retries: Int!
-  firstDoc: String
-  firstList: String
-  page: Int!
-  pageSent: Int!
-  media: Media!
-  creationDate: DateTime!
-  startDate: DateTime!
-  applicationId: Int
-  isProofJob: Boolean!
-}
-
-input JobSummaryBoolFilter {
-  field: JobSummaryBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum JobSummaryBoolFilterField {
-  ONLY_NOT_SENT
-  ALL_SUB_ACCOUNTS
-  IS_PROOF
-}
-
-input JobSummaryDateFilter {
-  field: JobSummaryDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum JobSummaryDateFilterField {
-  MOST_RECENT_DATE
-}
-
-input JobSummaryMediaEnumFilter {
-  field: JobSummaryMediaFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: Media!
-  filterValue2: Media
-}
-
-enum JobSummaryMediaFilterField {
-  MEDIA
-}
-
-input JobSummaryQueryParams {
-  sortField: JobSummarySortField
-  sortDirection: SortDirection
-  stringFilters: [JobSummaryStringFilter]
-  dateFilters: [JobSummaryDateFilter]
-  boolFilters: [JobSummaryBoolFilter]
-  mediaFilters: [JobSummaryMediaEnumFilter]
-}
-
-enum JobSummarySortField {
-  JOB_NUMBER
-  DATE
-  STATUS
-  REFERENCE
-  TOTAL
-  SENT
-  FAILED
-  REMAINING
-  MEDIA
-  CREATION_DATE
-  START_DATE
-}
-
-input JobSummaryStringFilter {
-  field: JobSummaryStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum JobSummaryStringFilterField {
-  JOB_NUMBER
-  TID
-}
-
-type JobSummaryTypeConnection {
-  edges: [JobSummary]
-  pageInfo: PageInfo
-}
-
-type JobTypeConnection {
-  edges: [Job]
-  pageInfo: PageInfo
-}
-
-enum JobTypeFilterField {
-  JOB_TYPE
-}
-
-type KeyValue {
-  key: String!
-  value: String
-}
-
-type KeyValuePair {
-  key: String!
-  value: String
-}
-
-input KeyValuePairInput {
-  key: String!
-  value: String
-}
-
-enum Language {
-  UKN
-  EN
-  FR
-}
-
-type ListOfValues {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  name: String!
-  ownerType: ListOfValuesOwnerType!
-  ownerId: String
-  valueCount: Int!
-  metadataIds: [String]
-}
-
-input ListOfValuesInput {
-  id: String
-  name: String!
-  ownerType: ListOfValuesOwnerType!
-  ownerId: String
-}
-
-enum ListOfValuesOwnerType {
-  SYSTEM
-  TENANT
-}
-
-input ListOfValuesQueryParams {
-  sortField: ListOfValuesSortField
-  sortDirection: SortDirection
-  stringFilters: [ListOfValuesStringFilter]
-}
-
-enum ListOfValuesSortField {
-  NAME
-}
-
-input ListOfValuesStringFilter {
-  field: ListOfValuesStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ListOfValuesStringFilterField {
-  NAME
-  OWNER_ID
-}
-
-type ListOfValuesTypeConnection {
-  edges: [ListOfValues]
-  pageInfo: PageInfo
-}
-
-scalar Long
-
-enum LreArManagementType {
-  MANUAL
-  ELECTRONIC
 }
 
 enum Media {
@@ -2640,196 +362,6 @@ enum Media {
   PUSH_NOTIFICATION
   EMAIL
   FAX_EMAIL
-}
-
-type Metadata {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  ownerType: MetadataOwnerType!
-  ownerId: String
-  code: String!
-  name: String!
-  dataType: MetadataDataType!
-  documentTypeIds: [String]
-  listOfValuesId: String
-}
-
-type MetadataConfig {
-  metadataId: String!
-  isMandatory: Boolean!
-  isEditable: Boolean!
-  isDeletable: Boolean
-  defaultValue: String
-  expectedFormat: String
-}
-
-input MetadataConfigInput {
-  metadataId: String!
-  isMandatory: Boolean!
-  isEditable: Boolean!
-  defaultValue: String
-  expectedFormat: String
-}
-
-enum MetadataDataType {
-  STRING
-  INTEGER
-  DOUBLE
-  DATE
-  BOOL
-  LIST_OF_VALUES
-}
-
-enum MetadataDataTypeFilterField {
-  DATA_TYPE
-}
-
-input MetadataInput {
-  id: String
-  ownerType: MetadataOwnerType!
-  ownerId: String!
-  code: String!
-  name: String!
-  dataType: MetadataDataType!
-  listOfValuesId: String
-}
-
-input MetadataMetadataDataTypeEnumFilter {
-  field: MetadataDataTypeFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: MetadataDataType!
-  filterValue2: MetadataDataType
-}
-
-enum MetadataOwnerType {
-  SYSTEM
-  TENANT
-}
-
-input MetadataQueryParams {
-  sortField: MetadataSortField
-  sortDirection: SortDirection
-  stringFilters: [MetadataStringFilter]
-  dataTypeFilters: [MetadataMetadataDataTypeEnumFilter]
-}
-
-enum MetadataSortField {
-  CODE
-  NAME
-  DATA_TYPE
-}
-
-input MetadataStringFilter {
-  field: MetadataStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum MetadataStringFilterField {
-  CODE
-  NAME
-}
-
-type MetadataTypeConnection {
-  edges: [Metadata]
-  pageInfo: PageInfo
-}
-
-type Nature {
-  id: String!
-  cycle: NatureCycle!
-  code: String!
-  label: String!
-  metadataConfigs: [MetadataConfig]
-  archiveConfiguration: ArchiveConfiguration
-}
-
-enum NatureCycle {
-  P_2_P
-  O_2_C
-}
-
-input NatureQueryParams {
-  sortField: NatureSortField
-  sortDirection: SortDirection
-}
-
-enum NatureSortField {
-  CODE
-  LABEL
-}
-
-type NatureTypeConnection {
-  edges: [Nature]
-  pageInfo: PageInfo
-}
-
-type Note {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  ownerId: String!
-  ownerType: NoteOwnerType!
-  text: String!
-}
-
-input NoteInput {
-  id: String
-  ownerId: String!
-  ownerType: NoteOwnerType!
-  text: String!
-}
-
-input NoteNoteOwnerTypeEnumFilter {
-  field: NoteOwnerTypeFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: NoteOwnerType!
-  filterValue2: NoteOwnerType
-}
-
-enum NoteOwnerType {
-  SERVICE
-  THIRD_PARTY
-}
-
-enum NoteOwnerTypeFilterField {
-  OWNER_TYPE
-}
-
-input NoteQueryParams {
-  sortField: NoteSortField
-  sortDirection: SortDirection
-  stringFilters: [NoteStringFilter]
-  ownerTypeFilters: [NoteNoteOwnerTypeEnumFilter]
-}
-
-enum NoteSortField {
-  CREATION_DATE
-  LAST_MODIFICATION_DATE
-}
-
-input NoteStringFilter {
-  field: NoteStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum NoteStringFilterField {
-  OWNER_ID
-}
-
-type NoteTypeConnection {
-  edges: [Note]
-  pageInfo: PageInfo
 }
 
 enum NumberFilterOperator {
@@ -2847,29 +379,112 @@ enum NumberFilterOperator {
   IS_NOT_NULL
 }
 
+type OmsAccount {
+  info: OmsAccountInfo
+  billingInfo: OmsAccountBillingInfo
+  billingParameter: OmsAccountBillingParameter
+}
+
+type OmsAccountBillingInfo {
+  customerNumber: Int!
+  companyName: String!
+  street1: String!
+  street2: String
+  city: String!
+  state: String!
+  zip: String!
+  phone: String
+  fax: String
+  attention: String!
+  email: String!
+}
+
+type OmsAccountBillingParameter {
+  customerNumber: Int!
+  pricingModel: AccountBillingParameterPricingModelType
+  idClientCrm: Int!
+  overchargingDuration: Boolean
+  overchargingUnsentPage: Boolean
+  overchargingFineMode: Boolean
+  overchargingPagesOfNotCompletelySentDoc: Boolean
+  quota: Boolean
+  billingType: AccountBillingParameterBillingType
+}
+
+type OmsAccountData {
+  omsAccount: OmsAccount
+  mediaList: [Media!]!
+}
+
+type OmsAccountInfo {
+  accountType: Int!
+  billingGroup: Int!
+  city: String!
+  companyName: String!
+  customerNumber: Int!
+  fax: String!
+  isBillingGroup: Boolean!
+  phone: String!
+  sla: Int!
+  state: String!
+  zip: String!
+}
+
+input OmsAccountInfoIntFilter {
+  field: OmsAccountInfoIntFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: Int!
+  filterValue2: Int
+}
+
+enum OmsAccountInfoIntFilterField {
+  BILLING_GROUP
+}
+
+input OmsAccountInfoQueryParams {
+  sortField: OmsAccountInfoSortField
+  sortDirection: SortDirection
+  stringFilters: [OmsAccountInfoStringFilter]
+  intFilters: [OmsAccountInfoIntFilter]
+}
+
+enum OmsAccountInfoSortField {
+  CUSTOMER_NUMBER
+  BILLING_GROUP
+  COMPANY_NAME
+  CITY
+  ZIP
+  COUNTRY
+}
+
+input OmsAccountInfoStringFilter {
+  field: OmsAccountInfoStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum OmsAccountInfoStringFilterField {
+  CUSTOMER_NUMBER
+  COMPANY_NAME
+}
+
+type OmsAccountInfoTypeConnection {
+  edges: [OmsAccountInfo]
+  pageInfo: PageInfo
+}
+
+type OmsUserAccount {
+  customerNumber: Int!
+  login: String!
+}
+
+input OmsUserAccountInput {
+  customerNumber: Int!
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   endCursor: String
-}
-
-type PaperMailJob {
-  id: String!
-  trackingId: String!
-  status: JobBaseStatus!
-  completedDate: DateTime
-  documentIds: [String]
-  serviceId: String
-  note: String
-}
-
-input PaperMailJobInput {
-  trackingId: String
-  adhocRecipientFiles: [FileIdOrNewInputType]
-  postalAdhocRecipients: [PostalAdhocRecipientInput]
-  documents: [FileIdOrNewInputType]
-  parameter: PostalParameter
-  serviceId: String
-  note: String
 }
 
 type PostalAddress {
@@ -2884,163 +499,158 @@ type PostalAddress {
 }
 
 input PostalAddressInput {
-  name: String
-  additionalInfo: String
   additionalGeographicInfo: String
-  street: String
-  postBox: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-input PostalAdhocRecipientInput {
-  name: String!
-  addressLine1: String!
-  addressLine2: String!
-  postalCode: String!
+  additionalInfo: String
   city: String!
   country: String!
+  name: String!
+  postBox: String
+  street: String!
+  zipCode: String!
 }
 
-input PostalJobDateFilter {
-  field: JobDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-input PostalJobJobBaseStatusEnumFilter {
-  field: JobStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: JobBaseStatus!
-  filterValue2: JobBaseStatus
-}
-
-input PostalJobQueryParams {
-  sortField: JobSortField
-  sortDirection: SortDirection
-  stringFilters: [PostalJobStringFilter]
-  dateFilters: [PostalJobDateFilter]
-  statusFilters: [PostalJobJobBaseStatusEnumFilter]
-}
-
-input PostalJobStringFilter {
-  field: JobStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-type PostalJobTypeConnection {
-  edges: [PaperMailJob]
-  pageInfo: PageInfo
-}
-
-input PostalParameter {
-  envelope: EnvelopeType
-  stamp: StampType
-  printBothSide: Boolean
-  printColor: Boolean
-  lreArManagement: LreArManagementType
-  sender: PostalAddressInput
-}
-
-type PowerBiAuthToken {
+type Product {
   creationDate: DateTime
   creationUserId: String
   creationUserLabel: String
   lastModificationDate: DateTime
   lastModificationUserId: String
   lastModificationUserLabel: String
-  accessToken: String!
-  embedUrl: String!
+  id: String!
+  name: String!
+  order: Int!
+  isEnabled: Boolean!
 }
 
-input PushJob {
-  jobType: String
-  trackingId: String
-  scheduledStartTime: DateTime
-  adhocRecipientFiles: [FileIdOrNewInputType]
-  deDuplicate: Boolean
-  adhocRecipients: [Recipient]
-  text: String!
-  parameter: PushParameter
+type ProductAccess {
+  productInstallId: String!
+  productId: String!
+  productName: String!
+  order: Int!
+  url: String!
 }
 
-input PushParameter {
-  applicationId: Int
-  title: String
-  badgeCount: Int
-  expirationDuration: Int
-  soundFileName: String
-  isSilent: Boolean
-  isByToken: Boolean
-  activateTracking: Boolean
+input ProductAccessInput {
+  productInstallId: String!
 }
 
-input Recipient {
-  address: String!
-  name: String
-  optionalFields: [String]
-}
-
-type RegisteredPostalOptions {
-  anonymous: Boolean!
-}
-
-input RegisteredPostalOptionsInput {
-  anonymous: Boolean!
-}
-
-"""The application rights action type."""
-enum RightActionType {
-  READ
-  CHANGE
-}
-
-type RightInitialValue {
-  right: RightType!
-  initialValue: Boolean!
-  category: String
-  subCategory: String
-  actionType: RightActionType
-}
-
-input RightInitialValueBoolFilter {
-  field: RightInitialValueBoolFilterField!
+input ProductBoolFilter {
+  field: ProductBoolFilterField!
   operator: BoolFilterOperator!
   filterValue1: Boolean!
 }
 
-enum RightInitialValueBoolFilterField {
-  INITIAL_VALUE
+enum ProductBoolFilterField {
+  IS_ENABLED
 }
 
-input RightInitialValueQueryParams {
-  sortField: RightInitialValueSortField
+input ProductInput {
+  id: String
+  name: String!
+  order: Int!
+  isEnabled: Boolean
+}
+
+type ProductInstall {
+  creationDate: DateTime
+  creationUserId: String
+  creationUserLabel: String
+  lastModificationDate: DateTime
+  lastModificationUserId: String
+  lastModificationUserLabel: String
+  id: String!
+  environmentId: String!
+  productId: String!
+  url: String!
+  isEnabled: Boolean!
+}
+
+input ProductInstallBoolFilter {
+  field: ProductInstallBoolFilterField!
+  operator: BoolFilterOperator!
+  filterValue1: Boolean!
+}
+
+enum ProductInstallBoolFilterField {
+  IS_ENABLED
+}
+
+input ProductInstallInput {
+  id: String
+  environmentId: String!
+  productId: String!
+  url: String!
+  isEnabled: Boolean
+}
+
+input ProductInstallQueryParams {
+  sortField: ProductInstallSortField
   sortDirection: SortDirection
-  boolFilters: [RightInitialValueBoolFilter]
-  rightTypeFilters: [RightInitialValueRightTypeEnumFilter]
+  stringFilters: [ProductInstallStringFilter]
+  boolFilters: [ProductInstallBoolFilter]
 }
 
-input RightInitialValueRightTypeEnumFilter {
-  field: RightInitialValueRightTypeFilterField!
+enum ProductInstallSortField {
+  ENVIRONMENT_ID
+  PRODUCT_ID
+  URL
+  IS_ENABLED
+}
+
+input ProductInstallStringFilter {
+  field: ProductInstallStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum ProductInstallStringFilterField {
+  ENVIRONMENT_ID
+  PRODUCT_ID
+  URL
+}
+
+type ProductInstallTypeConnection {
+  edges: [ProductInstall]
+  pageInfo: PageInfo
+}
+
+input ProductIntFilter {
+  field: ProductIntFilterField!
   operator: NumberFilterOperator!
-  filterValue1: RightType!
-  filterValue2: RightType
+  filterValue1: Int!
+  filterValue2: Int
 }
 
-enum RightInitialValueRightTypeFilterField {
-  RIGHT
+enum ProductIntFilterField {
+  ORDER
 }
 
-enum RightInitialValueSortField {
-  INITIAL_VALUE
-  RIGHT
+input ProductQueryParams {
+  sortField: ProductSortField
+  sortDirection: SortDirection
+  stringFilters: [ProductStringFilter]
+  intFilters: [ProductIntFilter]
+  boolFilters: [ProductBoolFilter]
 }
 
-type RightInitialValueTypeConnection {
-  edges: [RightInitialValue]
+enum ProductSortField {
+  ORDER
+  NAME
+  IS_ENABLED
+}
+
+input ProductStringFilter {
+  field: ProductStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum ProductStringFilterField {
+  NAME
+}
+
+type ProductTypeConnection {
+  edges: [Product]
   pageInfo: PageInfo
 }
 
@@ -3260,167 +870,41 @@ enum RightType {
   CHANGE_ENVIRONMENT_API_USER
 }
 
-input RightValueBoolFilter {
-  field: RightValueBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
+type RightValue {
+  right: RightType!
+  value: Boolean!
 }
 
-enum RightValueBoolFilterField {
-  VALUE
+input RightValueInput {
+  right: RightType!
+  value: Boolean!
 }
 
-input RightValueQueryParams {
-  sortField: RightValueSortField
-  sortDirection: SortDirection
-  boolFilters: [RightValueBoolFilter]
+type Role {
+  profile: UserProfile!
+  environmentId: String
+  environmentName: String
+  domainId: String
+  domainName: String
+  tenantId: String
+  tenantName: String
+  rights: [RightValue]
+  lastConnectionDate: DateTime
+  productAccesses: [ProductAccess]
 }
 
-enum RightValueSortField {
-  VALUE
-  RIGHT
-}
-
-type Service {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  tenantId: String!
-  name: String!
-  tenantUserCount: Int!
-  hasCustomSmtpConfig: Boolean!
-  customSmtpConfig: SmtpConfig
-  isEnabled: Boolean!
-}
-
-input ServiceBoolFilter {
-  field: ServiceBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum ServiceBoolFilterField {
-  IS_ENABLED
-  HAS_CUSTOM_SMTP_CONFIG
-}
-
-input ServiceInput {
-  id: String
-  name: String!
-  customSmtpConfig: SmtpConfigInput
-  isEnabled: Boolean
-}
-
-input ServiceIntFilter {
-  field: ServiceIntFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: Int!
-  filterValue2: Int
-}
-
-enum ServiceIntFilterField {
-  TENANT_USER_COUNT
-}
-
-input ServiceQueryParams {
-  sortField: ServiceSortField
-  sortDirection: SortDirection
-  stringFilters: [ServiceStringFilter]
-  intFilters: [ServiceIntFilter]
-  boolFilters: [ServiceBoolFilter]
-}
-
-enum ServiceSortField {
-  NAME
-  TENANT_USER_COUNT
-  HAS_CUSTOM_SMTP_CONFIG
-  IS_ENABLED
-}
-
-input ServiceStringFilter {
-  field: ServiceStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ServiceStringFilterField {
-  NAME
-}
-
-type ServiceTypeConnection {
-  edges: [Service]
-  pageInfo: PageInfo
-}
-
-enum SmsContentType {
-  TEXT
-  BINARY
-  UNICODE
-}
-
-input SmsJob {
-  jobType: String
-  trackingId: String
-  scheduledStartTime: DateTime
-  adhocRecipientFiles: [FileIdOrNewInputType]
-  deDuplicate: Boolean
-  adhocRecipients: [Recipient]
-  text: String!
-  parameter: SmsParameter
-}
-
-input SmsParameter {
-  sender: String
-  contentType: SmsContentType
-  smsFlash: Boolean
-  lifeSpan: Int
-  shortUrl: Boolean
-  shortUrlGeotagging: Boolean
-  formsManagement: Boolean
-  allowMultiPartition: Boolean
-  maxPartition: Int
-  shortUrlTracking: Boolean
-}
-
-type SmtpConfig {
-  errorAddress: String
-  hasSmtpSsl: Boolean
-  replyAddress: String
-  senderAddress: String
-  senderName: String
-  smtpLogin: String
-  smtpPassword: String
-  smtpPort: Int
-  smtpServer: String
-}
-
-input SmtpConfigInput {
-  errorAddress: String
-  hasSmtpSsl: Boolean
-  replyAddress: String
-  senderAddress: String!
-  senderName: String!
-  smtpLogin: String
-  smtpPassword: String
-  smtpPort: Int
-  smtpServer: String
+input RoleInput {
+  profile: UserProfile!
+  environmentId: String
+  domainId: String
+  tenantId: String
+  rights: [RightValueInput]
+  productAccesses: [ProductAccessInput]
 }
 
 enum SortDirection {
   ASCENDING
   DESCENDING
-}
-
-enum StampType {
-  LETTRE_VERTE
-  NORMAL
-  INDUSTRIEL
-  RECOMMANDE
-  INDUSTRIEL_JPLUS_4
 }
 
 enum StringFilterOperator {
@@ -3440,7 +924,7 @@ enum StringFilterOperator {
   IS_NOT_NULL
 }
 
-type TemporaryDocumentContent {
+type Tenant {
   creationDate: DateTime
   creationUserId: String
   creationUserLabel: String
@@ -3448,403 +932,101 @@ type TemporaryDocumentContent {
   lastModificationUserId: String
   lastModificationUserLabel: String
   id: String!
-  tenantId: String!
+  environmentId: String!
+  domainId: String!
   name: String!
-  size: Long!
-  storageEndDate: DateTime
-  metadata: [KeyValuePair]
-  content: String!
-}
-
-input TemporaryDocumentContentInput {
-  id: String
-  name: String!
-  tenantId: String!
-  metadata: [KeyValuePairInput]
-  content: String!
-}
-
-type TemporaryDocumentHeader {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  tenantId: String!
-  name: String!
-  size: Long!
-  storageEndDate: DateTime
-  metadata: [KeyValuePair]
-}
-
-input TemporaryDocumentHeaderDateFilter {
-  field: TemporaryDocumentHeaderDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
-enum TemporaryDocumentHeaderDateFilterField {
-  CREATION_DATE
-  STORAGE_END_DATE
-}
-
-input TemporaryDocumentHeaderQueryParams {
-  sortField: TemporaryDocumentHeaderSortField
-  sortDirection: SortDirection
-  stringFilters: [TemporaryDocumentHeaderStringFilter]
-  dateFilters: [TemporaryDocumentHeaderDateFilter]
-}
-
-enum TemporaryDocumentHeaderSortField {
-  NAME
-  CREATION_DATE
-  STORAGE_END_DATE
-  SIZE
-}
-
-input TemporaryDocumentHeaderStringFilter {
-  field: TemporaryDocumentHeaderStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum TemporaryDocumentHeaderStringFilterField {
-  NAME
-  TENANT_ID
-}
-
-type TemporaryDocumentHeaderTypeConnection {
-  edges: [TemporaryDocumentHeader]
-  pageInfo: PageInfo
-}
-
-"""The application rights for tenant user."""
-enum TenantRightType {
-  """Get or list tenants"""
-  READ_TENANT
-
-  """Edit tenants"""
-  EDIT_TENANT
-
-  """Grant user rights"""
-  GRANT_RIGHT
-
-  """Grant internal user rights"""
-  GRANT_INTERNAL_RIGHT
-
-  """Create or edit tenant users"""
-  CHANGE_TENANT_USER
-
-  """Get or list Api users"""
-  READ_TENANT_API_USER
-
-  """Create, edit or renew Api users"""
-  CHANGE_TENANT_API_USER
-
-  """Create, edit or delete services"""
-  CHANGE_SERVICE
-
-  """Get or list third party types"""
-  READ_THIRD_PARTY_TYPE
-
-  """Create, edit or delete third party types"""
-  CHANGE_THIRD_PARTY_TYPE
-
-  """Get or list third parties"""
-  READ_THIRD_PARTY
-
-  """Create, edit or delete third parties"""
-  CHANGE_THIRD_PARTY
-
-  """Get or list contact functions"""
-  READ_CONTACT_FUNCTION
-
-  """Create, edit or delete contact functions"""
-  CHANGE_CONTACT_FUNCTION
-
-  """Get or list contacts"""
-  READ_CONTACT
-
-  """Create, edit or delete contacts"""
-  CHANGE_CONTACT
-
-  """Get or list document types"""
-  READ_DOCUMENT_TYPE
-
-  """Create, edit or delete document types"""
-  CHANGE_DOCUMENT_TYPE
-
-  """Get or list documents sent to the user"""
-  READ_DOCUMENT
-
-  """Get or list documents sent to the service of the user"""
-  READ_DOCUMENT_ON_SERVICE
-
-  """Create, edit or delete documents"""
-  CHANGE_DOCUMENT
-
-  """Get or list tenants with internal info"""
-  READ_TENANT_EDC_OMS_INFO
-
-  """Create or edit tenant internal info"""
-  CHANGE_TENANT_EDC_OMS_INFO
-
-  """Get or list notes"""
-  READ_NOTE
-
-  """Create or edit notes"""
-  CHANGE_NOTE
-
-  """Get or list OMS resources"""
-  READ_OMS_RESOURCES
-
-  """Create or edit OMS resources"""
-  CHANGE_OMS_RESOURCES
-
-  """Get or list list of values"""
-  READ_LIST_OF_VALUES
-
-  """Create, edit or delete list of values"""
-  CHANGE_LIST_OF_VALUES
-
-  """Get or list metadatas"""
-  READ_METADATA
-
-  """Create, edit or delete metadatas"""
-  CHANGE_METADATA
-
-  """Get or list dashboards"""
-  READ_DASHBOARD
-
-  """Create, edit or delete dashboards"""
-  CHANGE_DASHBOARD
-
-  """Get or list documentJob"""
-  READ_DOCUMENT_JOB
-
-  """Create, edit or delete documentJob"""
-  CHANGE_DOCUMENT_JOB
-
-  """Get or list jobMessage"""
-  READ_JOB_MESSAGE
-
-  """Create, edit or delete jobMessage"""
-  CHANGE_JOB_MESSAGE
-
-  """Get or list activities"""
-  READ_ACTIVITY
-
-  """Create, edit or delete activities"""
-  CHANGE_ACTIVITY
-
-  """Get or list template structures"""
-  READ_TEMPLATE_STRUCTURE
-
-  """Create, edit or delete template structures"""
-  CHANGE_TEMPLATE_STRUCTURE
-
-  """Get or list template contents"""
-  READ_TEMPLATE_CONTENT
-
-  """Create, edit or delete template contents"""
-  CHANGE_TEMPLATE_CONTENT
-
-  """Get or list mailJob"""
-  READ_POSTAL_JOB
-
-  """Create, edit or delete mailJob"""
-  CHANGE_POSTAL_JOB
-}
-
-type TenantRightValue {
-  right: TenantRightType
-  value: Boolean!
-}
-
-input TenantRightValueInput {
-  right: TenantRightType
-  value: Boolean!
-}
-
-type TenantRightValueTypeConnection {
-  edges: [TenantRightValue]
-  pageInfo: PageInfo
-}
-
-type TenantUser {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  civility: String!
-  firstName: String!
-  lastName: String!
-  email: String!
-  userId: String!
-  phone: String!
-  culture: String!
-  timeZone: String!
-  isEnabled: Boolean!
-  lastConnectionDate: DateTime
-  tenantId: String!
-  documentAccessType: TenantUserDocumentAccessType!
-  weeklyReport: Boolean!
-  services: [IdName]
-}
-
-input TenantUserBoolFilter {
-  field: TenantUserBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum TenantUserBoolFilterField {
-  IS_ENABLED
-}
-
-enum TenantUserDocumentAccessType {
-  RESTRICTED
-  FULL
-}
-
-input TenantUserInput {
-  id: String
-  civility: String
-  firstName: String!
-  lastName: String!
-  email: String!
+  email: String
   phone: String
-  culture: String
-  timeZone: String
-  isEnabled: Boolean
-  documentAccessType: TenantUserDocumentAccessType!
-  weeklyReport: Boolean!
-  services: [IdNameInput]
-}
-
-input TenantUserQueryParams {
-  sortField: TenantUserSortField
-  sortDirection: SortDirection
-  stringFilters: [TenantUserStringFilter]
-  boolFilters: [TenantUserBoolFilter]
-}
-
-enum TenantUserSortField {
-  CIVILITY
-  FIRST_NAME
-  LAST_NAME
-  EMAIL
-  USER_ID
-  PHONE
-  CULTURE
-  TIME_ZONE
-  DOCUMENT_ACCESS_TYPE
-  WEEKLY_REPORT
-  IS_ENABLED
-}
-
-input TenantUserStringFilter {
-  field: TenantUserStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum TenantUserStringFilterField {
-  FIRST_NAME
-  LAST_NAME
-  EMAIL
-  USER_ID
-  SERVICE_ID
-}
-
-type TenantUserTypeConnection {
-  edges: [TenantUser]
-  pageInfo: PageInfo
-}
-
-type ThirdParty {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  tenantId: String!
-  code: String
-  isMoralPerson: Boolean!
-  name: String
-  contactCount: Int!
   isEnabled: Boolean!
-  thirdPartyTypeIds: [String]
   address: PostalAddress
+  omsServiceAccount: OmsUserAccount
+  edcServiceAccount: EdcUserAccount
+  authorizedProductIds: [String]
+  emailConfig: EmailConfig
+  chorusB2GConfig: ChorusB2GConfig
 }
 
-input ThirdPartyBoolFilter {
-  field: ThirdPartyBoolFilterField!
+input TenantBoolFilter {
+  field: TenantBoolFilterField!
   operator: BoolFilterOperator!
   filterValue1: Boolean!
 }
 
-enum ThirdPartyBoolFilterField {
-  IS_MORAL_PERSON
+enum TenantBoolFilterField {
   IS_ENABLED
 }
 
-enum ThirdPartyIdentifierType {
-  THIRDPARTY_ID
-  FROM_GED_FIELDS
-}
-
-input ThirdPartyInput {
+input TenantInput {
   id: String
-  code: String!
-  isMoralPerson: Boolean!
   name: String!
+  email: String
+  phone: String
   isEnabled: Boolean
-  thirdPartyTypeIds: [String!]!
   address: PostalAddressInput
+  omsServiceAccount: OmsUserAccountInput
+  edcServiceAccount: EdcUserAccountInput
+  authorizedProductIds: [String]
+  emailConfig: EmailConfigInput
+  chorusB2GConfig: ChorusB2GConfigInput
 }
 
-input ThirdPartyQueryParams {
-  sortField: ThirdPartySortField
+input TenantIntFilter {
+  field: TenantIntFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: Int!
+  filterValue2: Int
+}
+
+enum TenantIntFilterField {
+  OMS_SERVICE_ACCOUNT_CUSTOMER_NUMBER
+}
+
+input TenantQueryParams {
+  sortField: TenantSortField
   sortDirection: SortDirection
-  stringFilters: [ThirdPartyStringFilter]
-  boolFilters: [ThirdPartyBoolFilter]
+  stringFilters: [TenantStringFilter]
+  intFilters: [TenantIntFilter]
+  boolFilters: [TenantBoolFilter]
 }
 
-input ThirdPartyRecipientInput {
-  thirdPartyIdentifierType: ThirdPartyIdentifierType!
-  thirdPartyIdentifier: String!
-  contactFunctionCodes: [String]
-  updateOptions: ThirdPartyUpdateOptionsInput
-}
-
-enum ThirdPartySortField {
-  CODE
+enum TenantSortField {
   NAME
-  IS_MORAL_PERSON
+  EMAIL
+  PHONE
+  ENVIRONMENT_ID
+  DOMAIN_ID
   IS_ENABLED
+  OMS_SERVICE_ACCOUNT_CUSTOMER_NUMBER
+  EDC_SERVICE_ACCOUNT_GED_SCHEMA
 }
 
-input ThirdPartyStringFilter {
-  field: ThirdPartyStringFilterField!
+input TenantStringFilter {
+  field: TenantStringFilterField!
   operator: StringFilterOperator!
   filterValue1: String!
 }
 
-enum ThirdPartyStringFilterField {
-  CODE
+enum TenantStringFilterField {
   NAME
+  EMAIL
+  PHONE
+  ENVIRONMENT_ID
+  DOMAIN_ID
+  EDC_SERVICE_ACCOUNT_GED_SCHEMA
+  ADDRESS_ADDRESS_LINE_1
+  ADDRESS_ADDRESS_LINE_2
+  ADDRESS_POSTAL_CODE
+  ADDRESS_CITY
+  ADDRESS_STATE
+  ADDRESS_COUNTRY
 }
 
-type ThirdPartyType {
+type TenantTypeConnection {
+  edges: [Tenant]
+  pageInfo: PageInfo
+}
+
+type User {
   creationDate: DateTime
   creationUserId: String
   creationUserLabel: String
@@ -3852,68 +1034,11 @@ type ThirdPartyType {
   lastModificationUserId: String
   lastModificationUserLabel: String
   id: String!
-  name: String!
-  ownerType: ThirdPartyTypeOwnerType!
-  ownerId: String
+  azureId: String
+  email: String
   isEnabled: Boolean!
-}
-
-input ThirdPartyTypeBoolFilter {
-  field: ThirdPartyTypeBoolFilterField!
-  operator: BoolFilterOperator!
-  filterValue1: Boolean!
-}
-
-enum ThirdPartyTypeBoolFilterField {
-  IS_ENABLED
-}
-
-type ThirdPartyTypeConnection {
-  edges: [ThirdParty]
-  pageInfo: PageInfo
-}
-
-input ThirdPartyTypeInput {
-  id: String
-  name: String!
-  isEnabled: Boolean
-}
-
-enum ThirdPartyTypeOwnerType {
-  SYSTEM
-  TENANT
-}
-
-input ThirdPartyTypeQueryParams {
-  sortField: ThirdPartyTypeSortField
-  sortDirection: SortDirection
-  stringFilters: [ThirdPartyTypeStringFilter]
-  boolFilters: [ThirdPartyTypeBoolFilter]
-}
-
-enum ThirdPartyTypeSortField {
-  NAME
-  IS_ENABLED
-}
-
-input ThirdPartyTypeStringFilter {
-  field: ThirdPartyTypeStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ThirdPartyTypeStringFilterField {
-  NAME
-  OWNER_ID
-}
-
-type ThirdPartyTypeTypeConnection {
-  edges: [ThirdPartyType]
-  pageInfo: PageInfo
-}
-
-input ThirdPartyUpdateOptionsInput {
-  createThirdParty: Boolean!
+  isInvited: Boolean!
+  roles: [Role]
 }
 
 enum UserProfile {
@@ -3924,85 +1049,3 @@ enum UserProfile {
   TENANT_RECEIVER
   WEBSITE_ADMINISTRATOR
 }
-
-type ValueOfList {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  listOfValuesId: String!
-  ownerType: ValueOfListOwnerType!
-  ownerId: String
-  code: String!
-  name: String!
-}
-
-input ValueOfListInput {
-  id: String
-  listOfValuesId: String!
-  ownerType: ValueOfListOwnerType!
-  ownerId: String!
-  code: String!
-  name: String!
-}
-
-enum ValueOfListOwnerType {
-  SYSTEM
-  TENANT
-}
-
-input ValueOfListQueryParams {
-  sortField: ValueOfListSortField
-  sortDirection: SortDirection
-  stringFilters: [ValueOfListStringFilter]
-}
-
-enum ValueOfListSortField {
-  CODE
-  NAME
-}
-
-input ValueOfListStringFilter {
-  field: ValueOfListStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ValueOfListStringFilterField {
-  LIST_OF_VALUES_ID
-  CODE
-  NAME
-}
-
-type ValueOfListTypeConnection {
-  edges: [ValueOfList]
-  pageInfo: PageInfo
-}
-
-input VoiceJob {
-  jobType: String
-  trackingId: String
-  scheduledStartTime: DateTime
-  adhocRecipientFiles: [FileIdOrNewInputType]
-  deDuplicate: Boolean
-  adhocRecipients: [Recipient]
-  documents: [FileIdOrNewInputType]
-  parameter: VoiceParameter
-}
-
-input VoiceParameter {
-  textToSpeechVoiceId: Int
-  textToSpeechVoiceRate: Int
-  scenarioId: Int
-  sender: String
-  transferNumber: String
-  transferKey: String
-  repeatKey: String
-  acknowledgeKey: String
-  actionMessage: FileReferenceBase
-}
-
-scalar Void
