@@ -60,6 +60,7 @@ export enum ActivityActorType {
   Contact = 'CONTACT',
   EmailAddress = 'EMAIL_ADDRESS',
   External = 'EXTERNAL',
+  PostalAddress = 'POSTAL_ADDRESS',
   Service = 'SERVICE',
   System = 'SYSTEM',
   TenantUser = 'TENANT_USER',
@@ -73,6 +74,7 @@ export enum ActivityActorTypeFilterField {
 
 export enum ActivityCategory {
   AddAttachmentsDocument = 'ADD_ATTACHMENTS_DOCUMENT',
+  CancelJobMessage = 'CANCEL_JOB_MESSAGE',
   ChangeStatusChorusB_2G = 'CHANGE_STATUS_CHORUS_B_2_G',
   CompleteChorusB_2G = 'COMPLETE_CHORUS_B_2_G',
   DocumentArchived = 'DOCUMENT_ARCHIVED',
@@ -517,10 +519,13 @@ export type BusinessSchemaMutation = {
   addMetadata?: Maybe<Metadata>;
   addNote?: Maybe<Note>;
   addPostalJob?: Maybe<JobCreationResult>;
+  addPostalParameterConfiguration?: Maybe<PostalParameterConfiguration>;
   addPowerBiAuthToken?: Maybe<PowerBiAuthToken>;
   addPushJob?: Maybe<JobResult>;
   addService?: Maybe<Service>;
   addSmsJob?: Maybe<JobResult>;
+  addTemplateContent?: Maybe<TemplateContent>;
+  addTemplateStructure?: Maybe<TemplateStructure>;
   addTemporaryDocument?: Maybe<TemporaryDocumentContent>;
   addTenantUser?: Maybe<TenantUser>;
   addThirdParty?: Maybe<ThirdParty>;
@@ -539,7 +544,10 @@ export type BusinessSchemaMutation = {
   deleteListOfValues?: Maybe<Scalars['Void']>;
   deleteMetadata?: Maybe<Scalars['Void']>;
   deleteNote?: Maybe<Scalars['Void']>;
+  deletePostalParameterConfiguration?: Maybe<Scalars['Void']>;
   deleteService?: Maybe<Scalars['Void']>;
+  deleteTemplateContent?: Maybe<Scalars['Void']>;
+  deleteTemplateStructure?: Maybe<Scalars['Void']>;
   deleteTemporaryDocument?: Maybe<Scalars['Void']>;
   deleteThirdParty?: Maybe<Scalars['Void']>;
   deleteThirdPartyType?: Maybe<Scalars['Void']>;
@@ -562,7 +570,10 @@ export type BusinessSchemaMutation = {
   editListOfValues?: Maybe<ListOfValues>;
   editMetadata?: Maybe<Metadata>;
   editNote?: Maybe<Note>;
+  editPostalParameterConfiguration?: Maybe<PostalParameterConfiguration>;
   editService?: Maybe<Service>;
+  editTemplateContent?: Maybe<TemplateContent>;
+  editTemplateStructure?: Maybe<TemplateStructure>;
   editTenantUser?: Maybe<TenantUser>;
   editTenantUserRight?: Maybe<Array<TenantRightValue>>;
   editThirdParty?: Maybe<ThirdParty>;
@@ -701,6 +712,12 @@ export type BusinessSchemaMutationAddPostalJobArgs = {
 };
 
 
+export type BusinessSchemaMutationAddPostalParameterConfigurationArgs = {
+  item: PostalParameterConfigurationInput;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
 export type BusinessSchemaMutationAddPowerBiAuthTokenArgs = {
   id: Scalars['String'];
 };
@@ -720,6 +737,18 @@ export type BusinessSchemaMutationAddServiceArgs = {
 
 export type BusinessSchemaMutationAddSmsJobArgs = {
   item: SmsJob;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationAddTemplateContentArgs = {
+  item: TemplateContentInput;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationAddTemplateStructureArgs = {
+  item: TemplateStructureInput;
   tenantId?: InputMaybe<Scalars['String']>;
 };
 
@@ -832,7 +861,25 @@ export type BusinessSchemaMutationDeleteNoteArgs = {
 };
 
 
+export type BusinessSchemaMutationDeletePostalParameterConfigurationArgs = {
+  id: Scalars['String'];
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
 export type BusinessSchemaMutationDeleteServiceArgs = {
+  id: Scalars['String'];
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationDeleteTemplateContentArgs = {
+  id: Scalars['String'];
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationDeleteTemplateStructureArgs = {
   id: Scalars['String'];
   tenantId?: InputMaybe<Scalars['String']>;
 };
@@ -978,9 +1025,30 @@ export type BusinessSchemaMutationEditNoteArgs = {
 };
 
 
+export type BusinessSchemaMutationEditPostalParameterConfigurationArgs = {
+  id: Scalars['String'];
+  item: PostalParameterConfigurationInput;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
 export type BusinessSchemaMutationEditServiceArgs = {
   id: Scalars['String'];
   item: ServiceInput;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationEditTemplateContentArgs = {
+  id: Scalars['String'];
+  item: TemplateContentInput;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationEditTemplateStructureArgs = {
+  id: Scalars['String'];
+  item: TemplateStructureInput;
   tenantId?: InputMaybe<Scalars['String']>;
 };
 
@@ -1174,11 +1242,19 @@ export type BusinessSchemaQuery = {
   noteList?: Maybe<NoteTypeConnection>;
   postalJobItems?: Maybe<Array<Maybe<PostalJob>>>;
   postalJobList?: Maybe<PostalJobTypeConnection>;
+  postalParameterConfigurationItems?: Maybe<Array<Maybe<PostalParameterConfiguration>>>;
+  postalParameterConfigurationList?: Maybe<PostalParameterConfigurationTypeConnection>;
   processingJobCountStatistics?: Maybe<JobCountStatistics>;
   rightInitialValueList?: Maybe<RightInitialValueTypeConnection>;
   schema?: Maybe<Scalars['String']>;
   serviceItems?: Maybe<Array<Maybe<Service>>>;
   serviceList?: Maybe<ServiceTypeConnection>;
+  statusActionList?: Maybe<StatusActionTypeConnection>;
+  templateContentItems?: Maybe<Array<Maybe<TemplateContent>>>;
+  templateContentList?: Maybe<TemplateContentTypeConnection>;
+  templateStructureItems?: Maybe<Array<Maybe<TemplateStructure>>>;
+  templateStructureList?: Maybe<TemplateStructureTypeConnection>;
+  templateVariableList?: Maybe<Array<Maybe<TemplateVariable>>>;
   temporaryDocumentItems?: Maybe<Array<Maybe<TemporaryDocumentContent>>>;
   temporaryDocumentList?: Maybe<TemporaryDocumentHeaderTypeConnection>;
   tenantUserItems?: Maybe<Array<Maybe<TenantUser>>>;
@@ -1658,6 +1734,19 @@ export type BusinessSchemaQueryPostalJobListArgs = {
 };
 
 
+export type BusinessSchemaQueryPostalParameterConfigurationItemsArgs = {
+  idList: Array<Scalars['String']>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryPostalParameterConfigurationListArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  params?: InputMaybe<PostalParameterConfigurationQueryParams>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
 export type BusinessSchemaQueryProcessingJobCountStatisticsArgs = {
   tenantId?: InputMaybe<Scalars['String']>;
 };
@@ -1679,6 +1768,53 @@ export type BusinessSchemaQueryServiceItemsArgs = {
 export type BusinessSchemaQueryServiceListArgs = {
   after?: InputMaybe<Scalars['String']>;
   params?: InputMaybe<ServiceQueryParams>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryStatusActionListArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  params?: InputMaybe<StatusActionQueryParams>;
+};
+
+
+export type BusinessSchemaQueryTemplateContentItemsArgs = {
+  idList: Array<Scalars['String']>;
+  language?: InputMaybe<Language>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryTemplateContentListArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  language?: InputMaybe<Language>;
+  params?: InputMaybe<TemplateContentQueryParams>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryTemplateStructureItemsArgs = {
+  idList: Array<Scalars['String']>;
+  language?: InputMaybe<Language>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryTemplateStructureListArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  language?: InputMaybe<Language>;
+  params?: InputMaybe<TemplateStructureQueryParams>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryTemplateVariableListArgs = {
+  ancestorIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  documentTypeId?: InputMaybe<Scalars['String']>;
+  domainId?: InputMaybe<Scalars['String']>;
+  natureId?: InputMaybe<Scalars['String']>;
+  notificationType: TemplateContentNotificationType;
+  serviceId?: InputMaybe<Scalars['String']>;
   tenantId?: InputMaybe<Scalars['String']>;
 };
 
@@ -2139,10 +2275,12 @@ export type Document = {
   hash: Scalars['String'];
   id: Scalars['String'];
   jobIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  jobMessageStatusCounts?: Maybe<Array<Maybe<JobMessageStatusCount>>>;
   lastModificationDate?: Maybe<Scalars['DateTime']>;
   lastModificationUserId?: Maybe<Scalars['String']>;
   lastModificationUserLabel?: Maybe<Scalars['String']>;
   metadata?: Maybe<Array<Maybe<KeyValue>>>;
+  primaryJobMessageId?: Maybe<Scalars['String']>;
   readDate?: Maybe<Scalars['DateTime']>;
   sentDate?: Maybe<Scalars['DateTime']>;
   signRequired: Scalars['Boolean'];
@@ -2322,6 +2460,7 @@ export type DocumentJobInput = {
   emailAdhocRecipients?: InputMaybe<Array<InputMaybe<EmailAdhocRecipientInput>>>;
   note?: InputMaybe<Scalars['String']>;
   postalAdhocRecipients?: InputMaybe<Array<InputMaybe<PostalAdhocRecipientInput>>>;
+  postalParameter?: InputMaybe<PostalParameter>;
   serviceId?: InputMaybe<Scalars['String']>;
   thirdPartyRecipients?: InputMaybe<Array<InputMaybe<ThirdPartyRecipientInput>>>;
   trackingId?: InputMaybe<Scalars['String']>;
@@ -2664,6 +2803,8 @@ export type DocumentTypeTypeConnection = {
 export enum DomainRightType {
   /** Create tenants */
   AddTenant = 'ADD_TENANT',
+  /** CancelJobMessage */
+  CancelJobMessage = 'CANCEL_JOB_MESSAGE',
   /** Create or edit configurations */
   ChangeConfiguration = 'CHANGE_CONFIGURATION',
   /** Create, edit or delete dashboards */
@@ -2676,6 +2817,8 @@ export enum DomainRightType {
   ChangeDomainUser = 'CHANGE_DOMAIN_USER',
   /** Create or edit OMS resources */
   ChangeOmsResources = 'CHANGE_OMS_RESOURCES',
+  /** Create, edit or delete postal parameter configurations */
+  ChangePostalParameterConfiguration = 'CHANGE_POSTAL_PARAMETER_CONFIGURATION',
   /** Create or edit PowerBi auth token */
   ChangePowerBiAuthToken = 'CHANGE_POWER_BI_AUTH_TOKEN',
   /** Create or edit products */
@@ -2686,6 +2829,8 @@ export enum DomainRightType {
   ChangeTemplateContent = 'CHANGE_TEMPLATE_CONTENT',
   /** Create, edit or delete template structures */
   ChangeTemplateStructure = 'CHANGE_TEMPLATE_STRUCTURE',
+  /** Create, edit or delete template contents */
+  ChangeTemplateVariableConfiguration = 'CHANGE_TEMPLATE_VARIABLE_CONFIGURATION',
   /** Create, edit or renew Api users */
   ChangeTenantApiUser = 'CHANGE_TENANT_API_USER',
   /** Create or edit tenant internal info */
@@ -2708,14 +2853,20 @@ export enum DomainRightType {
   ReadDomainApiUser = 'READ_DOMAIN_API_USER',
   /** Get or list OMS resources */
   ReadOmsResources = 'READ_OMS_RESOURCES',
+  /** Get or list postal parameter configurations */
+  ReadPostalParameterConfiguration = 'READ_POSTAL_PARAMETER_CONFIGURATION',
   /** Get or list products */
   ReadProduct = 'READ_PRODUCT',
   /** Get or list product installs */
   ReadProductInstall = 'READ_PRODUCT_INSTALL',
+  /** Get or list status actions */
+  ReadStatusAction = 'READ_STATUS_ACTION',
   /** Get or list template contents */
   ReadTemplateContent = 'READ_TEMPLATE_CONTENT',
   /** Get or list template structures */
   ReadTemplateStructure = 'READ_TEMPLATE_STRUCTURE',
+  /** Get or list template variables configuration */
+  ReadTemplateVariableConfiguration = 'READ_TEMPLATE_VARIABLE_CONFIGURATION',
   /** Get or list tenants */
   ReadTenant = 'READ_TENANT',
   /** Get or list Api users */
@@ -2836,6 +2987,7 @@ export type DomainUserTypeConnection = {
 export type EmailAdhocRecipientInput = {
   documentTransmissionMode: DocumentTransmissionMode;
   email: Scalars['String'];
+  isPrimary?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
 
@@ -2888,6 +3040,7 @@ export enum EngineEventAction {
   AddAttachmentsDocument = 'ADD_ATTACHMENTS_DOCUMENT',
   ArchiveDocument = 'ARCHIVE_DOCUMENT',
   CancelDocument = 'CANCEL_DOCUMENT',
+  CancelJobMessage = 'CANCEL_JOB_MESSAGE',
   ChangeStatusChorusB_2G = 'CHANGE_STATUS_CHORUS_B_2_G',
   CompleteChorusB_2G = 'COMPLETE_CHORUS_B_2_G',
   CreateJob = 'CREATE_JOB',
@@ -2927,6 +3080,8 @@ export enum EnvironmentRightType {
   ReadContactFunction = 'READ_CONTACT_FUNCTION',
   /** Get or list Environment Api users */
   ReadEnvironmentApiUser = 'READ_ENVIRONMENT_API_USER',
+  /** Get or list status actions */
+  ReadStatusAction = 'READ_STATUS_ACTION',
   /** Get or list third party types */
   ReadThirdPartyType = 'READ_THIRD_PARTY_TYPE'
 }
@@ -3397,6 +3552,15 @@ export type InboundSmsTypeConnection = {
   pageInfo?: Maybe<PageInfo>;
 };
 
+export enum InheritedConfigurationOwnerType {
+  DocumentType = 'DOCUMENT_TYPE',
+  Domain = 'DOMAIN',
+  Nature = 'NATURE',
+  Service = 'SERVICE',
+  System = 'SYSTEM',
+  Tenant = 'TENANT'
+}
+
 export type Job = {
   __typename?: 'Job';
   completedDate?: Maybe<Scalars['DateTime']>;
@@ -3620,15 +3784,17 @@ export type JobMessage = {
   /** @deprecated This property has been deprecated. Use Documents instead. */
   documentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   documents?: Maybe<Array<Maybe<JobMessageDocument>>>;
-  emailAddress: Scalars['String'];
-  hasReadDocument: Scalars['Boolean'];
+  emailAddress?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  isPrimary?: Maybe<Scalars['Boolean']>;
   jobId: Scalars['String'];
   lastModificationDate?: Maybe<Scalars['DateTime']>;
   lastModificationUserId?: Maybe<Scalars['String']>;
   lastModificationUserLabel?: Maybe<Scalars['String']>;
   messageType: JobMessageType;
   name?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<PostalAddress>;
+  readDocumentDate?: Maybe<Scalars['DateTime']>;
   recipientName: Scalars['String'];
   retryCount: Scalars['Int'];
   status: JobMessageStatus;
@@ -3645,8 +3811,35 @@ export type JobMessageActionOptions = {
 };
 
 export enum JobMessageActionType {
-  None = 'NONE'
+  Cancel = 'CANCEL'
 }
+
+export type JobMessageBaseDateFilter = {
+  field: JobMessageDateFilterField;
+  filterValue1?: InputMaybe<Scalars['DateTime']>;
+  filterValue2?: InputMaybe<Scalars['DateTime']>;
+  operator: NumberFilterOperator;
+};
+
+export type JobMessageBaseJobMessageStatusEnumFilter = {
+  field: JobMessageStatusFilterField;
+  filterValue1: JobMessageStatus;
+  filterValue2?: InputMaybe<JobMessageStatus>;
+  operator: NumberFilterOperator;
+};
+
+export type JobMessageBaseJobMessageTransmissionStatusEnumFilter = {
+  field: JobMessageTransmissionStatusFilterField;
+  filterValue1: JobMessageTransmissionStatus;
+  filterValue2?: InputMaybe<JobMessageTransmissionStatus>;
+  operator: NumberFilterOperator;
+};
+
+export type JobMessageBaseStringFilter = {
+  field: JobMessageStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
 
 export enum JobMessageChorusActionType {
   Complete = 'COMPLETE',
@@ -3680,13 +3873,6 @@ export enum JobMessageChorusStatus {
   WrongValidatorBySupplier = 'WRONG_VALIDATOR_BY_SUPPLIER'
 }
 
-export type JobMessageDateFilter = {
-  field: JobMessageDateFilterField;
-  filterValue1?: InputMaybe<Scalars['DateTime']>;
-  filterValue2?: InputMaybe<Scalars['DateTime']>;
-  operator: NumberFilterOperator;
-};
-
 export enum JobMessageDateFilterField {
   CreationDate = 'CREATION_DATE'
 }
@@ -3697,27 +3883,13 @@ export type JobMessageDocument = {
   documentId: Scalars['String'];
 };
 
-export type JobMessageJobMessageStatusEnumFilter = {
-  field: JobMessageStatusFilterField;
-  filterValue1: JobMessageStatus;
-  filterValue2?: InputMaybe<JobMessageStatus>;
-  operator: NumberFilterOperator;
-};
-
-export type JobMessageJobMessageTransmissionStatusEnumFilter = {
-  field: JobMessageTransmissionStatusFilterField;
-  filterValue1: JobMessageTransmissionStatus;
-  filterValue2?: InputMaybe<JobMessageTransmissionStatus>;
-  operator: NumberFilterOperator;
-};
-
 export type JobMessageQueryParams = {
-  dateFilters?: InputMaybe<Array<InputMaybe<JobMessageDateFilter>>>;
+  dateFilters?: InputMaybe<Array<InputMaybe<JobMessageBaseDateFilter>>>;
   sortDirection?: InputMaybe<SortDirection>;
   sortField?: InputMaybe<JobMessageSortField>;
-  statusFilters?: InputMaybe<Array<InputMaybe<JobMessageJobMessageStatusEnumFilter>>>;
-  stringFilters?: InputMaybe<Array<InputMaybe<JobMessageStringFilter>>>;
-  transmissionStatusFilters?: InputMaybe<Array<InputMaybe<JobMessageJobMessageTransmissionStatusEnumFilter>>>;
+  statusFilters?: InputMaybe<Array<InputMaybe<JobMessageBaseJobMessageStatusEnumFilter>>>;
+  stringFilters?: InputMaybe<Array<InputMaybe<JobMessageBaseStringFilter>>>;
+  transmissionStatusFilters?: InputMaybe<Array<InputMaybe<JobMessageBaseJobMessageTransmissionStatusEnumFilter>>>;
 };
 
 export enum JobMessageSortField {
@@ -3728,20 +3900,23 @@ export enum JobMessageSortField {
 
 export enum JobMessageStatus {
   Canceled = 'CANCELED',
-  Complete = 'COMPLETE',
+  Completed = 'COMPLETED',
   Error = 'ERROR',
   Processing = 'PROCESSING'
 }
 
+export type JobMessageStatusCount = {
+  __typename?: 'JobMessageStatusCount';
+  canceledCount: Scalars['Int'];
+  completedCount: Scalars['Int'];
+  errorCount: Scalars['Int'];
+  totalCount: Scalars['Int'];
+  type: JobMessageType;
+};
+
 export enum JobMessageStatusFilterField {
   Status = 'STATUS'
 }
-
-export type JobMessageStringFilter = {
-  field: JobMessageStringFilterField;
-  filterValue1: Scalars['String'];
-  operator: StringFilterOperator;
-};
 
 export enum JobMessageStringFilterField {
   DocumentId = 'DOCUMENT_ID',
@@ -4301,21 +4476,18 @@ export type PostalAddress = {
 export type PostalAddressInput = {
   additionalGeographicInfo?: InputMaybe<Scalars['String']>;
   additionalInfo?: InputMaybe<Scalars['String']>;
-  city?: InputMaybe<Scalars['String']>;
-  country?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  postBox?: InputMaybe<Scalars['String']>;
-  street?: InputMaybe<Scalars['String']>;
-  zipCode?: InputMaybe<Scalars['String']>;
-};
-
-export type PostalAdhocRecipientInput = {
-  addressLine1: Scalars['String'];
-  addressLine2: Scalars['String'];
   city: Scalars['String'];
   country: Scalars['String'];
   name: Scalars['String'];
-  postalCode: Scalars['String'];
+  postBox?: InputMaybe<Scalars['String']>;
+  street: Scalars['String'];
+  zipCode: Scalars['String'];
+};
+
+export type PostalAdhocRecipientInput = {
+  address?: InputMaybe<PostalAddressInput>;
+  isPrimary?: InputMaybe<Scalars['Boolean']>;
+  name: Scalars['String'];
 };
 
 export type PostalJob = {
@@ -4384,10 +4556,73 @@ export type PostalJobTypeConnection = {
 export type PostalParameter = {
   envelope?: InputMaybe<EnvelopeType>;
   lreArManagement?: InputMaybe<LreArManagementType>;
+  mergeDocuments?: InputMaybe<Scalars['Boolean']>;
   printBothSide?: InputMaybe<Scalars['Boolean']>;
   printColor?: InputMaybe<Scalars['Boolean']>;
   sender?: InputMaybe<PostalAddressInput>;
   stamp?: InputMaybe<StampType>;
+};
+
+export type PostalParameterConfiguration = {
+  __typename?: 'PostalParameterConfiguration';
+  creationDate?: Maybe<Scalars['DateTime']>;
+  creationUserId?: Maybe<Scalars['String']>;
+  creationUserLabel?: Maybe<Scalars['String']>;
+  envelope?: Maybe<EnvelopeType>;
+  id: Scalars['String'];
+  lastModificationDate?: Maybe<Scalars['DateTime']>;
+  lastModificationUserId?: Maybe<Scalars['String']>;
+  lastModificationUserLabel?: Maybe<Scalars['String']>;
+  lreArManagement?: Maybe<LreArManagementType>;
+  mergeDocuments?: Maybe<Scalars['Boolean']>;
+  ownerId?: Maybe<Scalars['String']>;
+  ownerType: InheritedConfigurationOwnerType;
+  printBothSide?: Maybe<Scalars['Boolean']>;
+  printColor?: Maybe<Scalars['Boolean']>;
+  sender?: Maybe<PostalAddress>;
+  stamp?: Maybe<StampType>;
+};
+
+export type PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilter = {
+  field: PostalParameterConfigurationOwnerTypeFilterField;
+  filterValue1: InheritedConfigurationOwnerType;
+  filterValue2?: InputMaybe<InheritedConfigurationOwnerType>;
+  operator: NumberFilterOperator;
+};
+
+export type PostalParameterConfigurationInput = {
+  envelope?: InputMaybe<EnvelopeType>;
+  id?: InputMaybe<Scalars['String']>;
+  lreArManagement?: InputMaybe<LreArManagementType>;
+  mergeDocuments?: InputMaybe<Scalars['Boolean']>;
+  ownerId: Scalars['String'];
+  ownerType: InheritedConfigurationOwnerType;
+  printBothSide?: InputMaybe<Scalars['Boolean']>;
+  printColor?: InputMaybe<Scalars['Boolean']>;
+  sender?: InputMaybe<PostalAddressInput>;
+  stamp?: InputMaybe<StampType>;
+};
+
+export enum PostalParameterConfigurationOwnerTypeFilterField {
+  OwnerType = 'OWNER_TYPE'
+}
+
+export type PostalParameterConfigurationQueryParams = {
+  ownerId: Scalars['String'];
+  ownerTypeFilters?: InputMaybe<Array<InputMaybe<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilter>>>;
+  sortDirection?: InputMaybe<SortDirection>;
+  sortField?: InputMaybe<PostalParameterConfigurationSortField>;
+};
+
+export enum PostalParameterConfigurationSortField {
+  CreationDate = 'CREATION_DATE',
+  LastModificationDate = 'LAST_MODIFICATION_DATE'
+}
+
+export type PostalParameterConfigurationTypeConnection = {
+  __typename?: 'PostalParameterConfigurationTypeConnection';
+  edges?: Maybe<Array<Maybe<PostalParameterConfiguration>>>;
+  pageInfo?: Maybe<PageInfo>;
 };
 
 export type PowerBiAuthToken = {
@@ -4509,6 +4744,8 @@ export enum RightType {
   AddEnvironment = 'ADD_ENVIRONMENT',
   /** Create tenants */
   AddTenant = 'ADD_TENANT',
+  /** CancelJobMessage */
+  CancelJobMessage = 'CANCEL_JOB_MESSAGE',
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
   /** Create, edit or delete document links */
@@ -4549,6 +4786,8 @@ export enum RightType {
   ChangeOmsResources = 'CHANGE_OMS_RESOURCES',
   /** Create postalJob */
   ChangePostalJob = 'CHANGE_POSTAL_JOB',
+  /** Create, edit or delete postal parameter configurations */
+  ChangePostalParameterConfiguration = 'CHANGE_POSTAL_PARAMETER_CONFIGURATION',
   /** Create or edit PowerBi auth token */
   ChangePowerBiAuthToken = 'CHANGE_POWER_BI_AUTH_TOKEN',
   /** Create or edit products */
@@ -4561,6 +4800,8 @@ export enum RightType {
   ChangeTemplateContent = 'CHANGE_TEMPLATE_CONTENT',
   /** Create, edit or delete template structures */
   ChangeTemplateStructure = 'CHANGE_TEMPLATE_STRUCTURE',
+  /** Create, edit or delete template contents */
+  ChangeTemplateVariableConfiguration = 'CHANGE_TEMPLATE_VARIABLE_CONFIGURATION',
   /** Create, edit or renew Api users */
   ChangeTenantApiUser = 'CHANGE_TENANT_API_USER',
   /** Create or edit tenant internal info */
@@ -4627,6 +4868,8 @@ export enum RightType {
   ReadOmsResources = 'READ_OMS_RESOURCES',
   /** Get or list postalJobs */
   ReadPostalJob = 'READ_POSTAL_JOB',
+  /** Get or list postal parameter configurations */
+  ReadPostalParameterConfiguration = 'READ_POSTAL_PARAMETER_CONFIGURATION',
   /** Get or list products */
   ReadProduct = 'READ_PRODUCT',
   /** Get or list product installs */
@@ -4635,10 +4878,14 @@ export enum RightType {
   ReadRight = 'READ_RIGHT',
   /** Get or list services */
   ReadService = 'READ_SERVICE',
+  /** Get or list status actions */
+  ReadStatusAction = 'READ_STATUS_ACTION',
   /** Get or list template contents */
   ReadTemplateContent = 'READ_TEMPLATE_CONTENT',
   /** Get or list template structures */
   ReadTemplateStructure = 'READ_TEMPLATE_STRUCTURE',
+  /** Get or list template variables configuration */
+  ReadTemplateVariableConfiguration = 'READ_TEMPLATE_VARIABLE_CONFIGURATION',
   /** Get or list tenants */
   ReadTenant = 'READ_TENANT',
   /** Get or list Api users */
@@ -4829,6 +5076,48 @@ export enum StampType {
   Recommande = 'RECOMMANDE'
 }
 
+export type StatusAction = {
+  __typename?: 'StatusAction';
+  action: Scalars['String'];
+  category: Scalars['String'];
+  creationDate?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  lastModificationDate?: Maybe<Scalars['DateTime']>;
+  status: Scalars['String'];
+};
+
+export type StatusActionQueryParams = {
+  sortDirection?: InputMaybe<SortDirection>;
+  sortField?: InputMaybe<StatusActionSortField>;
+  stringFilters?: InputMaybe<Array<InputMaybe<StatusActionStringFilter>>>;
+};
+
+export enum StatusActionSortField {
+  Action = 'ACTION',
+  Category = 'CATEGORY',
+  Id = 'ID',
+  Status = 'STATUS'
+}
+
+export type StatusActionStringFilter = {
+  field: StatusActionStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
+
+export enum StatusActionStringFilterField {
+  Action = 'ACTION',
+  Category = 'CATEGORY',
+  Id = 'ID',
+  Status = 'STATUS'
+}
+
+export type StatusActionTypeConnection = {
+  __typename?: 'StatusActionTypeConnection';
+  edges?: Maybe<Array<Maybe<StatusAction>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
 export enum StringFilterOperator {
   Contain = 'CONTAIN',
   Defined = 'DEFINED',
@@ -4845,6 +5134,236 @@ export enum StringFilterOperator {
   StartWith = 'START_WITH',
   Undefined = 'UNDEFINED'
 }
+
+export type TemplateContent = {
+  __typename?: 'TemplateContent';
+  content: Scalars['String'];
+  creationDate: Scalars['DateTime'];
+  id: Scalars['String'];
+  isEnabled: Scalars['Boolean'];
+  notificationType: TemplateContentNotificationType;
+  ownerId?: Maybe<Scalars['String']>;
+  ownerType: InheritedConfigurationOwnerType;
+  subject?: Maybe<Scalars['String']>;
+  transmissionType: TemplateContentTransmissionType;
+};
+
+export type TemplateContentBoolFilter = {
+  field: TemplateContentBoolFilterField;
+  filterValue1: Scalars['Boolean'];
+  operator: BoolFilterOperator;
+};
+
+export enum TemplateContentBoolFilterField {
+  IsEnabled = 'IS_ENABLED'
+}
+
+export type TemplateContentDateFilter = {
+  field: TemplateContentDateFilterField;
+  filterValue1?: InputMaybe<Scalars['DateTime']>;
+  filterValue2?: InputMaybe<Scalars['DateTime']>;
+  operator: NumberFilterOperator;
+};
+
+export enum TemplateContentDateFilterField {
+  CreationDate = 'CREATION_DATE'
+}
+
+export type TemplateContentInheritedConfigurationOwnerTypeEnumFilter = {
+  field: TemplateContentOwnerTypeFilterField;
+  filterValue1: InheritedConfigurationOwnerType;
+  filterValue2?: InputMaybe<InheritedConfigurationOwnerType>;
+  operator: NumberFilterOperator;
+};
+
+export type TemplateContentInput = {
+  content: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  isEnabled: Scalars['Boolean'];
+  notificationType: TemplateContentNotificationType;
+  ownerId?: InputMaybe<Scalars['String']>;
+  ownerType: InheritedConfigurationOwnerType;
+  subject?: InputMaybe<Scalars['String']>;
+  transmissionType: TemplateContentTransmissionType;
+};
+
+export enum TemplateContentNotificationType {
+  AddUserToTenant = 'ADD_USER_TO_TENANT',
+  DocumentNotification = 'DOCUMENT_NOTIFICATION',
+  DocumentNotificationLink = 'DOCUMENT_NOTIFICATION_LINK',
+  DocumentNotificationWithLink = 'DOCUMENT_NOTIFICATION_WITH_LINK',
+  Ere = 'ERE',
+  EreAnonymous = 'ERE_ANONYMOUS',
+  InternalNotArchivedFiles = 'INTERNAL_NOT_ARCHIVED_FILES',
+  InviteUser = 'INVITE_USER',
+  Lse = 'LSE',
+  LseAnonymous = 'LSE_ANONYMOUS',
+  LseEreEndOfJob = 'LSE_ERE_END_OF_JOB',
+  NewUserLogin = 'NEW_USER_LOGIN',
+  NewUserPassword = 'NEW_USER_PASSWORD'
+}
+
+export enum TemplateContentNotificationTypeFilterField {
+  NotificationType = 'NOTIFICATION_TYPE'
+}
+
+export enum TemplateContentOwnerTypeFilterField {
+  OwnerType = 'OWNER_TYPE'
+}
+
+export type TemplateContentQueryParams = {
+  boolFilters?: InputMaybe<Array<InputMaybe<TemplateContentBoolFilter>>>;
+  dateFilters?: InputMaybe<Array<InputMaybe<TemplateContentDateFilter>>>;
+  notificationTypeFilters?: InputMaybe<Array<InputMaybe<TemplateContentTemplateContentNotificationTypeEnumFilter>>>;
+  ownerTypeFilters?: InputMaybe<Array<InputMaybe<TemplateContentInheritedConfigurationOwnerTypeEnumFilter>>>;
+  sortDirection?: InputMaybe<SortDirection>;
+  sortField?: InputMaybe<TemplateContentSortField>;
+  stringFilters?: InputMaybe<Array<InputMaybe<TemplateContentStringFilter>>>;
+  transmissionTypeFilters?: InputMaybe<Array<InputMaybe<TemplateContentTemplateContentTransmissionTypeEnumFilter>>>;
+};
+
+export enum TemplateContentSortField {
+  CreationDate = 'CREATION_DATE',
+  IsEnabled = 'IS_ENABLED',
+  NotificationType = 'NOTIFICATION_TYPE',
+  OwnerId = 'OWNER_ID',
+  OwnerType = 'OWNER_TYPE',
+  Subject = 'SUBJECT',
+  TransmissionType = 'TRANSMISSION_TYPE'
+}
+
+export type TemplateContentStringFilter = {
+  field: TemplateContentStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
+
+export enum TemplateContentStringFilterField {
+  Id = 'ID',
+  OwnerId = 'OWNER_ID',
+  Subject = 'SUBJECT'
+}
+
+export type TemplateContentTemplateContentNotificationTypeEnumFilter = {
+  field: TemplateContentNotificationTypeFilterField;
+  filterValue1: TemplateContentNotificationType;
+  filterValue2?: InputMaybe<TemplateContentNotificationType>;
+  operator: NumberFilterOperator;
+};
+
+export type TemplateContentTemplateContentTransmissionTypeEnumFilter = {
+  field: TemplateContentTransmissionTypeFilterField;
+  filterValue1: TemplateContentTransmissionType;
+  filterValue2?: InputMaybe<TemplateContentTransmissionType>;
+  operator: NumberFilterOperator;
+};
+
+export enum TemplateContentTransmissionType {
+  Email = 'EMAIL',
+  Sms = 'SMS',
+  WebNotification = 'WEB_NOTIFICATION'
+}
+
+export enum TemplateContentTransmissionTypeFilterField {
+  TransmissionType = 'TRANSMISSION_TYPE'
+}
+
+export type TemplateContentTypeConnection = {
+  __typename?: 'TemplateContentTypeConnection';
+  edges?: Maybe<Array<Maybe<TemplateContent>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type TemplateStructure = {
+  __typename?: 'TemplateStructure';
+  contentBase64: Scalars['String'];
+  contentId: Scalars['String'];
+  creationDate: Scalars['DateTime'];
+  id: Scalars['String'];
+  isEnabled: Scalars['Boolean'];
+  ownerId?: Maybe<Scalars['String']>;
+  ownerType: InheritedConfigurationOwnerType;
+};
+
+export type TemplateStructureBoolFilter = {
+  field: TemplateStructureBoolFilterField;
+  filterValue1: Scalars['Boolean'];
+  operator: BoolFilterOperator;
+};
+
+export enum TemplateStructureBoolFilterField {
+  IsEnabled = 'IS_ENABLED'
+}
+
+export type TemplateStructureDateFilter = {
+  field: TemplateStructureDateFilterField;
+  filterValue1?: InputMaybe<Scalars['DateTime']>;
+  filterValue2?: InputMaybe<Scalars['DateTime']>;
+  operator: NumberFilterOperator;
+};
+
+export enum TemplateStructureDateFilterField {
+  CreationDate = 'CREATION_DATE'
+}
+
+export type TemplateStructureInheritedConfigurationOwnerTypeEnumFilter = {
+  field: TemplateStructureOwnerTypeFilterField;
+  filterValue1: InheritedConfigurationOwnerType;
+  filterValue2?: InputMaybe<InheritedConfigurationOwnerType>;
+  operator: NumberFilterOperator;
+};
+
+export type TemplateStructureInput = {
+  contentBase64: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  isEnabled: Scalars['Boolean'];
+  ownerId?: InputMaybe<Scalars['String']>;
+  ownerType: InheritedConfigurationOwnerType;
+};
+
+export enum TemplateStructureOwnerTypeFilterField {
+  OwnerType = 'OWNER_TYPE'
+}
+
+export type TemplateStructureQueryParams = {
+  boolFilters?: InputMaybe<Array<InputMaybe<TemplateStructureBoolFilter>>>;
+  dateFilters?: InputMaybe<Array<InputMaybe<TemplateStructureDateFilter>>>;
+  ownerTypeFilters?: InputMaybe<Array<InputMaybe<TemplateStructureInheritedConfigurationOwnerTypeEnumFilter>>>;
+  sortDirection?: InputMaybe<SortDirection>;
+  sortField?: InputMaybe<TemplateStructureSortField>;
+  stringFilters?: InputMaybe<Array<InputMaybe<TemplateStructureStringFilter>>>;
+};
+
+export enum TemplateStructureSortField {
+  CreationDate = 'CREATION_DATE',
+  IsEnabled = 'IS_ENABLED',
+  OwnerId = 'OWNER_ID',
+  OwnerType = 'OWNER_TYPE'
+}
+
+export type TemplateStructureStringFilter = {
+  field: TemplateStructureStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
+
+export enum TemplateStructureStringFilterField {
+  Id = 'ID',
+  OwnerId = 'OWNER_ID'
+}
+
+export type TemplateStructureTypeConnection = {
+  __typename?: 'TemplateStructureTypeConnection';
+  edges?: Maybe<Array<Maybe<TemplateStructure>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type TemplateVariable = {
+  __typename?: 'TemplateVariable';
+  description?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  replacementTag: Scalars['String'];
+};
 
 export type TemporaryDocumentContent = {
   __typename?: 'TemporaryDocumentContent';
@@ -4932,6 +5451,8 @@ export type TemporaryDocumentHeaderTypeConnection = {
 
 /** The application rights for tenant user. */
 export enum TenantRightType {
+  /** CancelJobMessage */
+  CancelJobMessage = 'CANCEL_JOB_MESSAGE',
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
   /** Create, edit or delete document links */
@@ -4960,12 +5481,16 @@ export enum TenantRightType {
   ChangeOmsResources = 'CHANGE_OMS_RESOURCES',
   /** Create, edit or delete mailJob */
   ChangePostalJob = 'CHANGE_POSTAL_JOB',
+  /** Create, edit or delete postal parameter configurations */
+  ChangePostalParameterConfiguration = 'CHANGE_POSTAL_PARAMETER_CONFIGURATION',
   /** Create, edit or delete services */
   ChangeService = 'CHANGE_SERVICE',
   /** Create, edit or delete template contents */
   ChangeTemplateContent = 'CHANGE_TEMPLATE_CONTENT',
   /** Create, edit or delete template structures */
   ChangeTemplateStructure = 'CHANGE_TEMPLATE_STRUCTURE',
+  /** Create, edit or delete template contents */
+  ChangeTemplateVariableConfiguration = 'CHANGE_TEMPLATE_VARIABLE_CONFIGURATION',
   /** Create, edit or renew Api users */
   ChangeTenantApiUser = 'CHANGE_TENANT_API_USER',
   /** Create or edit tenant internal info */
@@ -5012,12 +5537,18 @@ export enum TenantRightType {
   ReadOmsResources = 'READ_OMS_RESOURCES',
   /** Get or list mailJob */
   ReadPostalJob = 'READ_POSTAL_JOB',
+  /** Get or list postal parameter configurations */
+  ReadPostalParameterConfiguration = 'READ_POSTAL_PARAMETER_CONFIGURATION',
   /** Get or list services */
   ReadService = 'READ_SERVICE',
+  /** Get or list status actions */
+  ReadStatusAction = 'READ_STATUS_ACTION',
   /** Get or list template contents */
   ReadTemplateContent = 'READ_TEMPLATE_CONTENT',
   /** Get or list template structures */
   ReadTemplateStructure = 'READ_TEMPLATE_STRUCTURE',
+  /** Get or list template variables configuration */
+  ReadTemplateVariableConfiguration = 'READ_TEMPLATE_VARIABLE_CONFIGURATION',
   /** Get or list tenants */
   ReadTenant = 'READ_TENANT',
   /** Get or list Api users */
@@ -5154,20 +5685,20 @@ export type TenantUserTypeConnection = {
 export type ThirdParty = {
   __typename?: 'ThirdParty';
   address?: Maybe<PostalAddress>;
-  code?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
   contactCount: Scalars['Int'];
   creationDate?: Maybe<Scalars['DateTime']>;
   creationUserId?: Maybe<Scalars['String']>;
   creationUserLabel?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   isEnabled: Scalars['Boolean'];
-  isMoralPerson: Scalars['Boolean'];
   lastModificationDate?: Maybe<Scalars['DateTime']>;
   lastModificationUserId?: Maybe<Scalars['String']>;
   lastModificationUserLabel?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  personType: ThirdPartyPersonType;
   tenantId: Scalars['String'];
-  thirdPartyTypeIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  thirdPartyTypeIds: Array<Maybe<Scalars['String']>>;
 };
 
 export type ThirdPartyBoolFilter = {
@@ -5191,10 +5722,16 @@ export type ThirdPartyInput = {
   code: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
-  isMoralPerson: Scalars['Boolean'];
   name: Scalars['String'];
+  personType: ThirdPartyPersonType;
   thirdPartyTypeIds: Array<Scalars['String']>;
 };
+
+export enum ThirdPartyPersonType {
+  MoralPersonPrivate = 'MORAL_PERSON_PRIVATE',
+  MoralPersonPublic = 'MORAL_PERSON_PUBLIC',
+  PrivatePerson = 'PRIVATE_PERSON'
+}
 
 export type ThirdPartyQueryParams = {
   boolFilters?: InputMaybe<Array<InputMaybe<ThirdPartyBoolFilter>>>;

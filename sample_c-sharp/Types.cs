@@ -171,6 +171,7 @@ namespace GraphQLCodeGen {
       CONTACT,
       EMAIL_ADDRESS,
       EXTERNAL,
+      POSTAL_ADDRESS,
       SERVICE,
       SYSTEM,
       TENANT_USER,
@@ -184,6 +185,7 @@ namespace GraphQLCodeGen {
     
     public enum ActivityCategory {
       ADD_ATTACHMENTS_DOCUMENT,
+      CANCEL_JOB_MESSAGE,
       CHANGE_STATUS_CHORUS_B_2_G,
       COMPLETE_CHORUS_B_2_G,
       DOCUMENT_ARCHIVED,
@@ -1457,6 +1459,9 @@ namespace GraphQLCodeGen {
       [JsonProperty("addPostalJob")]
       public JobCreationResult addPostalJob { get; set; }
     
+      [JsonProperty("addPostalParameterConfiguration")]
+      public PostalParameterConfiguration addPostalParameterConfiguration { get; set; }
+    
       [JsonProperty("addPowerBiAuthToken")]
       public PowerBiAuthToken addPowerBiAuthToken { get; set; }
     
@@ -1468,6 +1473,12 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("addSmsJob")]
       public JobResult addSmsJob { get; set; }
+    
+      [JsonProperty("addTemplateContent")]
+      public TemplateContent addTemplateContent { get; set; }
+    
+      [JsonProperty("addTemplateStructure")]
+      public TemplateStructure addTemplateStructure { get; set; }
     
       [JsonProperty("addTemporaryDocument")]
       public TemporaryDocumentContent addTemporaryDocument { get; set; }
@@ -1523,8 +1534,17 @@ namespace GraphQLCodeGen {
       [JsonProperty("deleteNote")]
       public any deleteNote { get; set; }
     
+      [JsonProperty("deletePostalParameterConfiguration")]
+      public any deletePostalParameterConfiguration { get; set; }
+    
       [JsonProperty("deleteService")]
       public any deleteService { get; set; }
+    
+      [JsonProperty("deleteTemplateContent")]
+      public any deleteTemplateContent { get; set; }
+    
+      [JsonProperty("deleteTemplateStructure")]
+      public any deleteTemplateStructure { get; set; }
     
       [JsonProperty("deleteTemporaryDocument")]
       public any deleteTemporaryDocument { get; set; }
@@ -1592,8 +1612,17 @@ namespace GraphQLCodeGen {
       [JsonProperty("editNote")]
       public Note editNote { get; set; }
     
+      [JsonProperty("editPostalParameterConfiguration")]
+      public PostalParameterConfiguration editPostalParameterConfiguration { get; set; }
+    
       [JsonProperty("editService")]
       public Service editService { get; set; }
+    
+      [JsonProperty("editTemplateContent")]
+      public TemplateContent editTemplateContent { get; set; }
+    
+      [JsonProperty("editTemplateStructure")]
+      public TemplateStructure editTemplateStructure { get; set; }
     
       [JsonProperty("editTenantUser")]
       public TenantUser editTenantUser { get; set; }
@@ -1874,6 +1903,12 @@ namespace GraphQLCodeGen {
       [JsonProperty("postalJobList")]
       public PostalJobTypeConnection postalJobList { get; set; }
     
+      [JsonProperty("postalParameterConfigurationItems")]
+      public List<PostalParameterConfiguration> postalParameterConfigurationItems { get; set; }
+    
+      [JsonProperty("postalParameterConfigurationList")]
+      public PostalParameterConfigurationTypeConnection postalParameterConfigurationList { get; set; }
+    
       [JsonProperty("processingJobCountStatistics")]
       public JobCountStatistics processingJobCountStatistics { get; set; }
     
@@ -1888,6 +1923,24 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("serviceList")]
       public ServiceTypeConnection serviceList { get; set; }
+    
+      [JsonProperty("statusActionList")]
+      public StatusActionTypeConnection statusActionList { get; set; }
+    
+      [JsonProperty("templateContentItems")]
+      public List<TemplateContent> templateContentItems { get; set; }
+    
+      [JsonProperty("templateContentList")]
+      public TemplateContentTypeConnection templateContentList { get; set; }
+    
+      [JsonProperty("templateStructureItems")]
+      public List<TemplateStructure> templateStructureItems { get; set; }
+    
+      [JsonProperty("templateStructureList")]
+      public TemplateStructureTypeConnection templateStructureList { get; set; }
+    
+      [JsonProperty("templateVariableList")]
+      public List<TemplateVariable> templateVariableList { get; set; }
     
       [JsonProperty("temporaryDocumentItems")]
       public List<TemporaryDocumentContent> temporaryDocumentItems { get; set; }
@@ -3071,6 +3124,9 @@ namespace GraphQLCodeGen {
       [JsonProperty("jobIds")]
       public List<string> jobIds { get; set; }
     
+      [JsonProperty("jobMessageStatusCounts")]
+      public List<JobMessageStatusCount> jobMessageStatusCounts { get; set; }
+    
       [JsonProperty("lastModificationDate")]
       public any lastModificationDate { get; set; }
     
@@ -3082,6 +3138,9 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("metadata")]
       public List<KeyValue> metadata { get; set; }
+    
+      [JsonProperty("primaryJobMessageId")]
+      public string primaryJobMessageId { get; set; }
     
       [JsonProperty("readDate")]
       public any readDate { get; set; }
@@ -3746,6 +3805,8 @@ namespace GraphQLCodeGen {
       public string note { get; set; }
     
       public List<PostalAdhocRecipientInput> postalAdhocRecipients { get; set; }
+    
+      public PostalParameter postalParameter { get; set; }
     
       public string serviceId { get; set; }
     
@@ -4814,6 +4875,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       ADD_TENANT,
       /// <summary>
+      /// CancelJobMessage
+      /// </summary>
+      CANCEL_JOB_MESSAGE,
+      /// <summary>
       /// Create or edit configurations
       /// </summary>
       CHANGE_CONFIGURATION,
@@ -4838,6 +4903,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_OMS_RESOURCES,
       /// <summary>
+      /// Create, edit or delete postal parameter configurations
+      /// </summary>
+      CHANGE_POSTAL_PARAMETER_CONFIGURATION,
+      /// <summary>
       /// Create or edit PowerBi auth token
       /// </summary>
       CHANGE_POWER_BI_AUTH_TOKEN,
@@ -4857,6 +4926,10 @@ namespace GraphQLCodeGen {
       /// Create, edit or delete template structures
       /// </summary>
       CHANGE_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Create, edit or delete template contents
+      /// </summary>
+      CHANGE_TEMPLATE_VARIABLE_CONFIGURATION,
       /// <summary>
       /// Create, edit or renew Api users
       /// </summary>
@@ -4902,6 +4975,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_OMS_RESOURCES,
       /// <summary>
+      /// Get or list postal parameter configurations
+      /// </summary>
+      READ_POSTAL_PARAMETER_CONFIGURATION,
+      /// <summary>
       /// Get or list products
       /// </summary>
       READ_PRODUCT,
@@ -4910,6 +4987,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_PRODUCT_INSTALL,
       /// <summary>
+      /// Get or list status actions
+      /// </summary>
+      READ_STATUS_ACTION,
+      /// <summary>
       /// Get or list template contents
       /// </summary>
       READ_TEMPLATE_CONTENT,
@@ -4917,6 +4998,10 @@ namespace GraphQLCodeGen {
       /// Get or list template structures
       /// </summary>
       READ_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Get or list template variables configuration
+      /// </summary>
+      READ_TEMPLATE_VARIABLE_CONFIGURATION,
       /// <summary>
       /// Get or list tenants
       /// </summary>
@@ -5283,6 +5368,8 @@ namespace GraphQLCodeGen {
       [JsonRequired]
       public string email { get; set; }
     
+      public bool? isPrimary { get; set; }
+    
       [Required]
       [JsonRequired]
       public string name { get; set; }
@@ -5460,6 +5547,7 @@ namespace GraphQLCodeGen {
       ADD_ATTACHMENTS_DOCUMENT,
       ARCHIVE_DOCUMENT,
       CANCEL_DOCUMENT,
+      CANCEL_JOB_MESSAGE,
       CHANGE_STATUS_CHORUS_B_2_G,
       COMPLETE_CHORUS_B_2_G,
       CREATE_JOB,
@@ -5513,6 +5601,10 @@ namespace GraphQLCodeGen {
       /// Get or list Environment Api users
       /// </summary>
       READ_ENVIRONMENT_API_USER,
+      /// <summary>
+      /// Get or list status actions
+      /// </summary>
+      READ_STATUS_ACTION,
       /// <summary>
       /// Get or list third party types
       /// </summary>
@@ -7100,6 +7192,15 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    public enum InheritedConfigurationOwnerType {
+      DOCUMENT_TYPE,
+      DOMAIN,
+      NATURE,
+      SERVICE,
+      SYSTEM,
+      TENANT
+    }
+    
     
     #region Job
     public class Job {
@@ -7825,11 +7926,11 @@ namespace GraphQLCodeGen {
       [JsonProperty("emailAddress")]
       public string emailAddress { get; set; }
     
-      [JsonProperty("hasReadDocument")]
-      public bool hasReadDocument { get; set; }
-    
       [JsonProperty("id")]
       public string id { get; set; }
+    
+      [JsonProperty("isPrimary")]
+      public bool? isPrimary { get; set; }
     
       [JsonProperty("jobId")]
       public string jobId { get; set; }
@@ -7848,6 +7949,12 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("name")]
       public string name { get; set; }
+    
+      [JsonProperty("postalAddress")]
+      public PostalAddress postalAddress { get; set; }
+    
+      [JsonProperty("readDocumentDate")]
+      public any readDocumentDate { get; set; }
     
       [JsonProperty("recipientName")]
       public string recipientName { get; set; }
@@ -7911,44 +8018,12 @@ namespace GraphQLCodeGen {
     }
     #endregion
     public enum JobMessageActionType {
-      NONE
-    }
-    
-    public enum JobMessageChorusActionType {
-      COMPLETE,
-      SEND
-    }
-    
-    public enum JobMessageChorusStatus {
-      COMPLETED,
-      DRAFT,
-      MADE_AVAILABLE_TO_THE_ACCOUNTING_OFFICER,
-      MADE_AVAILABLE_TO_THE_FIRST_VALIDATOR,
-      MADE_AVAILABLE_TO_THE_RECIPIENT,
-      MADE_AVAILABLE_TO_THE_SECOND_VALIDATOR,
-      MANDATED,
-      POSTED_IN_THE_ACCOUNTS,
-      REJECTED,
-      REJECTED_BY_FIRST_VALIDATOR,
-      REJECTED_BY_SECOND_VALIDATOR,
-      RELEASED_FOR_PAYMENT,
-      SERVICE_RENDERED,
-      SUBMITED,
-      SUSPENDED,
-      TRANSMISSION_IN_PROGRESS,
-      UNKNOWN,
-      VALIDATED_BY_FIRST_VALIDATOR,
-      VALIDATED_BY_SECOND_VALIDATOR,
-      VALIDATION_1_OVER_THE_DEADLINE,
-      VALIDATION_2_OVER_THE_DEADLINE,
-      WRONG_RECEIVER_INFORMATIONS,
-      WRONG_VALIDATOR_BY_COCONTRACTOR,
-      WRONG_VALIDATOR_BY_SUPPLIER
+      CANCEL
     }
     
     
-    #region JobMessageDateFilter
-    public class JobMessageDateFilter {
+    #region JobMessageBaseDateFilter
+    public class JobMessageBaseDateFilter {
       #region members
       [Required]
       [JsonRequired]
@@ -7986,25 +8061,9 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
-    public enum JobMessageDateFilterField {
-      CREATION_DATE
-    }
     
-    
-    #region JobMessageDocument
-    public class JobMessageDocument {
-      #region members
-      [JsonProperty("attachmentIds")]
-      public List<string> attachmentIds { get; set; }
-    
-      [JsonProperty("documentId")]
-      public string documentId { get; set; }
-      #endregion
-    }
-    #endregion
-    
-    #region JobMessageJobMessageStatusEnumFilter
-    public class JobMessageJobMessageStatusEnumFilter {
+    #region JobMessageBaseJobMessageStatusEnumFilter
+    public class JobMessageBaseJobMessageStatusEnumFilter {
       #region members
       [Required]
       [JsonRequired]
@@ -8045,8 +8104,8 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
-    #region JobMessageJobMessageTransmissionStatusEnumFilter
-    public class JobMessageJobMessageTransmissionStatusEnumFilter {
+    #region JobMessageBaseJobMessageTransmissionStatusEnumFilter
+    public class JobMessageBaseJobMessageTransmissionStatusEnumFilter {
       #region members
       [Required]
       [JsonRequired]
@@ -8087,65 +8146,8 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
-    #region JobMessageQueryParams
-    public class JobMessageQueryParams {
-      #region members
-      public List<JobMessageDateFilter> dateFilters { get; set; }
-    
-      public SortDirection? sortDirection { get; set; }
-    
-      public JobMessageSortField? sortField { get; set; }
-    
-      public List<JobMessageJobMessageStatusEnumFilter> statusFilters { get; set; }
-    
-      public List<JobMessageStringFilter> stringFilters { get; set; }
-    
-      public List<JobMessageJobMessageTransmissionStatusEnumFilter> transmissionStatusFilters { get; set; }
-      #endregion
-    
-      #region methods
-      public dynamic GetInputObject()
-      {
-        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
-    
-        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
-        foreach (var propertyInfo in properties)
-        {
-          var value = propertyInfo.GetValue(this);
-          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
-    
-          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
-    
-          if (requiredProp || value != defaultValue)
-          {
-            d[propertyInfo.Name] = value;
-          }
-        }
-        return d;
-      }
-      #endregion
-    }
-    #endregion
-    public enum JobMessageSortField {
-      ID,
-      NAME,
-      TRACKING_ID
-    }
-    
-    public enum JobMessageStatus {
-      CANCELED,
-      COMPLETE,
-      ERROR,
-      PROCESSING
-    }
-    
-    public enum JobMessageStatusFilterField {
-      STATUS
-    }
-    
-    
-    #region JobMessageStringFilter
-    public class JobMessageStringFilter {
+    #region JobMessageBaseStringFilter
+    public class JobMessageBaseStringFilter {
       #region members
       [Required]
       [JsonRequired]
@@ -8183,6 +8185,132 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    public enum JobMessageChorusActionType {
+      COMPLETE,
+      SEND
+    }
+    
+    public enum JobMessageChorusStatus {
+      COMPLETED,
+      DRAFT,
+      MADE_AVAILABLE_TO_THE_ACCOUNTING_OFFICER,
+      MADE_AVAILABLE_TO_THE_FIRST_VALIDATOR,
+      MADE_AVAILABLE_TO_THE_RECIPIENT,
+      MADE_AVAILABLE_TO_THE_SECOND_VALIDATOR,
+      MANDATED,
+      POSTED_IN_THE_ACCOUNTS,
+      REJECTED,
+      REJECTED_BY_FIRST_VALIDATOR,
+      REJECTED_BY_SECOND_VALIDATOR,
+      RELEASED_FOR_PAYMENT,
+      SERVICE_RENDERED,
+      SUBMITED,
+      SUSPENDED,
+      TRANSMISSION_IN_PROGRESS,
+      UNKNOWN,
+      VALIDATED_BY_FIRST_VALIDATOR,
+      VALIDATED_BY_SECOND_VALIDATOR,
+      VALIDATION_1_OVER_THE_DEADLINE,
+      VALIDATION_2_OVER_THE_DEADLINE,
+      WRONG_RECEIVER_INFORMATIONS,
+      WRONG_VALIDATOR_BY_COCONTRACTOR,
+      WRONG_VALIDATOR_BY_SUPPLIER
+    }
+    
+    public enum JobMessageDateFilterField {
+      CREATION_DATE
+    }
+    
+    
+    #region JobMessageDocument
+    public class JobMessageDocument {
+      #region members
+      [JsonProperty("attachmentIds")]
+      public List<string> attachmentIds { get; set; }
+    
+      [JsonProperty("documentId")]
+      public string documentId { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region JobMessageQueryParams
+    public class JobMessageQueryParams {
+      #region members
+      public List<JobMessageBaseDateFilter> dateFilters { get; set; }
+    
+      public SortDirection? sortDirection { get; set; }
+    
+      public JobMessageSortField? sortField { get; set; }
+    
+      public List<JobMessageBaseJobMessageStatusEnumFilter> statusFilters { get; set; }
+    
+      public List<JobMessageBaseStringFilter> stringFilters { get; set; }
+    
+      public List<JobMessageBaseJobMessageTransmissionStatusEnumFilter> transmissionStatusFilters { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum JobMessageSortField {
+      ID,
+      NAME,
+      TRACKING_ID
+    }
+    
+    public enum JobMessageStatus {
+      CANCELED,
+      COMPLETED,
+      ERROR,
+      PROCESSING
+    }
+    
+    
+    #region JobMessageStatusCount
+    public class JobMessageStatusCount {
+      #region members
+      [JsonProperty("canceledCount")]
+      public int canceledCount { get; set; }
+    
+      [JsonProperty("completedCount")]
+      public int completedCount { get; set; }
+    
+      [JsonProperty("errorCount")]
+      public int errorCount { get; set; }
+    
+      [JsonProperty("totalCount")]
+      public int totalCount { get; set; }
+    
+      [JsonProperty("type")]
+      public JobMessageType type { get; set; }
+      #endregion
+    }
+    #endregion
+    public enum JobMessageStatusFilterField {
+      STATUS
+    }
+    
     public enum JobMessageStringFilterField {
       DOCUMENT_ID,
       EXTERNAL_ID,
@@ -9687,16 +9815,26 @@ namespace GraphQLCodeGen {
     
       public string additionalInfo { get; set; }
     
+      [Required]
+      [JsonRequired]
       public string city { get; set; }
     
+      [Required]
+      [JsonRequired]
       public string country { get; set; }
     
+      [Required]
+      [JsonRequired]
       public string name { get; set; }
     
       public string postBox { get; set; }
     
+      [Required]
+      [JsonRequired]
       public string street { get; set; }
     
+      [Required]
+      [JsonRequired]
       public string zipCode { get; set; }
       #endregion
     
@@ -9727,29 +9865,13 @@ namespace GraphQLCodeGen {
     #region PostalAdhocRecipientInput
     public class PostalAdhocRecipientInput {
       #region members
-      [Required]
-      [JsonRequired]
-      public string addressLine1 { get; set; }
+      public PostalAddressInput address { get; set; }
     
-      [Required]
-      [JsonRequired]
-      public string addressLine2 { get; set; }
-    
-      [Required]
-      [JsonRequired]
-      public string city { get; set; }
-    
-      [Required]
-      [JsonRequired]
-      public string country { get; set; }
+      public bool? isPrimary { get; set; }
     
       [Required]
       [JsonRequired]
       public string name { get; set; }
-    
-      [Required]
-      [JsonRequired]
-      public string postalCode { get; set; }
       #endregion
     
       #region methods
@@ -10047,6 +10169,8 @@ namespace GraphQLCodeGen {
     
       public LreArManagementType? lreArManagement { get; set; }
     
+      public bool? mergeDocuments { get; set; }
+    
       public bool? printBothSide { get; set; }
     
       public bool? printColor { get; set; }
@@ -10076,6 +10200,213 @@ namespace GraphQLCodeGen {
         }
         return d;
       }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalParameterConfiguration
+    public class PostalParameterConfiguration {
+      #region members
+      [JsonProperty("creationDate")]
+      public any creationDate { get; set; }
+    
+      [JsonProperty("creationUserId")]
+      public string creationUserId { get; set; }
+    
+      [JsonProperty("creationUserLabel")]
+      public string creationUserLabel { get; set; }
+    
+      [JsonProperty("envelope")]
+      public EnvelopeType? envelope { get; set; }
+    
+      [JsonProperty("id")]
+      public string id { get; set; }
+    
+      [JsonProperty("lastModificationDate")]
+      public any lastModificationDate { get; set; }
+    
+      [JsonProperty("lastModificationUserId")]
+      public string lastModificationUserId { get; set; }
+    
+      [JsonProperty("lastModificationUserLabel")]
+      public string lastModificationUserLabel { get; set; }
+    
+      [JsonProperty("lreArManagement")]
+      public LreArManagementType? lreArManagement { get; set; }
+    
+      [JsonProperty("mergeDocuments")]
+      public bool? mergeDocuments { get; set; }
+    
+      [JsonProperty("ownerId")]
+      public string ownerId { get; set; }
+    
+      [JsonProperty("ownerType")]
+      public InheritedConfigurationOwnerType ownerType { get; set; }
+    
+      [JsonProperty("printBothSide")]
+      public bool? printBothSide { get; set; }
+    
+      [JsonProperty("printColor")]
+      public bool? printColor { get; set; }
+    
+      [JsonProperty("sender")]
+      public PostalAddress sender { get; set; }
+    
+      [JsonProperty("stamp")]
+      public StampType? stamp { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilter
+    public class PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public PostalParameterConfigurationOwnerTypeFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public InheritedConfigurationOwnerType filterValue1 { get; set; }
+    
+      public InheritedConfigurationOwnerType? filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalParameterConfigurationInput
+    public class PostalParameterConfigurationInput {
+      #region members
+      public EnvelopeType? envelope { get; set; }
+    
+      public string id { get; set; }
+    
+      public LreArManagementType? lreArManagement { get; set; }
+    
+      public bool? mergeDocuments { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string ownerId { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public InheritedConfigurationOwnerType ownerType { get; set; }
+    
+      public bool? printBothSide { get; set; }
+    
+      public bool? printColor { get; set; }
+    
+      public PostalAddressInput sender { get; set; }
+    
+      public StampType? stamp { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum PostalParameterConfigurationOwnerTypeFilterField {
+      OWNER_TYPE
+    }
+    
+    
+    #region PostalParameterConfigurationQueryParams
+    public class PostalParameterConfigurationQueryParams {
+      #region members
+      [Required]
+      [JsonRequired]
+      public string ownerId { get; set; }
+    
+      public List<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilter> ownerTypeFilters { get; set; }
+    
+      public SortDirection? sortDirection { get; set; }
+    
+      public PostalParameterConfigurationSortField? sortField { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum PostalParameterConfigurationSortField {
+      CREATION_DATE,
+      LAST_MODIFICATION_DATE
+    }
+    
+    
+    #region PostalParameterConfigurationTypeConnection
+    public class PostalParameterConfigurationTypeConnection {
+      #region members
+      [JsonProperty("edges")]
+      public List<PostalParameterConfiguration> edges { get; set; }
+    
+      [JsonProperty("pageInfo")]
+      public PageInfo pageInfo { get; set; }
       #endregion
     }
     #endregion
@@ -10505,6 +10836,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       ADD_TENANT,
       /// <summary>
+      /// CancelJobMessage
+      /// </summary>
+      CANCEL_JOB_MESSAGE,
+      /// <summary>
       /// Create, edit or delete activities
       /// </summary>
       CHANGE_ACTIVITY,
@@ -10585,6 +10920,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_POSTAL_JOB,
       /// <summary>
+      /// Create, edit or delete postal parameter configurations
+      /// </summary>
+      CHANGE_POSTAL_PARAMETER_CONFIGURATION,
+      /// <summary>
       /// Create or edit PowerBi auth token
       /// </summary>
       CHANGE_POWER_BI_AUTH_TOKEN,
@@ -10608,6 +10947,10 @@ namespace GraphQLCodeGen {
       /// Create, edit or delete template structures
       /// </summary>
       CHANGE_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Create, edit or delete template contents
+      /// </summary>
+      CHANGE_TEMPLATE_VARIABLE_CONFIGURATION,
       /// <summary>
       /// Create, edit or renew Api users
       /// </summary>
@@ -10741,6 +11084,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_POSTAL_JOB,
       /// <summary>
+      /// Get or list postal parameter configurations
+      /// </summary>
+      READ_POSTAL_PARAMETER_CONFIGURATION,
+      /// <summary>
       /// Get or list products
       /// </summary>
       READ_PRODUCT,
@@ -10757,6 +11104,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_SERVICE,
       /// <summary>
+      /// Get or list status actions
+      /// </summary>
+      READ_STATUS_ACTION,
+      /// <summary>
       /// Get or list template contents
       /// </summary>
       READ_TEMPLATE_CONTENT,
@@ -10764,6 +11115,10 @@ namespace GraphQLCodeGen {
       /// Get or list template structures
       /// </summary>
       READ_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Get or list template variables configuration
+      /// </summary>
+      READ_TEMPLATE_VARIABLE_CONFIGURATION,
       /// <summary>
       /// Get or list tenants
       /// </summary>
@@ -11365,6 +11720,130 @@ namespace GraphQLCodeGen {
       RECOMMANDE
     }
     
+    
+    #region StatusAction
+    public class StatusAction {
+      #region members
+      [JsonProperty("action")]
+      public string action { get; set; }
+    
+      [JsonProperty("category")]
+      public string category { get; set; }
+    
+      [JsonProperty("creationDate")]
+      public any creationDate { get; set; }
+    
+      [JsonProperty("id")]
+      public string id { get; set; }
+    
+      [JsonProperty("lastModificationDate")]
+      public any lastModificationDate { get; set; }
+    
+      [JsonProperty("status")]
+      public string status { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region StatusActionQueryParams
+    public class StatusActionQueryParams {
+      #region members
+      public SortDirection? sortDirection { get; set; }
+    
+      public StatusActionSortField? sortField { get; set; }
+    
+      public List<StatusActionStringFilter> stringFilters { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum StatusActionSortField {
+      ACTION,
+      CATEGORY,
+      ID,
+      STATUS
+    }
+    
+    
+    #region StatusActionStringFilter
+    public class StatusActionStringFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public StatusActionStringFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string filterValue1 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public StringFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum StatusActionStringFilterField {
+      ACTION,
+      CATEGORY,
+      ID,
+      STATUS
+    }
+    
+    
+    #region StatusActionTypeConnection
+    public class StatusActionTypeConnection {
+      #region members
+      [JsonProperty("edges")]
+      public List<StatusAction> edges { get; set; }
+    
+      [JsonProperty("pageInfo")]
+      public PageInfo pageInfo { get; set; }
+      #endregion
+    }
+    #endregion
     public enum StringFilterOperator {
       CONTAIN,
       DEFINED,
@@ -11382,6 +11861,777 @@ namespace GraphQLCodeGen {
       UNDEFINED
     }
     
+    
+    #region TemplateContent
+    public class TemplateContent {
+      #region members
+      [JsonProperty("content")]
+      public string content { get; set; }
+    
+      [JsonProperty("creationDate")]
+      public any creationDate { get; set; }
+    
+      [JsonProperty("id")]
+      public string id { get; set; }
+    
+      [JsonProperty("isEnabled")]
+      public bool isEnabled { get; set; }
+    
+      [JsonProperty("notificationType")]
+      public TemplateContentNotificationType notificationType { get; set; }
+    
+      [JsonProperty("ownerId")]
+      public string ownerId { get; set; }
+    
+      [JsonProperty("ownerType")]
+      public InheritedConfigurationOwnerType ownerType { get; set; }
+    
+      [JsonProperty("subject")]
+      public string subject { get; set; }
+    
+      [JsonProperty("transmissionType")]
+      public TemplateContentTransmissionType transmissionType { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region TemplateContentBoolFilter
+    public class TemplateContentBoolFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateContentBoolFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public bool filterValue1 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public BoolFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateContentBoolFilterField {
+      IS_ENABLED
+    }
+    
+    
+    #region TemplateContentDateFilter
+    public class TemplateContentDateFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateContentDateFilterField field { get; set; }
+    
+      public any filterValue1 { get; set; }
+    
+      public any filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateContentDateFilterField {
+      CREATION_DATE
+    }
+    
+    
+    #region TemplateContentInheritedConfigurationOwnerTypeEnumFilter
+    public class TemplateContentInheritedConfigurationOwnerTypeEnumFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateContentOwnerTypeFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public InheritedConfigurationOwnerType filterValue1 { get; set; }
+    
+      public InheritedConfigurationOwnerType? filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region TemplateContentInput
+    public class TemplateContentInput {
+      #region members
+      [Required]
+      [JsonRequired]
+      public string content { get; set; }
+    
+      public string id { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public bool isEnabled { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public TemplateContentNotificationType notificationType { get; set; }
+    
+      public string ownerId { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public InheritedConfigurationOwnerType ownerType { get; set; }
+    
+      public string subject { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public TemplateContentTransmissionType transmissionType { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateContentNotificationType {
+      ADD_USER_TO_TENANT,
+      DOCUMENT_NOTIFICATION,
+      DOCUMENT_NOTIFICATION_LINK,
+      DOCUMENT_NOTIFICATION_WITH_LINK,
+      ERE,
+      ERE_ANONYMOUS,
+      INTERNAL_NOT_ARCHIVED_FILES,
+      INVITE_USER,
+      LSE,
+      LSE_ANONYMOUS,
+      LSE_ERE_END_OF_JOB,
+      NEW_USER_LOGIN,
+      NEW_USER_PASSWORD
+    }
+    
+    public enum TemplateContentNotificationTypeFilterField {
+      NOTIFICATION_TYPE
+    }
+    
+    public enum TemplateContentOwnerTypeFilterField {
+      OWNER_TYPE
+    }
+    
+    
+    #region TemplateContentQueryParams
+    public class TemplateContentQueryParams {
+      #region members
+      public List<TemplateContentBoolFilter> boolFilters { get; set; }
+    
+      public List<TemplateContentDateFilter> dateFilters { get; set; }
+    
+      public List<TemplateContentTemplateContentNotificationTypeEnumFilter> notificationTypeFilters { get; set; }
+    
+      public List<TemplateContentInheritedConfigurationOwnerTypeEnumFilter> ownerTypeFilters { get; set; }
+    
+      public SortDirection? sortDirection { get; set; }
+    
+      public TemplateContentSortField? sortField { get; set; }
+    
+      public List<TemplateContentStringFilter> stringFilters { get; set; }
+    
+      public List<TemplateContentTemplateContentTransmissionTypeEnumFilter> transmissionTypeFilters { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateContentSortField {
+      CREATION_DATE,
+      IS_ENABLED,
+      NOTIFICATION_TYPE,
+      OWNER_ID,
+      OWNER_TYPE,
+      SUBJECT,
+      TRANSMISSION_TYPE
+    }
+    
+    
+    #region TemplateContentStringFilter
+    public class TemplateContentStringFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateContentStringFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string filterValue1 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public StringFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateContentStringFilterField {
+      ID,
+      OWNER_ID,
+      SUBJECT
+    }
+    
+    
+    #region TemplateContentTemplateContentNotificationTypeEnumFilter
+    public class TemplateContentTemplateContentNotificationTypeEnumFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateContentNotificationTypeFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public TemplateContentNotificationType filterValue1 { get; set; }
+    
+      public TemplateContentNotificationType? filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region TemplateContentTemplateContentTransmissionTypeEnumFilter
+    public class TemplateContentTemplateContentTransmissionTypeEnumFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateContentTransmissionTypeFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public TemplateContentTransmissionType filterValue1 { get; set; }
+    
+      public TemplateContentTransmissionType? filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateContentTransmissionType {
+      EMAIL,
+      SMS,
+      WEB_NOTIFICATION
+    }
+    
+    public enum TemplateContentTransmissionTypeFilterField {
+      TRANSMISSION_TYPE
+    }
+    
+    
+    #region TemplateContentTypeConnection
+    public class TemplateContentTypeConnection {
+      #region members
+      [JsonProperty("edges")]
+      public List<TemplateContent> edges { get; set; }
+    
+      [JsonProperty("pageInfo")]
+      public PageInfo pageInfo { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region TemplateStructure
+    public class TemplateStructure {
+      #region members
+      [JsonProperty("contentBase64")]
+      public string contentBase64 { get; set; }
+    
+      [JsonProperty("contentId")]
+      public string contentId { get; set; }
+    
+      [JsonProperty("creationDate")]
+      public any creationDate { get; set; }
+    
+      [JsonProperty("id")]
+      public string id { get; set; }
+    
+      [JsonProperty("isEnabled")]
+      public bool isEnabled { get; set; }
+    
+      [JsonProperty("ownerId")]
+      public string ownerId { get; set; }
+    
+      [JsonProperty("ownerType")]
+      public InheritedConfigurationOwnerType ownerType { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region TemplateStructureBoolFilter
+    public class TemplateStructureBoolFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateStructureBoolFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public bool filterValue1 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public BoolFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateStructureBoolFilterField {
+      IS_ENABLED
+    }
+    
+    
+    #region TemplateStructureDateFilter
+    public class TemplateStructureDateFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateStructureDateFilterField field { get; set; }
+    
+      public any filterValue1 { get; set; }
+    
+      public any filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateStructureDateFilterField {
+      CREATION_DATE
+    }
+    
+    
+    #region TemplateStructureInheritedConfigurationOwnerTypeEnumFilter
+    public class TemplateStructureInheritedConfigurationOwnerTypeEnumFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateStructureOwnerTypeFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public InheritedConfigurationOwnerType filterValue1 { get; set; }
+    
+      public InheritedConfigurationOwnerType? filterValue2 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region TemplateStructureInput
+    public class TemplateStructureInput {
+      #region members
+      [Required]
+      [JsonRequired]
+      public string contentBase64 { get; set; }
+    
+      public string id { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public bool isEnabled { get; set; }
+    
+      public string ownerId { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public InheritedConfigurationOwnerType ownerType { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateStructureOwnerTypeFilterField {
+      OWNER_TYPE
+    }
+    
+    
+    #region TemplateStructureQueryParams
+    public class TemplateStructureQueryParams {
+      #region members
+      public List<TemplateStructureBoolFilter> boolFilters { get; set; }
+    
+      public List<TemplateStructureDateFilter> dateFilters { get; set; }
+    
+      public List<TemplateStructureInheritedConfigurationOwnerTypeEnumFilter> ownerTypeFilters { get; set; }
+    
+      public SortDirection? sortDirection { get; set; }
+    
+      public TemplateStructureSortField? sortField { get; set; }
+    
+      public List<TemplateStructureStringFilter> stringFilters { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateStructureSortField {
+      CREATION_DATE,
+      IS_ENABLED,
+      OWNER_ID,
+      OWNER_TYPE
+    }
+    
+    
+    #region TemplateStructureStringFilter
+    public class TemplateStructureStringFilter {
+      #region members
+      [Required]
+      [JsonRequired]
+      public TemplateStructureStringFilterField field { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string filterValue1 { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public StringFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum TemplateStructureStringFilterField {
+      ID,
+      OWNER_ID
+    }
+    
+    
+    #region TemplateStructureTypeConnection
+    public class TemplateStructureTypeConnection {
+      #region members
+      [JsonProperty("edges")]
+      public List<TemplateStructure> edges { get; set; }
+    
+      [JsonProperty("pageInfo")]
+      public PageInfo pageInfo { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region TemplateVariable
+    public class TemplateVariable {
+      #region members
+      [JsonProperty("description")]
+      public string description { get; set; }
+    
+      [JsonProperty("name")]
+      public string name { get; set; }
+    
+      [JsonProperty("replacementTag")]
+      public string replacementTag { get; set; }
+      #endregion
+    }
+    #endregion
     
     #region TemporaryDocumentContent
     public class TemporaryDocumentContent {
@@ -11663,6 +12913,10 @@ namespace GraphQLCodeGen {
       /// </summary>
     public enum TenantRightType {
       /// <summary>
+      /// CancelJobMessage
+      /// </summary>
+      CANCEL_JOB_MESSAGE,
+      /// <summary>
       /// Create, edit or delete activities
       /// </summary>
       CHANGE_ACTIVITY,
@@ -11719,6 +12973,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_POSTAL_JOB,
       /// <summary>
+      /// Create, edit or delete postal parameter configurations
+      /// </summary>
+      CHANGE_POSTAL_PARAMETER_CONFIGURATION,
+      /// <summary>
       /// Create, edit or delete services
       /// </summary>
       CHANGE_SERVICE,
@@ -11730,6 +12988,10 @@ namespace GraphQLCodeGen {
       /// Create, edit or delete template structures
       /// </summary>
       CHANGE_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Create, edit or delete template contents
+      /// </summary>
+      CHANGE_TEMPLATE_VARIABLE_CONFIGURATION,
       /// <summary>
       /// Create, edit or renew Api users
       /// </summary>
@@ -11823,9 +13085,17 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_POSTAL_JOB,
       /// <summary>
+      /// Get or list postal parameter configurations
+      /// </summary>
+      READ_POSTAL_PARAMETER_CONFIGURATION,
+      /// <summary>
       /// Get or list services
       /// </summary>
       READ_SERVICE,
+      /// <summary>
+      /// Get or list status actions
+      /// </summary>
+      READ_STATUS_ACTION,
       /// <summary>
       /// Get or list template contents
       /// </summary>
@@ -11834,6 +13104,10 @@ namespace GraphQLCodeGen {
       /// Get or list template structures
       /// </summary>
       READ_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Get or list template variables configuration
+      /// </summary>
+      READ_TEMPLATE_VARIABLE_CONFIGURATION,
       /// <summary>
       /// Get or list tenants
       /// </summary>
@@ -12248,9 +13522,6 @@ namespace GraphQLCodeGen {
       [JsonProperty("isEnabled")]
       public bool isEnabled { get; set; }
     
-      [JsonProperty("isMoralPerson")]
-      public bool isMoralPerson { get; set; }
-    
       [JsonProperty("lastModificationDate")]
       public any lastModificationDate { get; set; }
     
@@ -12262,6 +13533,9 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("name")]
       public string name { get; set; }
+    
+      [JsonProperty("personType")]
+      public ThirdPartyPersonType personType { get; set; }
     
       [JsonProperty("tenantId")]
       public string tenantId { get; set; }
@@ -12337,11 +13611,11 @@ namespace GraphQLCodeGen {
     
       [Required]
       [JsonRequired]
-      public bool isMoralPerson { get; set; }
+      public string name { get; set; }
     
       [Required]
       [JsonRequired]
-      public string name { get; set; }
+      public ThirdPartyPersonType personType { get; set; }
     
       [Required]
       [JsonRequired]
@@ -12371,6 +13645,12 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    public enum ThirdPartyPersonType {
+      MORAL_PERSON_PRIVATE,
+      MORAL_PERSON_PUBLIC,
+      PRIVATE_PERSON
+    }
+    
     
     #region ThirdPartyQueryParams
     public class ThirdPartyQueryParams {

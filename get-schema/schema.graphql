@@ -45,6 +45,7 @@ enum ActivityActorType {
   THIRD_PARTY
   CONTACT
   EMAIL_ADDRESS
+  POSTAL_ADDRESS
 }
 
 enum ActivityActorTypeFilterField {
@@ -66,6 +67,7 @@ enum ActivityCategory {
   SEND_CHORUS_B_2_G
   CHANGE_STATUS_CHORUS_B_2_G
   COMPLETE_CHORUS_B_2_G
+  CANCEL_JOB_MESSAGE
   EXTERNAL_PROCESS
   ERROR
 }
@@ -533,10 +535,19 @@ type BusinessSchemaMutation {
   editNote(id: String!, item: NoteInput!, tenantId: String): Note
   deleteNote(id: String!, tenantId: String): Void
   addPostalJob(item: PostalJobInput!, tenantId: String): JobCreationResult
+  addPostalParameterConfiguration(item: PostalParameterConfigurationInput!, tenantId: String): PostalParameterConfiguration
+  editPostalParameterConfiguration(id: String!, item: PostalParameterConfigurationInput!, tenantId: String): PostalParameterConfiguration
+  deletePostalParameterConfiguration(id: String!, tenantId: String): Void
   addPowerBiAuthToken(id: String!): PowerBiAuthToken
   addService(item: ServiceInput!, tenantId: String): Service
   editService(id: String!, item: ServiceInput!, tenantId: String): Service
   deleteService(id: String!, tenantId: String): Void
+  addTemplateContent(item: TemplateContentInput!, tenantId: String): TemplateContent
+  editTemplateContent(id: String!, item: TemplateContentInput!, tenantId: String): TemplateContent
+  deleteTemplateContent(id: String!, tenantId: String): Void
+  addTemplateStructure(item: TemplateStructureInput!, tenantId: String): TemplateStructure
+  editTemplateStructure(id: String!, item: TemplateStructureInput!, tenantId: String): TemplateStructure
+  deleteTemplateStructure(id: String!, tenantId: String): Void
   addTemporaryDocument(item: TemporaryDocumentContentInput!): TemporaryDocumentContent
   deleteTemporaryDocument(id: String!): Void
   addTenantUser(item: TenantUserInput!, tenantId: String): TenantUser
@@ -630,9 +641,17 @@ type BusinessSchemaQuery {
   noteList(params: NoteQueryParams, after: String, tenantId: String): NoteTypeConnection
   postalJobItems(idList: [String!]!, tenantId: String): [PostalJob]
   postalJobList(params: PostalJobQueryParams, after: String, tenantId: String): PostalJobTypeConnection
+  postalParameterConfigurationItems(idList: [String!]!, tenantId: String): [PostalParameterConfiguration]
+  postalParameterConfigurationList(params: PostalParameterConfigurationQueryParams, after: String, tenantId: String): PostalParameterConfigurationTypeConnection
   rightInitialValueList(profile: UserProfile!, params: RightInitialValueQueryParams, after: String): RightInitialValueTypeConnection
   serviceItems(idList: [String!]!, tenantId: String): [Service]
   serviceList(params: ServiceQueryParams, after: String, tenantId: String): ServiceTypeConnection
+  statusActionList(params: StatusActionQueryParams, after: String): StatusActionTypeConnection
+  templateContentItems(idList: [String!]!, tenantId: String, language: Language): [TemplateContent]
+  templateContentList(params: TemplateContentQueryParams, after: String, tenantId: String, language: Language): TemplateContentTypeConnection
+  templateStructureItems(idList: [String!]!, tenantId: String, language: Language): [TemplateStructure]
+  templateStructureList(params: TemplateStructureQueryParams, after: String, tenantId: String, language: Language): TemplateStructureTypeConnection
+  templateVariableList(notificationType: TemplateContentNotificationType!, domainId: String, ancestorIds: [String], tenantId: String, serviceId: String, natureId: String, documentTypeId: String): [TemplateVariable]
   temporaryDocumentItems(idList: [String!]!): [TemporaryDocumentContent]
   temporaryDocumentList(params: TemporaryDocumentHeaderQueryParams, after: String): TemporaryDocumentHeaderTypeConnection
   tenantUserItems(idList: [String!]!, tenantId: String): [TenantUser]
@@ -1027,6 +1046,8 @@ type Document {
   sentDate: DateTime
   signType: DocumentTypeSignType
   attachmentIds: [String]
+  jobMessageStatusCounts: [JobMessageStatusCount]
+  primaryJobMessageId: String
 }
 
 input DocumentActionOptions {
@@ -1195,6 +1216,7 @@ input DocumentJobInput {
   contactRecipients: [ContactRecipientInput]
   thirdPartyRecipients: [ThirdPartyRecipientInput]
   adhocRecipientsFiles: [FileIdOrBase64Input]
+  postalParameter: PostalParameter
   postalAdhocRecipients: [PostalAdhocRecipientInput]
   emailAdhocRecipients: [EmailAdhocRecipientInput]
   chorusB2GAdhocRecipient: ChorusB2GAdhocRecipientInput
@@ -1620,6 +1642,24 @@ enum DomainRightType {
 
   """Create, edit or renew Domain Api users"""
   CHANGE_DOMAIN_API_USER
+
+  """Get or list template variables configuration"""
+  READ_TEMPLATE_VARIABLE_CONFIGURATION
+
+  """Create, edit or delete template contents"""
+  CHANGE_TEMPLATE_VARIABLE_CONFIGURATION
+
+  """CancelJobMessage"""
+  CANCEL_JOB_MESSAGE
+
+  """Get or list postal parameter configurations"""
+  READ_POSTAL_PARAMETER_CONFIGURATION
+
+  """Create, edit or delete postal parameter configurations"""
+  CHANGE_POSTAL_PARAMETER_CONFIGURATION
+
+  """Get or list status actions"""
+  READ_STATUS_ACTION
 }
 
 type DomainRightValue {
@@ -1727,6 +1767,7 @@ input EmailAdhocRecipientInput {
   name: String!
   documentTransmissionMode: DocumentTransmissionMode!
   email: String!
+  isPrimary: Boolean
 }
 
 input EmailJob {
@@ -1795,6 +1836,7 @@ enum EngineEventAction {
   COMPLETE_CHORUS_B_2_G
   EDIT_METADATA_DOCUMENT
   ADD_ATTACHMENTS_DOCUMENT
+  CANCEL_JOB_MESSAGE
 }
 
 enum EnvelopeType {
@@ -1825,6 +1867,9 @@ enum EnvironmentRightType {
 
   """Create, edit or renew Environment Api users"""
   CHANGE_ENVIRONMENT_API_USER
+
+  """Get or list status actions"""
+  READ_STATUS_ACTION
 }
 
 type EnvironmentRightValue {
@@ -2278,6 +2323,15 @@ type InboundSmsTypeConnection {
   pageInfo: PageInfo
 }
 
+enum InheritedConfigurationOwnerType {
+  SYSTEM
+  DOMAIN
+  TENANT
+  SERVICE
+  NATURE
+  DOCUMENT_TYPE
+}
+
 type Job {
   id: String!
   tenantId: String!
@@ -2491,27 +2545,29 @@ type JobMessage {
   lastModificationUserId: String
   lastModificationUserLabel: String
   id: String!
+  messageType: JobMessageType!
   tenantId: String!
   trackingId: String!
-  name: String
   jobId: String!
   documentIds: [String] @deprecated(reason: "This property has been deprecated. Use Documents instead.")
   thirdPartyId: String
   contactId: String
-  messageType: JobMessageType!
+  name: String
+  recipientName: String!
   status: JobMessageStatus!
   transmissionStatus: JobMessageTransmissionStatus!
-  emailAddress: String!
-  recipientName: String!
-  transmissionMode: DocumentTransmissionMode
   documents: [JobMessageDocument]
+  retryCount: Int!
+  readDocumentDate: DateTime
+  isPrimary: Boolean
+  emailAddress: String
+  postalAddress: PostalAddress
+  transmissionMode: DocumentTransmissionMode
   chorusStatus: JobMessageChorusStatus
   validationErrors: [ChorusB2GValidationError]
   chorusB2GAddress: ChorusB2GAddress
-  hasReadDocument: Boolean!
   chorusActionType: JobMessageChorusActionType
   chorusAddedAttachmentIds: [String]
-  retryCount: Int!
 }
 
 input JobMessageActionOptions {
@@ -2519,7 +2575,34 @@ input JobMessageActionOptions {
 }
 
 enum JobMessageActionType {
-  NONE
+  CANCEL
+}
+
+input JobMessageBaseDateFilter {
+  field: JobMessageDateFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: DateTime
+  filterValue2: DateTime
+}
+
+input JobMessageBaseJobMessageStatusEnumFilter {
+  field: JobMessageStatusFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: JobMessageStatus!
+  filterValue2: JobMessageStatus
+}
+
+input JobMessageBaseJobMessageTransmissionStatusEnumFilter {
+  field: JobMessageTransmissionStatusFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: JobMessageTransmissionStatus!
+  filterValue2: JobMessageTransmissionStatus
+}
+
+input JobMessageBaseStringFilter {
+  field: JobMessageStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
 }
 
 enum JobMessageChorusActionType {
@@ -2554,13 +2637,6 @@ enum JobMessageChorusStatus {
   SERVICE_RENDERED
 }
 
-input JobMessageDateFilter {
-  field: JobMessageDateFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: DateTime
-  filterValue2: DateTime
-}
-
 enum JobMessageDateFilterField {
   CREATION_DATE
 }
@@ -2570,27 +2646,13 @@ type JobMessageDocument {
   attachmentIds: [String]
 }
 
-input JobMessageJobMessageStatusEnumFilter {
-  field: JobMessageStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: JobMessageStatus!
-  filterValue2: JobMessageStatus
-}
-
-input JobMessageJobMessageTransmissionStatusEnumFilter {
-  field: JobMessageTransmissionStatusFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: JobMessageTransmissionStatus!
-  filterValue2: JobMessageTransmissionStatus
-}
-
 input JobMessageQueryParams {
   sortField: JobMessageSortField
   sortDirection: SortDirection
-  stringFilters: [JobMessageStringFilter]
-  dateFilters: [JobMessageDateFilter]
-  statusFilters: [JobMessageJobMessageStatusEnumFilter]
-  transmissionStatusFilters: [JobMessageJobMessageTransmissionStatusEnumFilter]
+  stringFilters: [JobMessageBaseStringFilter]
+  dateFilters: [JobMessageBaseDateFilter]
+  statusFilters: [JobMessageBaseJobMessageStatusEnumFilter]
+  transmissionStatusFilters: [JobMessageBaseJobMessageTransmissionStatusEnumFilter]
 }
 
 enum JobMessageSortField {
@@ -2601,19 +2663,21 @@ enum JobMessageSortField {
 
 enum JobMessageStatus {
   PROCESSING
-  COMPLETE
+  COMPLETED
   ERROR
   CANCELED
 }
 
-enum JobMessageStatusFilterField {
-  STATUS
+type JobMessageStatusCount {
+  type: JobMessageType!
+  totalCount: Int!
+  completedCount: Int!
+  errorCount: Int!
+  canceledCount: Int!
 }
 
-input JobMessageStringFilter {
-  field: JobMessageStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
+enum JobMessageStatusFilterField {
+  STATUS
 }
 
 enum JobMessageStringFilterField {
@@ -3154,23 +3218,20 @@ type PostalAddress {
 }
 
 input PostalAddressInput {
-  name: String
-  additionalInfo: String
   additionalGeographicInfo: String
-  street: String
+  additionalInfo: String
+  city: String!
+  country: String!
+  name: String!
   postBox: String
-  zipCode: String
-  city: String
-  country: String
+  street: String!
+  zipCode: String!
 }
 
 input PostalAdhocRecipientInput {
   name: String!
-  addressLine1: String!
-  addressLine2: String!
-  postalCode: String!
-  city: String!
-  country: String!
+  address: PostalAddressInput
+  isPrimary: Boolean
 }
 
 type PostalJob {
@@ -3240,7 +3301,68 @@ input PostalParameter {
   printBothSide: Boolean
   printColor: Boolean
   lreArManagement: LreArManagementType
+  mergeDocuments: Boolean
   sender: PostalAddressInput
+}
+
+type PostalParameterConfiguration {
+  creationDate: DateTime
+  creationUserId: String
+  creationUserLabel: String
+  lastModificationDate: DateTime
+  lastModificationUserId: String
+  lastModificationUserLabel: String
+  id: String!
+  ownerId: String
+  ownerType: InheritedConfigurationOwnerType!
+  envelope: EnvelopeType
+  stamp: StampType
+  printBothSide: Boolean
+  printColor: Boolean
+  lreArManagement: LreArManagementType
+  mergeDocuments: Boolean
+  sender: PostalAddress
+}
+
+input PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilter {
+  field: PostalParameterConfigurationOwnerTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: InheritedConfigurationOwnerType!
+  filterValue2: InheritedConfigurationOwnerType
+}
+
+input PostalParameterConfigurationInput {
+  id: String
+  ownerId: String!
+  ownerType: InheritedConfigurationOwnerType!
+  envelope: EnvelopeType
+  stamp: StampType
+  printBothSide: Boolean
+  printColor: Boolean
+  lreArManagement: LreArManagementType
+  mergeDocuments: Boolean
+  sender: PostalAddressInput
+}
+
+enum PostalParameterConfigurationOwnerTypeFilterField {
+  OWNER_TYPE
+}
+
+input PostalParameterConfigurationQueryParams {
+  sortField: PostalParameterConfigurationSortField
+  sortDirection: SortDirection
+  ownerTypeFilters: [PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilter]
+  ownerId: String!
+}
+
+enum PostalParameterConfigurationSortField {
+  CREATION_DATE
+  LAST_MODIFICATION_DATE
+}
+
+type PostalParameterConfigurationTypeConnection {
+  edges: [PostalParameterConfiguration]
+  pageInfo: PageInfo
 }
 
 type PowerBiAuthToken {
@@ -3584,6 +3706,24 @@ enum RightType {
 
   """RelaunchJobMessage"""
   RELAUNCH_JOB_MESSAGE
+
+  """Get or list template variables configuration"""
+  READ_TEMPLATE_VARIABLE_CONFIGURATION
+
+  """Create, edit or delete template contents"""
+  CHANGE_TEMPLATE_VARIABLE_CONFIGURATION
+
+  """CancelJobMessage"""
+  CANCEL_JOB_MESSAGE
+
+  """Get or list postal parameter configurations"""
+  READ_POSTAL_PARAMETER_CONFIGURATION
+
+  """Create, edit or delete postal parameter configurations"""
+  CHANGE_POSTAL_PARAMETER_CONFIGURATION
+
+  """Get or list status actions"""
+  READ_STATUS_ACTION
 }
 
 input RightValueBoolFilter {
@@ -3751,6 +3891,46 @@ enum StampType {
   INDUSTRIEL_JPLUS_4
 }
 
+type StatusAction {
+  creationDate: DateTime
+  lastModificationDate: DateTime
+  id: String!
+  category: String!
+  status: String!
+  action: String!
+}
+
+input StatusActionQueryParams {
+  sortField: StatusActionSortField
+  sortDirection: SortDirection
+  stringFilters: [StatusActionStringFilter]
+}
+
+enum StatusActionSortField {
+  ID
+  CATEGORY
+  STATUS
+  ACTION
+}
+
+input StatusActionStringFilter {
+  field: StatusActionStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum StatusActionStringFilterField {
+  ID
+  CATEGORY
+  STATUS
+  ACTION
+}
+
+type StatusActionTypeConnection {
+  edges: [StatusAction]
+  pageInfo: PageInfo
+}
+
 enum StringFilterOperator {
   EQUAL
   NOT_EQUAL
@@ -3766,6 +3946,231 @@ enum StringFilterOperator {
   IN_ARRAY
   IS_NULL
   IS_NOT_NULL
+}
+
+type TemplateContent {
+  id: String!
+  ownerId: String
+  ownerType: InheritedConfigurationOwnerType!
+  subject: String
+  content: String!
+  isEnabled: Boolean!
+  notificationType: TemplateContentNotificationType!
+  transmissionType: TemplateContentTransmissionType!
+  creationDate: DateTime!
+}
+
+input TemplateContentBoolFilter {
+  field: TemplateContentBoolFilterField!
+  operator: BoolFilterOperator!
+  filterValue1: Boolean!
+}
+
+enum TemplateContentBoolFilterField {
+  IS_ENABLED
+}
+
+input TemplateContentDateFilter {
+  field: TemplateContentDateFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: DateTime
+  filterValue2: DateTime
+}
+
+enum TemplateContentDateFilterField {
+  CREATION_DATE
+}
+
+input TemplateContentInheritedConfigurationOwnerTypeEnumFilter {
+  field: TemplateContentOwnerTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: InheritedConfigurationOwnerType!
+  filterValue2: InheritedConfigurationOwnerType
+}
+
+input TemplateContentInput {
+  id: String
+  ownerId: String
+  ownerType: InheritedConfigurationOwnerType!
+  subject: String
+  content: String!
+  notificationType: TemplateContentNotificationType!
+  transmissionType: TemplateContentTransmissionType!
+  isEnabled: Boolean!
+}
+
+enum TemplateContentNotificationType {
+  INVITE_USER
+  NEW_USER_LOGIN
+  NEW_USER_PASSWORD
+  ADD_USER_TO_TENANT
+  LSE
+  LSE_ANONYMOUS
+  ERE
+  ERE_ANONYMOUS
+  LSE_ERE_END_OF_JOB
+  DOCUMENT_NOTIFICATION
+  DOCUMENT_NOTIFICATION_WITH_LINK
+  DOCUMENT_NOTIFICATION_LINK
+  INTERNAL_NOT_ARCHIVED_FILES
+}
+
+enum TemplateContentNotificationTypeFilterField {
+  NOTIFICATION_TYPE
+}
+
+enum TemplateContentOwnerTypeFilterField {
+  OWNER_TYPE
+}
+
+input TemplateContentQueryParams {
+  sortField: TemplateContentSortField
+  sortDirection: SortDirection
+  stringFilters: [TemplateContentStringFilter]
+  boolFilters: [TemplateContentBoolFilter]
+  dateFilters: [TemplateContentDateFilter]
+  ownerTypeFilters: [TemplateContentInheritedConfigurationOwnerTypeEnumFilter]
+  notificationTypeFilters: [TemplateContentTemplateContentNotificationTypeEnumFilter]
+  transmissionTypeFilters: [TemplateContentTemplateContentTransmissionTypeEnumFilter]
+}
+
+enum TemplateContentSortField {
+  CREATION_DATE
+  OWNER_TYPE
+  OWNER_ID
+  IS_ENABLED
+  NOTIFICATION_TYPE
+  TRANSMISSION_TYPE
+  SUBJECT
+}
+
+input TemplateContentStringFilter {
+  field: TemplateContentStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum TemplateContentStringFilterField {
+  ID
+  OWNER_ID
+  SUBJECT
+}
+
+input TemplateContentTemplateContentNotificationTypeEnumFilter {
+  field: TemplateContentNotificationTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: TemplateContentNotificationType!
+  filterValue2: TemplateContentNotificationType
+}
+
+input TemplateContentTemplateContentTransmissionTypeEnumFilter {
+  field: TemplateContentTransmissionTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: TemplateContentTransmissionType!
+  filterValue2: TemplateContentTransmissionType
+}
+
+enum TemplateContentTransmissionType {
+  EMAIL
+  WEB_NOTIFICATION
+  SMS
+}
+
+enum TemplateContentTransmissionTypeFilterField {
+  TRANSMISSION_TYPE
+}
+
+type TemplateContentTypeConnection {
+  edges: [TemplateContent]
+  pageInfo: PageInfo
+}
+
+type TemplateStructure {
+  id: String!
+  ownerId: String
+  ownerType: InheritedConfigurationOwnerType!
+  isEnabled: Boolean!
+  contentId: String!
+  contentBase64: String!
+  creationDate: DateTime!
+}
+
+input TemplateStructureBoolFilter {
+  field: TemplateStructureBoolFilterField!
+  operator: BoolFilterOperator!
+  filterValue1: Boolean!
+}
+
+enum TemplateStructureBoolFilterField {
+  IS_ENABLED
+}
+
+input TemplateStructureDateFilter {
+  field: TemplateStructureDateFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: DateTime
+  filterValue2: DateTime
+}
+
+enum TemplateStructureDateFilterField {
+  CREATION_DATE
+}
+
+input TemplateStructureInheritedConfigurationOwnerTypeEnumFilter {
+  field: TemplateStructureOwnerTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: InheritedConfigurationOwnerType!
+  filterValue2: InheritedConfigurationOwnerType
+}
+
+input TemplateStructureInput {
+  id: String
+  ownerId: String
+  ownerType: InheritedConfigurationOwnerType!
+  isEnabled: Boolean!
+  contentBase64: String!
+}
+
+enum TemplateStructureOwnerTypeFilterField {
+  OWNER_TYPE
+}
+
+input TemplateStructureQueryParams {
+  sortField: TemplateStructureSortField
+  sortDirection: SortDirection
+  stringFilters: [TemplateStructureStringFilter]
+  boolFilters: [TemplateStructureBoolFilter]
+  dateFilters: [TemplateStructureDateFilter]
+  ownerTypeFilters: [TemplateStructureInheritedConfigurationOwnerTypeEnumFilter]
+}
+
+enum TemplateStructureSortField {
+  CREATION_DATE
+  OWNER_TYPE
+  OWNER_ID
+  IS_ENABLED
+}
+
+input TemplateStructureStringFilter {
+  field: TemplateStructureStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum TemplateStructureStringFilterField {
+  ID
+  OWNER_ID
+}
+
+type TemplateStructureTypeConnection {
+  edges: [TemplateStructure]
+  pageInfo: PageInfo
+}
+
+type TemplateVariable {
+  name: String!
+  replacementTag: String!
+  description: String
 }
 
 type TemporaryDocumentContent {
@@ -4006,6 +4411,24 @@ enum TenantRightType {
 
   """RelaunchJobMessage"""
   RELAUNCH_JOB_MESSAGE
+
+  """Get or list template variables configuration"""
+  READ_TEMPLATE_VARIABLE_CONFIGURATION
+
+  """Create, edit or delete template contents"""
+  CHANGE_TEMPLATE_VARIABLE_CONFIGURATION
+
+  """CancelJobMessage"""
+  CANCEL_JOB_MESSAGE
+
+  """Get or list postal parameter configurations"""
+  READ_POSTAL_PARAMETER_CONFIGURATION
+
+  """Create, edit or delete postal parameter configurations"""
+  CHANGE_POSTAL_PARAMETER_CONFIGURATION
+
+  """Get or list status actions"""
+  READ_STATUS_ACTION
 }
 
 type TenantRightValue {
@@ -4126,12 +4549,12 @@ type ThirdParty {
   lastModificationUserLabel: String
   id: String!
   tenantId: String!
-  code: String
-  isMoralPerson: Boolean!
-  name: String
+  code: String!
+  personType: ThirdPartyPersonType!
+  name: String!
   contactCount: Int!
   isEnabled: Boolean!
-  thirdPartyTypeIds: [String]
+  thirdPartyTypeIds: [String]!
   address: PostalAddress
 }
 
@@ -4154,11 +4577,17 @@ enum ThirdPartyIdentifierType {
 input ThirdPartyInput {
   id: String
   code: String!
-  isMoralPerson: Boolean!
   name: String!
   isEnabled: Boolean
   thirdPartyTypeIds: [String!]!
   address: PostalAddressInput
+  personType: ThirdPartyPersonType!
+}
+
+enum ThirdPartyPersonType {
+  PRIVATE_PERSON
+  MORAL_PERSON_PRIVATE
+  MORAL_PERSON_PUBLIC
 }
 
 input ThirdPartyQueryParams {

@@ -131,6 +131,7 @@ public class Types {
     CONTACT,
     EMAIL_ADDRESS,
     EXTERNAL,
+    POSTAL_ADDRESS,
     SERVICE,
     SYSTEM,
     TENANT_USER,
@@ -146,6 +147,7 @@ public class Types {
   
   public enum ActivityCategory {
     ADD_ATTACHMENTS_DOCUMENT,
+    CANCEL_JOB_MESSAGE,
     CHANGE_STATUS_CHORUS_B_2_G,
     COMPLETE_CHORUS_B_2_G,
     DOCUMENT_ARCHIVED,
@@ -1307,6 +1309,22 @@ public class Types {
     public void setItem(PostalJobInput item) { this.item = item; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
+  public static class BusinessSchemaMutationAddPostalParameterConfigurationArgs {
+    private PostalParameterConfigurationInput item;
+    private String tenantId;
+  
+    public BusinessSchemaMutationAddPostalParameterConfigurationArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.item = new PostalParameterConfigurationInput((Map<String, Object>) args.get("item"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public PostalParameterConfigurationInput getItem() { return this.item; }
+    public String getTenantId() { return this.tenantId; }
+    public void setItem(PostalParameterConfigurationInput item) { this.item = item; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
   public static class BusinessSchemaMutationAddPowerBiAuthTokenArgs {
     private String id;
   
@@ -1365,6 +1383,38 @@ public class Types {
     public SmsJobInput getItem() { return this.item; }
     public String getTenantId() { return this.tenantId; }
     public void setItem(SmsJobInput item) { this.item = item; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationAddTemplateContentArgs {
+    private TemplateContentInput item;
+    private String tenantId;
+  
+    public BusinessSchemaMutationAddTemplateContentArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.item = new TemplateContentInput((Map<String, Object>) args.get("item"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public TemplateContentInput getItem() { return this.item; }
+    public String getTenantId() { return this.tenantId; }
+    public void setItem(TemplateContentInput item) { this.item = item; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationAddTemplateStructureArgs {
+    private TemplateStructureInput item;
+    private String tenantId;
+  
+    public BusinessSchemaMutationAddTemplateStructureArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.item = new TemplateStructureInput((Map<String, Object>) args.get("item"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public TemplateStructureInput getItem() { return this.item; }
+    public String getTenantId() { return this.tenantId; }
+    public void setItem(TemplateStructureInput item) { this.item = item; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaMutationAddTemporaryDocumentArgs {
@@ -1655,11 +1705,59 @@ public class Types {
     public void setId(String id) { this.id = id; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
+  public static class BusinessSchemaMutationDeletePostalParameterConfigurationArgs {
+    private String id;
+    private String tenantId;
+  
+    public BusinessSchemaMutationDeletePostalParameterConfigurationArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public String getTenantId() { return this.tenantId; }
+    public void setId(String id) { this.id = id; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
   public static class BusinessSchemaMutationDeleteServiceArgs {
     private String id;
     private String tenantId;
   
     public BusinessSchemaMutationDeleteServiceArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public String getTenantId() { return this.tenantId; }
+    public void setId(String id) { this.id = id; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationDeleteTemplateContentArgs {
+    private String id;
+    private String tenantId;
+  
+    public BusinessSchemaMutationDeleteTemplateContentArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public String getTenantId() { return this.tenantId; }
+    public void setId(String id) { this.id = id; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationDeleteTemplateStructureArgs {
+    private String id;
+    private String tenantId;
+  
+    public BusinessSchemaMutationDeleteTemplateStructureArgs(Map<String, Object> args) {
       if (args != null) {
         this.id = (String) args.get("id");
         this.tenantId = (String) args.get("tenantId");
@@ -2065,6 +2163,26 @@ public class Types {
     public void setItem(NoteInput item) { this.item = item; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
+  public static class BusinessSchemaMutationEditPostalParameterConfigurationArgs {
+    private String id;
+    private PostalParameterConfigurationInput item;
+    private String tenantId;
+  
+    public BusinessSchemaMutationEditPostalParameterConfigurationArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+        this.item = new PostalParameterConfigurationInput((Map<String, Object>) args.get("item"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public PostalParameterConfigurationInput getItem() { return this.item; }
+    public String getTenantId() { return this.tenantId; }
+    public void setId(String id) { this.id = id; }
+    public void setItem(PostalParameterConfigurationInput item) { this.item = item; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
   public static class BusinessSchemaMutationEditServiceArgs {
     private String id;
     private ServiceInput item;
@@ -2083,6 +2201,46 @@ public class Types {
     public String getTenantId() { return this.tenantId; }
     public void setId(String id) { this.id = id; }
     public void setItem(ServiceInput item) { this.item = item; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationEditTemplateContentArgs {
+    private String id;
+    private TemplateContentInput item;
+    private String tenantId;
+  
+    public BusinessSchemaMutationEditTemplateContentArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+        this.item = new TemplateContentInput((Map<String, Object>) args.get("item"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public TemplateContentInput getItem() { return this.item; }
+    public String getTenantId() { return this.tenantId; }
+    public void setId(String id) { this.id = id; }
+    public void setItem(TemplateContentInput item) { this.item = item; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationEditTemplateStructureArgs {
+    private String id;
+    private TemplateStructureInput item;
+    private String tenantId;
+  
+    public BusinessSchemaMutationEditTemplateStructureArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+        this.item = new TemplateStructureInput((Map<String, Object>) args.get("item"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public TemplateStructureInput getItem() { return this.item; }
+    public String getTenantId() { return this.tenantId; }
+    public void setId(String id) { this.id = id; }
+    public void setItem(TemplateStructureInput item) { this.item = item; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaMutationEditTenantUserArgs {
@@ -3733,6 +3891,42 @@ public class Types {
     public void setParams(PostalJobQueryParamsInput params) { this.params = params; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
+  public static class BusinessSchemaQueryPostalParameterConfigurationItemsArgs {
+    private Iterable<String> idList;
+    private String tenantId;
+  
+    public BusinessSchemaQueryPostalParameterConfigurationItemsArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.idList = (Iterable<String>) args.get("idList");
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public Iterable<String> getIdList() { return this.idList; }
+    public String getTenantId() { return this.tenantId; }
+    public void setIdList(Iterable<String> idList) { this.idList = idList; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaQueryPostalParameterConfigurationListArgs {
+    private String after;
+    private PostalParameterConfigurationQueryParamsInput params;
+    private String tenantId;
+  
+    public BusinessSchemaQueryPostalParameterConfigurationListArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.after = (String) args.get("after");
+        this.params = new PostalParameterConfigurationQueryParamsInput((Map<String, Object>) args.get("params"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getAfter() { return this.after; }
+    public PostalParameterConfigurationQueryParamsInput getParams() { return this.params; }
+    public String getTenantId() { return this.tenantId; }
+    public void setAfter(String after) { this.after = after; }
+    public void setParams(PostalParameterConfigurationQueryParamsInput params) { this.params = params; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
   public static class BusinessSchemaQueryProcessingJobCountStatisticsArgs {
     private String tenantId;
   
@@ -3803,6 +3997,166 @@ public class Types {
     public String getTenantId() { return this.tenantId; }
     public void setAfter(String after) { this.after = after; }
     public void setParams(ServiceQueryParamsInput params) { this.params = params; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaQueryStatusActionListArgs {
+    private String after;
+    private StatusActionQueryParamsInput params;
+  
+    public BusinessSchemaQueryStatusActionListArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.after = (String) args.get("after");
+        this.params = new StatusActionQueryParamsInput((Map<String, Object>) args.get("params"));
+      }
+    }
+  
+    public String getAfter() { return this.after; }
+    public StatusActionQueryParamsInput getParams() { return this.params; }
+    public void setAfter(String after) { this.after = after; }
+    public void setParams(StatusActionQueryParamsInput params) { this.params = params; }
+  }
+  public static class BusinessSchemaQueryTemplateContentItemsArgs {
+    private Iterable<String> idList;
+    private Language language;
+    private String tenantId;
+  
+    public BusinessSchemaQueryTemplateContentItemsArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.idList = (Iterable<String>) args.get("idList");
+        if (args.get("language") instanceof Language) {
+          this.language = (Language) args.get("language");
+        } else {
+          this.language = Language.valueOf((String) args.get("language"));
+        }
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public Iterable<String> getIdList() { return this.idList; }
+    public Language getLanguage() { return this.language; }
+    public String getTenantId() { return this.tenantId; }
+    public void setIdList(Iterable<String> idList) { this.idList = idList; }
+    public void setLanguage(Language language) { this.language = language; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaQueryTemplateContentListArgs {
+    private String after;
+    private Language language;
+    private TemplateContentQueryParamsInput params;
+    private String tenantId;
+  
+    public BusinessSchemaQueryTemplateContentListArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.after = (String) args.get("after");
+        if (args.get("language") instanceof Language) {
+          this.language = (Language) args.get("language");
+        } else {
+          this.language = Language.valueOf((String) args.get("language"));
+        }
+        this.params = new TemplateContentQueryParamsInput((Map<String, Object>) args.get("params"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getAfter() { return this.after; }
+    public Language getLanguage() { return this.language; }
+    public TemplateContentQueryParamsInput getParams() { return this.params; }
+    public String getTenantId() { return this.tenantId; }
+    public void setAfter(String after) { this.after = after; }
+    public void setLanguage(Language language) { this.language = language; }
+    public void setParams(TemplateContentQueryParamsInput params) { this.params = params; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaQueryTemplateStructureItemsArgs {
+    private Iterable<String> idList;
+    private Language language;
+    private String tenantId;
+  
+    public BusinessSchemaQueryTemplateStructureItemsArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.idList = (Iterable<String>) args.get("idList");
+        if (args.get("language") instanceof Language) {
+          this.language = (Language) args.get("language");
+        } else {
+          this.language = Language.valueOf((String) args.get("language"));
+        }
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public Iterable<String> getIdList() { return this.idList; }
+    public Language getLanguage() { return this.language; }
+    public String getTenantId() { return this.tenantId; }
+    public void setIdList(Iterable<String> idList) { this.idList = idList; }
+    public void setLanguage(Language language) { this.language = language; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaQueryTemplateStructureListArgs {
+    private String after;
+    private Language language;
+    private TemplateStructureQueryParamsInput params;
+    private String tenantId;
+  
+    public BusinessSchemaQueryTemplateStructureListArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.after = (String) args.get("after");
+        if (args.get("language") instanceof Language) {
+          this.language = (Language) args.get("language");
+        } else {
+          this.language = Language.valueOf((String) args.get("language"));
+        }
+        this.params = new TemplateStructureQueryParamsInput((Map<String, Object>) args.get("params"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getAfter() { return this.after; }
+    public Language getLanguage() { return this.language; }
+    public TemplateStructureQueryParamsInput getParams() { return this.params; }
+    public String getTenantId() { return this.tenantId; }
+    public void setAfter(String after) { this.after = after; }
+    public void setLanguage(Language language) { this.language = language; }
+    public void setParams(TemplateStructureQueryParamsInput params) { this.params = params; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaQueryTemplateVariableListArgs {
+    private Iterable<String> ancestorIds;
+    private String documentTypeId;
+    private String domainId;
+    private String natureId;
+    private TemplateContentNotificationType notificationType;
+    private String serviceId;
+    private String tenantId;
+  
+    public BusinessSchemaQueryTemplateVariableListArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.ancestorIds = (Iterable<String>) args.get("ancestorIds");
+        this.documentTypeId = (String) args.get("documentTypeId");
+        this.domainId = (String) args.get("domainId");
+        this.natureId = (String) args.get("natureId");
+        if (args.get("notificationType") instanceof TemplateContentNotificationType) {
+          this.notificationType = (TemplateContentNotificationType) args.get("notificationType");
+        } else {
+          this.notificationType = TemplateContentNotificationType.valueOf((String) args.get("notificationType"));
+        }
+        this.serviceId = (String) args.get("serviceId");
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public Iterable<String> getAncestorIds() { return this.ancestorIds; }
+    public String getDocumentTypeId() { return this.documentTypeId; }
+    public String getDomainId() { return this.domainId; }
+    public String getNatureId() { return this.natureId; }
+    public TemplateContentNotificationType getNotificationType() { return this.notificationType; }
+    public String getServiceId() { return this.serviceId; }
+    public String getTenantId() { return this.tenantId; }
+    public void setAncestorIds(Iterable<String> ancestorIds) { this.ancestorIds = ancestorIds; }
+    public void setDocumentTypeId(String documentTypeId) { this.documentTypeId = documentTypeId; }
+    public void setDomainId(String domainId) { this.domainId = domainId; }
+    public void setNatureId(String natureId) { this.natureId = natureId; }
+    public void setNotificationType(TemplateContentNotificationType notificationType) { this.notificationType = notificationType; }
+    public void setServiceId(String serviceId) { this.serviceId = serviceId; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaQueryTemporaryDocumentItemsArgs {
@@ -5207,6 +5561,7 @@ public class Types {
     private Iterable<EmailAdhocRecipientInput> emailAdhocRecipients;
     private String note;
     private Iterable<PostalAdhocRecipientInput> postalAdhocRecipients;
+    private PostalParameterInput postalParameter;
     private String serviceId;
     private Iterable<ThirdPartyRecipientInput> thirdPartyRecipients;
     private String trackingId;
@@ -5232,6 +5587,7 @@ public class Types {
         if (args.get("postalAdhocRecipients") != null) {
         		this.postalAdhocRecipients = (Iterable<PostalAdhocRecipientInput>) args.get("postalAdhocRecipients");
         }
+        this.postalParameter = new PostalParameterInput((Map<String, Object>) args.get("postalParameter"));
         this.serviceId = (String) args.get("serviceId");
         if (args.get("thirdPartyRecipients") != null) {
         		this.thirdPartyRecipients = (Iterable<ThirdPartyRecipientInput>) args.get("thirdPartyRecipients");
@@ -5253,6 +5609,7 @@ public class Types {
     public Iterable<EmailAdhocRecipientInput> getEmailAdhocRecipients() { return this.emailAdhocRecipients; }
     public String getNote() { return this.note; }
     public Iterable<PostalAdhocRecipientInput> getPostalAdhocRecipients() { return this.postalAdhocRecipients; }
+    public PostalParameterInput getPostalParameter() { return this.postalParameter; }
     public String getServiceId() { return this.serviceId; }
     public Iterable<ThirdPartyRecipientInput> getThirdPartyRecipients() { return this.thirdPartyRecipients; }
     public String getTrackingId() { return this.trackingId; }
@@ -5265,6 +5622,7 @@ public class Types {
     public void setEmailAdhocRecipients(Iterable<EmailAdhocRecipientInput> emailAdhocRecipients) { this.emailAdhocRecipients = emailAdhocRecipients; }
     public void setNote(String note) { this.note = note; }
     public void setPostalAdhocRecipients(Iterable<PostalAdhocRecipientInput> postalAdhocRecipients) { this.postalAdhocRecipients = postalAdhocRecipients; }
+    public void setPostalParameter(PostalParameterInput postalParameter) { this.postalParameter = postalParameter; }
     public void setServiceId(String serviceId) { this.serviceId = serviceId; }
     public void setThirdPartyRecipients(Iterable<ThirdPartyRecipientInput> thirdPartyRecipients) { this.thirdPartyRecipients = thirdPartyRecipients; }
     public void setTrackingId(String trackingId) { this.trackingId = trackingId; }
@@ -6044,17 +6402,20 @@ public class Types {
   /** The application rights for domain user. */
   public enum DomainRightType {
     ADD_TENANT,
+    CANCEL_JOB_MESSAGE,
     CHANGE_CONFIGURATION,
     CHANGE_DASHBOARD,
     CHANGE_DOMAIN,
     CHANGE_DOMAIN_API_USER,
     CHANGE_DOMAIN_USER,
     CHANGE_OMS_RESOURCES,
+    CHANGE_POSTAL_PARAMETER_CONFIGURATION,
     CHANGE_POWER_BI_AUTH_TOKEN,
     CHANGE_PRODUCT,
     CHANGE_PRODUCT_INSTALL,
     CHANGE_TEMPLATE_CONTENT,
     CHANGE_TEMPLATE_STRUCTURE,
+    CHANGE_TEMPLATE_VARIABLE_CONFIGURATION,
     CHANGE_TENANT_API_USER,
     CHANGE_TENANT_EDC_OMS_INFO,
     CHANGE_TENANT_USER,
@@ -6066,10 +6427,13 @@ public class Types {
     READ_DOMAIN,
     READ_DOMAIN_API_USER,
     READ_OMS_RESOURCES,
+    READ_POSTAL_PARAMETER_CONFIGURATION,
     READ_PRODUCT,
     READ_PRODUCT_INSTALL,
+    READ_STATUS_ACTION,
     READ_TEMPLATE_CONTENT,
     READ_TEMPLATE_STRUCTURE,
+    READ_TEMPLATE_VARIABLE_CONFIGURATION,
     READ_TENANT,
     READ_TENANT_API_USER,
     READ_TENANT_EDC_OMS_INFO,
@@ -6275,6 +6639,7 @@ public class Types {
   public static class EmailAdhocRecipientInput {
     private DocumentTransmissionMode documentTransmissionMode;
     private String email;
+    private Boolean isPrimary;
     private String name;
   
     public EmailAdhocRecipientInput(Map<String, Object> args) {
@@ -6285,15 +6650,18 @@ public class Types {
           this.documentTransmissionMode = DocumentTransmissionMode.valueOf((String) args.get("documentTransmissionMode"));
         }
         this.email = (String) args.get("email");
+        this.isPrimary = (Boolean) args.get("isPrimary");
         this.name = (String) args.get("name");
       }
     }
   
     public DocumentTransmissionMode getDocumentTransmissionMode() { return this.documentTransmissionMode; }
     public String getEmail() { return this.email; }
+    public Boolean getIsPrimary() { return this.isPrimary; }
     public String getName() { return this.name; }
     public void setDocumentTransmissionMode(DocumentTransmissionMode documentTransmissionMode) { this.documentTransmissionMode = documentTransmissionMode; }
     public void setEmail(String email) { this.email = email; }
+    public void setIsPrimary(Boolean isPrimary) { this.isPrimary = isPrimary; }
     public void setName(String name) { this.name = name; }
   }
   public static class EmailJobInput {
@@ -6445,6 +6813,7 @@ public class Types {
     ADD_ATTACHMENTS_DOCUMENT,
     ARCHIVE_DOCUMENT,
     CANCEL_DOCUMENT,
+    CANCEL_JOB_MESSAGE,
     CHANGE_STATUS_CHORUS_B_2_G,
     COMPLETE_CHORUS_B_2_G,
     CREATE_JOB,
@@ -6480,6 +6849,7 @@ public class Types {
     CHANGE_THIRD_PARTY_TYPE,
     READ_CONTACT_FUNCTION,
     READ_ENVIRONMENT_API_USER,
+    READ_STATUS_ACTION,
     READ_THIRD_PARTY_TYPE
     
   }
@@ -7540,6 +7910,16 @@ public class Types {
   }
   
   
+  public enum InheritedConfigurationOwnerType {
+    DOCUMENT_TYPE,
+    DOMAIN,
+    NATURE,
+    SERVICE,
+    SYSTEM,
+    TENANT
+    
+  }
+  
   
   public static class JobActionOptionsInput {
     private JobActionType action;
@@ -7979,10 +8359,150 @@ public class Types {
     public void setAction(JobMessageActionType action) { this.action = action; }
   }
   public enum JobMessageActionType {
-    NONE
+    CANCEL
     
   }
   
+  public static class JobMessageBaseDateFilterInput {
+    private JobMessageDateFilterField field;
+    private Object filterValue1;
+    private Object filterValue2;
+    private NumberFilterOperator operator;
+  
+    public JobMessageBaseDateFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof JobMessageDateFilterField) {
+          this.field = (JobMessageDateFilterField) args.get("field");
+        } else {
+          this.field = JobMessageDateFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (Object) args.get("filterValue1");
+        this.filterValue2 = (Object) args.get("filterValue2");
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public JobMessageDateFilterField getField() { return this.field; }
+    public Object getFilterValue1() { return this.filterValue1; }
+    public Object getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(JobMessageDateFilterField field) { this.field = field; }
+    public void setFilterValue1(Object filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(Object filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class JobMessageBaseJobMessageStatusEnumFilterInput {
+    private JobMessageStatusFilterField field;
+    private JobMessageStatus filterValue1;
+    private JobMessageStatus filterValue2;
+    private NumberFilterOperator operator;
+  
+    public JobMessageBaseJobMessageStatusEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof JobMessageStatusFilterField) {
+          this.field = (JobMessageStatusFilterField) args.get("field");
+        } else {
+          this.field = JobMessageStatusFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof JobMessageStatus) {
+          this.filterValue1 = (JobMessageStatus) args.get("filterValue1");
+        } else {
+          this.filterValue1 = JobMessageStatus.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof JobMessageStatus) {
+          this.filterValue2 = (JobMessageStatus) args.get("filterValue2");
+        } else {
+          this.filterValue2 = JobMessageStatus.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public JobMessageStatusFilterField getField() { return this.field; }
+    public JobMessageStatus getFilterValue1() { return this.filterValue1; }
+    public JobMessageStatus getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(JobMessageStatusFilterField field) { this.field = field; }
+    public void setFilterValue1(JobMessageStatus filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(JobMessageStatus filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class JobMessageBaseJobMessageTransmissionStatusEnumFilterInput {
+    private JobMessageTransmissionStatusFilterField field;
+    private JobMessageTransmissionStatus filterValue1;
+    private JobMessageTransmissionStatus filterValue2;
+    private NumberFilterOperator operator;
+  
+    public JobMessageBaseJobMessageTransmissionStatusEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof JobMessageTransmissionStatusFilterField) {
+          this.field = (JobMessageTransmissionStatusFilterField) args.get("field");
+        } else {
+          this.field = JobMessageTransmissionStatusFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof JobMessageTransmissionStatus) {
+          this.filterValue1 = (JobMessageTransmissionStatus) args.get("filterValue1");
+        } else {
+          this.filterValue1 = JobMessageTransmissionStatus.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof JobMessageTransmissionStatus) {
+          this.filterValue2 = (JobMessageTransmissionStatus) args.get("filterValue2");
+        } else {
+          this.filterValue2 = JobMessageTransmissionStatus.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public JobMessageTransmissionStatusFilterField getField() { return this.field; }
+    public JobMessageTransmissionStatus getFilterValue1() { return this.filterValue1; }
+    public JobMessageTransmissionStatus getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(JobMessageTransmissionStatusFilterField field) { this.field = field; }
+    public void setFilterValue1(JobMessageTransmissionStatus filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(JobMessageTransmissionStatus filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class JobMessageBaseStringFilterInput {
+    private JobMessageStringFilterField field;
+    private String filterValue1;
+    private StringFilterOperator operator;
+  
+    public JobMessageBaseStringFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof JobMessageStringFilterField) {
+          this.field = (JobMessageStringFilterField) args.get("field");
+        } else {
+          this.field = JobMessageStringFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (String) args.get("filterValue1");
+        if (args.get("operator") instanceof StringFilterOperator) {
+          this.operator = (StringFilterOperator) args.get("operator");
+        } else {
+          this.operator = StringFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public JobMessageStringFilterField getField() { return this.field; }
+    public String getFilterValue1() { return this.filterValue1; }
+    public StringFilterOperator getOperator() { return this.operator; }
+    public void setField(JobMessageStringFilterField field) { this.field = field; }
+    public void setFilterValue1(String filterValue1) { this.filterValue1 = filterValue1; }
+    public void setOperator(StringFilterOperator operator) { this.operator = operator; }
+  }
   public enum JobMessageChorusActionType {
     COMPLETE,
     SEND
@@ -8017,136 +8537,24 @@ public class Types {
     
   }
   
-  public static class JobMessageDateFilterInput {
-    private JobMessageDateFilterField field;
-    private Object filterValue1;
-    private Object filterValue2;
-    private NumberFilterOperator operator;
-  
-    public JobMessageDateFilterInput(Map<String, Object> args) {
-      if (args != null) {
-        if (args.get("field") instanceof JobMessageDateFilterField) {
-          this.field = (JobMessageDateFilterField) args.get("field");
-        } else {
-          this.field = JobMessageDateFilterField.valueOf((String) args.get("field"));
-        }
-        this.filterValue1 = (Object) args.get("filterValue1");
-        this.filterValue2 = (Object) args.get("filterValue2");
-        if (args.get("operator") instanceof NumberFilterOperator) {
-          this.operator = (NumberFilterOperator) args.get("operator");
-        } else {
-          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
-        }
-      }
-    }
-  
-    public JobMessageDateFilterField getField() { return this.field; }
-    public Object getFilterValue1() { return this.filterValue1; }
-    public Object getFilterValue2() { return this.filterValue2; }
-    public NumberFilterOperator getOperator() { return this.operator; }
-    public void setField(JobMessageDateFilterField field) { this.field = field; }
-    public void setFilterValue1(Object filterValue1) { this.filterValue1 = filterValue1; }
-    public void setFilterValue2(Object filterValue2) { this.filterValue2 = filterValue2; }
-    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
-  }
   public enum JobMessageDateFilterField {
     CREATION_DATE
     
   }
   
   
-  public static class JobMessageJobMessageStatusEnumFilterInput {
-    private JobMessageStatusFilterField field;
-    private JobMessageStatus filterValue1;
-    private JobMessageStatus filterValue2;
-    private NumberFilterOperator operator;
-  
-    public JobMessageJobMessageStatusEnumFilterInput(Map<String, Object> args) {
-      if (args != null) {
-        if (args.get("field") instanceof JobMessageStatusFilterField) {
-          this.field = (JobMessageStatusFilterField) args.get("field");
-        } else {
-          this.field = JobMessageStatusFilterField.valueOf((String) args.get("field"));
-        }
-        if (args.get("filterValue1") instanceof JobMessageStatus) {
-          this.filterValue1 = (JobMessageStatus) args.get("filterValue1");
-        } else {
-          this.filterValue1 = JobMessageStatus.valueOf((String) args.get("filterValue1"));
-        }
-        if (args.get("filterValue2") instanceof JobMessageStatus) {
-          this.filterValue2 = (JobMessageStatus) args.get("filterValue2");
-        } else {
-          this.filterValue2 = JobMessageStatus.valueOf((String) args.get("filterValue2"));
-        }
-        if (args.get("operator") instanceof NumberFilterOperator) {
-          this.operator = (NumberFilterOperator) args.get("operator");
-        } else {
-          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
-        }
-      }
-    }
-  
-    public JobMessageStatusFilterField getField() { return this.field; }
-    public JobMessageStatus getFilterValue1() { return this.filterValue1; }
-    public JobMessageStatus getFilterValue2() { return this.filterValue2; }
-    public NumberFilterOperator getOperator() { return this.operator; }
-    public void setField(JobMessageStatusFilterField field) { this.field = field; }
-    public void setFilterValue1(JobMessageStatus filterValue1) { this.filterValue1 = filterValue1; }
-    public void setFilterValue2(JobMessageStatus filterValue2) { this.filterValue2 = filterValue2; }
-    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
-  }
-  public static class JobMessageJobMessageTransmissionStatusEnumFilterInput {
-    private JobMessageTransmissionStatusFilterField field;
-    private JobMessageTransmissionStatus filterValue1;
-    private JobMessageTransmissionStatus filterValue2;
-    private NumberFilterOperator operator;
-  
-    public JobMessageJobMessageTransmissionStatusEnumFilterInput(Map<String, Object> args) {
-      if (args != null) {
-        if (args.get("field") instanceof JobMessageTransmissionStatusFilterField) {
-          this.field = (JobMessageTransmissionStatusFilterField) args.get("field");
-        } else {
-          this.field = JobMessageTransmissionStatusFilterField.valueOf((String) args.get("field"));
-        }
-        if (args.get("filterValue1") instanceof JobMessageTransmissionStatus) {
-          this.filterValue1 = (JobMessageTransmissionStatus) args.get("filterValue1");
-        } else {
-          this.filterValue1 = JobMessageTransmissionStatus.valueOf((String) args.get("filterValue1"));
-        }
-        if (args.get("filterValue2") instanceof JobMessageTransmissionStatus) {
-          this.filterValue2 = (JobMessageTransmissionStatus) args.get("filterValue2");
-        } else {
-          this.filterValue2 = JobMessageTransmissionStatus.valueOf((String) args.get("filterValue2"));
-        }
-        if (args.get("operator") instanceof NumberFilterOperator) {
-          this.operator = (NumberFilterOperator) args.get("operator");
-        } else {
-          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
-        }
-      }
-    }
-  
-    public JobMessageTransmissionStatusFilterField getField() { return this.field; }
-    public JobMessageTransmissionStatus getFilterValue1() { return this.filterValue1; }
-    public JobMessageTransmissionStatus getFilterValue2() { return this.filterValue2; }
-    public NumberFilterOperator getOperator() { return this.operator; }
-    public void setField(JobMessageTransmissionStatusFilterField field) { this.field = field; }
-    public void setFilterValue1(JobMessageTransmissionStatus filterValue1) { this.filterValue1 = filterValue1; }
-    public void setFilterValue2(JobMessageTransmissionStatus filterValue2) { this.filterValue2 = filterValue2; }
-    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
-  }
   public static class JobMessageQueryParamsInput {
-    private Iterable<JobMessageDateFilterInput> dateFilters;
+    private Iterable<JobMessageBaseDateFilterInput> dateFilters;
     private SortDirection sortDirection;
     private JobMessageSortField sortField;
-    private Iterable<JobMessageJobMessageStatusEnumFilterInput> statusFilters;
-    private Iterable<JobMessageStringFilterInput> stringFilters;
-    private Iterable<JobMessageJobMessageTransmissionStatusEnumFilterInput> transmissionStatusFilters;
+    private Iterable<JobMessageBaseJobMessageStatusEnumFilterInput> statusFilters;
+    private Iterable<JobMessageBaseStringFilterInput> stringFilters;
+    private Iterable<JobMessageBaseJobMessageTransmissionStatusEnumFilterInput> transmissionStatusFilters;
   
     public JobMessageQueryParamsInput(Map<String, Object> args) {
       if (args != null) {
         if (args.get("dateFilters") != null) {
-        		this.dateFilters = (Iterable<JobMessageDateFilterInput>) args.get("dateFilters");
+        		this.dateFilters = (Iterable<JobMessageBaseDateFilterInput>) args.get("dateFilters");
         }
         if (args.get("sortDirection") instanceof SortDirection) {
           this.sortDirection = (SortDirection) args.get("sortDirection");
@@ -8159,29 +8567,29 @@ public class Types {
           this.sortField = JobMessageSortField.valueOf((String) args.get("sortField"));
         }
         if (args.get("statusFilters") != null) {
-        		this.statusFilters = (Iterable<JobMessageJobMessageStatusEnumFilterInput>) args.get("statusFilters");
+        		this.statusFilters = (Iterable<JobMessageBaseJobMessageStatusEnumFilterInput>) args.get("statusFilters");
         }
         if (args.get("stringFilters") != null) {
-        		this.stringFilters = (Iterable<JobMessageStringFilterInput>) args.get("stringFilters");
+        		this.stringFilters = (Iterable<JobMessageBaseStringFilterInput>) args.get("stringFilters");
         }
         if (args.get("transmissionStatusFilters") != null) {
-        		this.transmissionStatusFilters = (Iterable<JobMessageJobMessageTransmissionStatusEnumFilterInput>) args.get("transmissionStatusFilters");
+        		this.transmissionStatusFilters = (Iterable<JobMessageBaseJobMessageTransmissionStatusEnumFilterInput>) args.get("transmissionStatusFilters");
         }
       }
     }
   
-    public Iterable<JobMessageDateFilterInput> getDateFilters() { return this.dateFilters; }
+    public Iterable<JobMessageBaseDateFilterInput> getDateFilters() { return this.dateFilters; }
     public SortDirection getSortDirection() { return this.sortDirection; }
     public JobMessageSortField getSortField() { return this.sortField; }
-    public Iterable<JobMessageJobMessageStatusEnumFilterInput> getStatusFilters() { return this.statusFilters; }
-    public Iterable<JobMessageStringFilterInput> getStringFilters() { return this.stringFilters; }
-    public Iterable<JobMessageJobMessageTransmissionStatusEnumFilterInput> getTransmissionStatusFilters() { return this.transmissionStatusFilters; }
-    public void setDateFilters(Iterable<JobMessageDateFilterInput> dateFilters) { this.dateFilters = dateFilters; }
+    public Iterable<JobMessageBaseJobMessageStatusEnumFilterInput> getStatusFilters() { return this.statusFilters; }
+    public Iterable<JobMessageBaseStringFilterInput> getStringFilters() { return this.stringFilters; }
+    public Iterable<JobMessageBaseJobMessageTransmissionStatusEnumFilterInput> getTransmissionStatusFilters() { return this.transmissionStatusFilters; }
+    public void setDateFilters(Iterable<JobMessageBaseDateFilterInput> dateFilters) { this.dateFilters = dateFilters; }
     public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
     public void setSortField(JobMessageSortField sortField) { this.sortField = sortField; }
-    public void setStatusFilters(Iterable<JobMessageJobMessageStatusEnumFilterInput> statusFilters) { this.statusFilters = statusFilters; }
-    public void setStringFilters(Iterable<JobMessageStringFilterInput> stringFilters) { this.stringFilters = stringFilters; }
-    public void setTransmissionStatusFilters(Iterable<JobMessageJobMessageTransmissionStatusEnumFilterInput> transmissionStatusFilters) { this.transmissionStatusFilters = transmissionStatusFilters; }
+    public void setStatusFilters(Iterable<JobMessageBaseJobMessageStatusEnumFilterInput> statusFilters) { this.statusFilters = statusFilters; }
+    public void setStringFilters(Iterable<JobMessageBaseStringFilterInput> stringFilters) { this.stringFilters = stringFilters; }
+    public void setTransmissionStatusFilters(Iterable<JobMessageBaseJobMessageTransmissionStatusEnumFilterInput> transmissionStatusFilters) { this.transmissionStatusFilters = transmissionStatusFilters; }
   }
   public enum JobMessageSortField {
     ID,
@@ -8192,45 +8600,18 @@ public class Types {
   
   public enum JobMessageStatus {
     CANCELED,
-    COMPLETE,
+    COMPLETED,
     ERROR,
     PROCESSING
     
   }
+  
   
   public enum JobMessageStatusFilterField {
     STATUS
     
   }
   
-  public static class JobMessageStringFilterInput {
-    private JobMessageStringFilterField field;
-    private String filterValue1;
-    private StringFilterOperator operator;
-  
-    public JobMessageStringFilterInput(Map<String, Object> args) {
-      if (args != null) {
-        if (args.get("field") instanceof JobMessageStringFilterField) {
-          this.field = (JobMessageStringFilterField) args.get("field");
-        } else {
-          this.field = JobMessageStringFilterField.valueOf((String) args.get("field"));
-        }
-        this.filterValue1 = (String) args.get("filterValue1");
-        if (args.get("operator") instanceof StringFilterOperator) {
-          this.operator = (StringFilterOperator) args.get("operator");
-        } else {
-          this.operator = StringFilterOperator.valueOf((String) args.get("operator"));
-        }
-      }
-    }
-  
-    public JobMessageStringFilterField getField() { return this.field; }
-    public String getFilterValue1() { return this.filterValue1; }
-    public StringFilterOperator getOperator() { return this.operator; }
-    public void setField(JobMessageStringFilterField field) { this.field = field; }
-    public void setFilterValue1(String filterValue1) { this.filterValue1 = filterValue1; }
-    public void setOperator(StringFilterOperator operator) { this.operator = operator; }
-  }
   public enum JobMessageStringFilterField {
     DOCUMENT_ID,
     EXTERNAL_ID,
@@ -9236,36 +9617,24 @@ public class Types {
     public void setZipCode(String zipCode) { this.zipCode = zipCode; }
   }
   public static class PostalAdhocRecipientInput {
-    private String addressLine1;
-    private String addressLine2;
-    private String city;
-    private String country;
+    private PostalAddressInput address;
+    private Boolean isPrimary;
     private String name;
-    private String postalCode;
   
     public PostalAdhocRecipientInput(Map<String, Object> args) {
       if (args != null) {
-        this.addressLine1 = (String) args.get("addressLine1");
-        this.addressLine2 = (String) args.get("addressLine2");
-        this.city = (String) args.get("city");
-        this.country = (String) args.get("country");
+        this.address = new PostalAddressInput((Map<String, Object>) args.get("address"));
+        this.isPrimary = (Boolean) args.get("isPrimary");
         this.name = (String) args.get("name");
-        this.postalCode = (String) args.get("postalCode");
       }
     }
   
-    public String getAddressLine1() { return this.addressLine1; }
-    public String getAddressLine2() { return this.addressLine2; }
-    public String getCity() { return this.city; }
-    public String getCountry() { return this.country; }
+    public PostalAddressInput getAddress() { return this.address; }
+    public Boolean getIsPrimary() { return this.isPrimary; }
     public String getName() { return this.name; }
-    public String getPostalCode() { return this.postalCode; }
-    public void setAddressLine1(String addressLine1) { this.addressLine1 = addressLine1; }
-    public void setAddressLine2(String addressLine2) { this.addressLine2 = addressLine2; }
-    public void setCity(String city) { this.city = city; }
-    public void setCountry(String country) { this.country = country; }
+    public void setAddress(PostalAddressInput address) { this.address = address; }
+    public void setIsPrimary(Boolean isPrimary) { this.isPrimary = isPrimary; }
     public void setName(String name) { this.name = name; }
-    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
   }
   
   public static class PostalJobDateFilterInput {
@@ -9462,6 +9831,7 @@ public class Types {
   public static class PostalParameterInput {
     private EnvelopeType envelope;
     private LreArManagementType lreArManagement;
+    private Boolean mergeDocuments;
     private Boolean printBothSide;
     private Boolean printColor;
     private PostalAddressInput sender;
@@ -9479,6 +9849,7 @@ public class Types {
         } else {
           this.lreArManagement = LreArManagementType.valueOf((String) args.get("lreArManagement"));
         }
+        this.mergeDocuments = (Boolean) args.get("mergeDocuments");
         this.printBothSide = (Boolean) args.get("printBothSide");
         this.printColor = (Boolean) args.get("printColor");
         this.sender = new PostalAddressInput((Map<String, Object>) args.get("sender"));
@@ -9492,17 +9863,170 @@ public class Types {
   
     public EnvelopeType getEnvelope() { return this.envelope; }
     public LreArManagementType getLreArManagement() { return this.lreArManagement; }
+    public Boolean getMergeDocuments() { return this.mergeDocuments; }
     public Boolean getPrintBothSide() { return this.printBothSide; }
     public Boolean getPrintColor() { return this.printColor; }
     public PostalAddressInput getSender() { return this.sender; }
     public StampType getStamp() { return this.stamp; }
     public void setEnvelope(EnvelopeType envelope) { this.envelope = envelope; }
     public void setLreArManagement(LreArManagementType lreArManagement) { this.lreArManagement = lreArManagement; }
+    public void setMergeDocuments(Boolean mergeDocuments) { this.mergeDocuments = mergeDocuments; }
     public void setPrintBothSide(Boolean printBothSide) { this.printBothSide = printBothSide; }
     public void setPrintColor(Boolean printColor) { this.printColor = printColor; }
     public void setSender(PostalAddressInput sender) { this.sender = sender; }
     public void setStamp(StampType stamp) { this.stamp = stamp; }
   }
+  
+  public static class PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput {
+    private PostalParameterConfigurationOwnerTypeFilterField field;
+    private InheritedConfigurationOwnerType filterValue1;
+    private InheritedConfigurationOwnerType filterValue2;
+    private NumberFilterOperator operator;
+  
+    public PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof PostalParameterConfigurationOwnerTypeFilterField) {
+          this.field = (PostalParameterConfigurationOwnerTypeFilterField) args.get("field");
+        } else {
+          this.field = PostalParameterConfigurationOwnerTypeFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof InheritedConfigurationOwnerType) {
+          this.filterValue1 = (InheritedConfigurationOwnerType) args.get("filterValue1");
+        } else {
+          this.filterValue1 = InheritedConfigurationOwnerType.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof InheritedConfigurationOwnerType) {
+          this.filterValue2 = (InheritedConfigurationOwnerType) args.get("filterValue2");
+        } else {
+          this.filterValue2 = InheritedConfigurationOwnerType.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public PostalParameterConfigurationOwnerTypeFilterField getField() { return this.field; }
+    public InheritedConfigurationOwnerType getFilterValue1() { return this.filterValue1; }
+    public InheritedConfigurationOwnerType getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(PostalParameterConfigurationOwnerTypeFilterField field) { this.field = field; }
+    public void setFilterValue1(InheritedConfigurationOwnerType filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(InheritedConfigurationOwnerType filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class PostalParameterConfigurationInput {
+    private EnvelopeType envelope;
+    private String id;
+    private LreArManagementType lreArManagement;
+    private Boolean mergeDocuments;
+    private String ownerId;
+    private InheritedConfigurationOwnerType ownerType;
+    private Boolean printBothSide;
+    private Boolean printColor;
+    private PostalAddressInput sender;
+    private StampType stamp;
+  
+    public PostalParameterConfigurationInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("envelope") instanceof EnvelopeType) {
+          this.envelope = (EnvelopeType) args.get("envelope");
+        } else {
+          this.envelope = EnvelopeType.valueOf((String) args.get("envelope"));
+        }
+        this.id = (String) args.get("id");
+        if (args.get("lreArManagement") instanceof LreArManagementType) {
+          this.lreArManagement = (LreArManagementType) args.get("lreArManagement");
+        } else {
+          this.lreArManagement = LreArManagementType.valueOf((String) args.get("lreArManagement"));
+        }
+        this.mergeDocuments = (Boolean) args.get("mergeDocuments");
+        this.ownerId = (String) args.get("ownerId");
+        if (args.get("ownerType") instanceof InheritedConfigurationOwnerType) {
+          this.ownerType = (InheritedConfigurationOwnerType) args.get("ownerType");
+        } else {
+          this.ownerType = InheritedConfigurationOwnerType.valueOf((String) args.get("ownerType"));
+        }
+        this.printBothSide = (Boolean) args.get("printBothSide");
+        this.printColor = (Boolean) args.get("printColor");
+        this.sender = new PostalAddressInput((Map<String, Object>) args.get("sender"));
+        if (args.get("stamp") instanceof StampType) {
+          this.stamp = (StampType) args.get("stamp");
+        } else {
+          this.stamp = StampType.valueOf((String) args.get("stamp"));
+        }
+      }
+    }
+  
+    public EnvelopeType getEnvelope() { return this.envelope; }
+    public String getId() { return this.id; }
+    public LreArManagementType getLreArManagement() { return this.lreArManagement; }
+    public Boolean getMergeDocuments() { return this.mergeDocuments; }
+    public String getOwnerId() { return this.ownerId; }
+    public InheritedConfigurationOwnerType getOwnerType() { return this.ownerType; }
+    public Boolean getPrintBothSide() { return this.printBothSide; }
+    public Boolean getPrintColor() { return this.printColor; }
+    public PostalAddressInput getSender() { return this.sender; }
+    public StampType getStamp() { return this.stamp; }
+    public void setEnvelope(EnvelopeType envelope) { this.envelope = envelope; }
+    public void setId(String id) { this.id = id; }
+    public void setLreArManagement(LreArManagementType lreArManagement) { this.lreArManagement = lreArManagement; }
+    public void setMergeDocuments(Boolean mergeDocuments) { this.mergeDocuments = mergeDocuments; }
+    public void setOwnerId(String ownerId) { this.ownerId = ownerId; }
+    public void setOwnerType(InheritedConfigurationOwnerType ownerType) { this.ownerType = ownerType; }
+    public void setPrintBothSide(Boolean printBothSide) { this.printBothSide = printBothSide; }
+    public void setPrintColor(Boolean printColor) { this.printColor = printColor; }
+    public void setSender(PostalAddressInput sender) { this.sender = sender; }
+    public void setStamp(StampType stamp) { this.stamp = stamp; }
+  }
+  public enum PostalParameterConfigurationOwnerTypeFilterField {
+    OWNER_TYPE
+    
+  }
+  
+  public static class PostalParameterConfigurationQueryParamsInput {
+    private String ownerId;
+    private Iterable<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters;
+    private SortDirection sortDirection;
+    private PostalParameterConfigurationSortField sortField;
+  
+    public PostalParameterConfigurationQueryParamsInput(Map<String, Object> args) {
+      if (args != null) {
+        this.ownerId = (String) args.get("ownerId");
+        if (args.get("ownerTypeFilters") != null) {
+        		this.ownerTypeFilters = (Iterable<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput>) args.get("ownerTypeFilters");
+        }
+        if (args.get("sortDirection") instanceof SortDirection) {
+          this.sortDirection = (SortDirection) args.get("sortDirection");
+        } else {
+          this.sortDirection = SortDirection.valueOf((String) args.get("sortDirection"));
+        }
+        if (args.get("sortField") instanceof PostalParameterConfigurationSortField) {
+          this.sortField = (PostalParameterConfigurationSortField) args.get("sortField");
+        } else {
+          this.sortField = PostalParameterConfigurationSortField.valueOf((String) args.get("sortField"));
+        }
+      }
+    }
+  
+    public String getOwnerId() { return this.ownerId; }
+    public Iterable<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput> getOwnerTypeFilters() { return this.ownerTypeFilters; }
+    public SortDirection getSortDirection() { return this.sortDirection; }
+    public PostalParameterConfigurationSortField getSortField() { return this.sortField; }
+    public void setOwnerId(String ownerId) { this.ownerId = ownerId; }
+    public void setOwnerTypeFilters(Iterable<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters) { this.ownerTypeFilters = ownerTypeFilters; }
+    public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
+    public void setSortField(PostalParameterConfigurationSortField sortField) { this.sortField = sortField; }
+  }
+  public enum PostalParameterConfigurationSortField {
+    CREATION_DATE,
+    LAST_MODIFICATION_DATE
+    
+  }
+  
+  
   
   public static class PushJobInput {
     private Iterable<FileIdOrNewInputTypeInput> adhocRecipientFiles;
@@ -9798,6 +10322,7 @@ public class Types {
   public enum RightType {
     ADD_ENVIRONMENT,
     ADD_TENANT,
+    CANCEL_JOB_MESSAGE,
     CHANGE_ACTIVITY,
     CHANGE_CLICKED_LINK_DOCUMENT,
     CHANGE_CONFIGURATION,
@@ -9818,12 +10343,14 @@ public class Types {
     CHANGE_NOTE,
     CHANGE_OMS_RESOURCES,
     CHANGE_POSTAL_JOB,
+    CHANGE_POSTAL_PARAMETER_CONFIGURATION,
     CHANGE_POWER_BI_AUTH_TOKEN,
     CHANGE_PRODUCT,
     CHANGE_PRODUCT_INSTALL,
     CHANGE_SERVICE,
     CHANGE_TEMPLATE_CONTENT,
     CHANGE_TEMPLATE_STRUCTURE,
+    CHANGE_TEMPLATE_VARIABLE_CONFIGURATION,
     CHANGE_TENANT_API_USER,
     CHANGE_TENANT_EDC_OMS_INFO,
     CHANGE_TENANT_USER,
@@ -9857,12 +10384,15 @@ public class Types {
     READ_NOTE,
     READ_OMS_RESOURCES,
     READ_POSTAL_JOB,
+    READ_POSTAL_PARAMETER_CONFIGURATION,
     READ_PRODUCT,
     READ_PRODUCT_INSTALL,
     READ_RIGHT,
     READ_SERVICE,
+    READ_STATUS_ACTION,
     READ_TEMPLATE_CONTENT,
     READ_TEMPLATE_STRUCTURE,
+    READ_TEMPLATE_VARIABLE_CONFIGURATION,
     READ_TENANT,
     READ_TENANT_API_USER,
     READ_TENANT_EDC_OMS_INFO,
@@ -10292,6 +10822,82 @@ public class Types {
     
   }
   
+  
+  public static class StatusActionQueryParamsInput {
+    private SortDirection sortDirection;
+    private StatusActionSortField sortField;
+    private Iterable<StatusActionStringFilterInput> stringFilters;
+  
+    public StatusActionQueryParamsInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("sortDirection") instanceof SortDirection) {
+          this.sortDirection = (SortDirection) args.get("sortDirection");
+        } else {
+          this.sortDirection = SortDirection.valueOf((String) args.get("sortDirection"));
+        }
+        if (args.get("sortField") instanceof StatusActionSortField) {
+          this.sortField = (StatusActionSortField) args.get("sortField");
+        } else {
+          this.sortField = StatusActionSortField.valueOf((String) args.get("sortField"));
+        }
+        if (args.get("stringFilters") != null) {
+        		this.stringFilters = (Iterable<StatusActionStringFilterInput>) args.get("stringFilters");
+        }
+      }
+    }
+  
+    public SortDirection getSortDirection() { return this.sortDirection; }
+    public StatusActionSortField getSortField() { return this.sortField; }
+    public Iterable<StatusActionStringFilterInput> getStringFilters() { return this.stringFilters; }
+    public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
+    public void setSortField(StatusActionSortField sortField) { this.sortField = sortField; }
+    public void setStringFilters(Iterable<StatusActionStringFilterInput> stringFilters) { this.stringFilters = stringFilters; }
+  }
+  public enum StatusActionSortField {
+    ACTION,
+    CATEGORY,
+    ID,
+    STATUS
+    
+  }
+  
+  public static class StatusActionStringFilterInput {
+    private StatusActionStringFilterField field;
+    private String filterValue1;
+    private StringFilterOperator operator;
+  
+    public StatusActionStringFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof StatusActionStringFilterField) {
+          this.field = (StatusActionStringFilterField) args.get("field");
+        } else {
+          this.field = StatusActionStringFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (String) args.get("filterValue1");
+        if (args.get("operator") instanceof StringFilterOperator) {
+          this.operator = (StringFilterOperator) args.get("operator");
+        } else {
+          this.operator = StringFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public StatusActionStringFilterField getField() { return this.field; }
+    public String getFilterValue1() { return this.filterValue1; }
+    public StringFilterOperator getOperator() { return this.operator; }
+    public void setField(StatusActionStringFilterField field) { this.field = field; }
+    public void setFilterValue1(String filterValue1) { this.filterValue1 = filterValue1; }
+    public void setOperator(StringFilterOperator operator) { this.operator = operator; }
+  }
+  public enum StatusActionStringFilterField {
+    ACTION,
+    CATEGORY,
+    ID,
+    STATUS
+    
+  }
+  
+  
   public enum StringFilterOperator {
     CONTAIN,
     DEFINED,
@@ -10309,6 +10915,635 @@ public class Types {
     UNDEFINED
     
   }
+  
+  
+  public static class TemplateContentBoolFilterInput {
+    private TemplateContentBoolFilterField field;
+    private Boolean filterValue1;
+    private BoolFilterOperator operator;
+  
+    public TemplateContentBoolFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateContentBoolFilterField) {
+          this.field = (TemplateContentBoolFilterField) args.get("field");
+        } else {
+          this.field = TemplateContentBoolFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (Boolean) args.get("filterValue1");
+        if (args.get("operator") instanceof BoolFilterOperator) {
+          this.operator = (BoolFilterOperator) args.get("operator");
+        } else {
+          this.operator = BoolFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateContentBoolFilterField getField() { return this.field; }
+    public Boolean getFilterValue1() { return this.filterValue1; }
+    public BoolFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateContentBoolFilterField field) { this.field = field; }
+    public void setFilterValue1(Boolean filterValue1) { this.filterValue1 = filterValue1; }
+    public void setOperator(BoolFilterOperator operator) { this.operator = operator; }
+  }
+  public enum TemplateContentBoolFilterField {
+    IS_ENABLED
+    
+  }
+  
+  public static class TemplateContentDateFilterInput {
+    private TemplateContentDateFilterField field;
+    private Object filterValue1;
+    private Object filterValue2;
+    private NumberFilterOperator operator;
+  
+    public TemplateContentDateFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateContentDateFilterField) {
+          this.field = (TemplateContentDateFilterField) args.get("field");
+        } else {
+          this.field = TemplateContentDateFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (Object) args.get("filterValue1");
+        this.filterValue2 = (Object) args.get("filterValue2");
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateContentDateFilterField getField() { return this.field; }
+    public Object getFilterValue1() { return this.filterValue1; }
+    public Object getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateContentDateFilterField field) { this.field = field; }
+    public void setFilterValue1(Object filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(Object filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public enum TemplateContentDateFilterField {
+    CREATION_DATE
+    
+  }
+  
+  public static class TemplateContentInheritedConfigurationOwnerTypeEnumFilterInput {
+    private TemplateContentOwnerTypeFilterField field;
+    private InheritedConfigurationOwnerType filterValue1;
+    private InheritedConfigurationOwnerType filterValue2;
+    private NumberFilterOperator operator;
+  
+    public TemplateContentInheritedConfigurationOwnerTypeEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateContentOwnerTypeFilterField) {
+          this.field = (TemplateContentOwnerTypeFilterField) args.get("field");
+        } else {
+          this.field = TemplateContentOwnerTypeFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof InheritedConfigurationOwnerType) {
+          this.filterValue1 = (InheritedConfigurationOwnerType) args.get("filterValue1");
+        } else {
+          this.filterValue1 = InheritedConfigurationOwnerType.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof InheritedConfigurationOwnerType) {
+          this.filterValue2 = (InheritedConfigurationOwnerType) args.get("filterValue2");
+        } else {
+          this.filterValue2 = InheritedConfigurationOwnerType.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateContentOwnerTypeFilterField getField() { return this.field; }
+    public InheritedConfigurationOwnerType getFilterValue1() { return this.filterValue1; }
+    public InheritedConfigurationOwnerType getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateContentOwnerTypeFilterField field) { this.field = field; }
+    public void setFilterValue1(InheritedConfigurationOwnerType filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(InheritedConfigurationOwnerType filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class TemplateContentInput {
+    private String content;
+    private String id;
+    private Boolean isEnabled;
+    private TemplateContentNotificationType notificationType;
+    private String ownerId;
+    private InheritedConfigurationOwnerType ownerType;
+    private String subject;
+    private TemplateContentTransmissionType transmissionType;
+  
+    public TemplateContentInput(Map<String, Object> args) {
+      if (args != null) {
+        this.content = (String) args.get("content");
+        this.id = (String) args.get("id");
+        this.isEnabled = (Boolean) args.get("isEnabled");
+        if (args.get("notificationType") instanceof TemplateContentNotificationType) {
+          this.notificationType = (TemplateContentNotificationType) args.get("notificationType");
+        } else {
+          this.notificationType = TemplateContentNotificationType.valueOf((String) args.get("notificationType"));
+        }
+        this.ownerId = (String) args.get("ownerId");
+        if (args.get("ownerType") instanceof InheritedConfigurationOwnerType) {
+          this.ownerType = (InheritedConfigurationOwnerType) args.get("ownerType");
+        } else {
+          this.ownerType = InheritedConfigurationOwnerType.valueOf((String) args.get("ownerType"));
+        }
+        this.subject = (String) args.get("subject");
+        if (args.get("transmissionType") instanceof TemplateContentTransmissionType) {
+          this.transmissionType = (TemplateContentTransmissionType) args.get("transmissionType");
+        } else {
+          this.transmissionType = TemplateContentTransmissionType.valueOf((String) args.get("transmissionType"));
+        }
+      }
+    }
+  
+    public String getContent() { return this.content; }
+    public String getId() { return this.id; }
+    public Boolean getIsEnabled() { return this.isEnabled; }
+    public TemplateContentNotificationType getNotificationType() { return this.notificationType; }
+    public String getOwnerId() { return this.ownerId; }
+    public InheritedConfigurationOwnerType getOwnerType() { return this.ownerType; }
+    public String getSubject() { return this.subject; }
+    public TemplateContentTransmissionType getTransmissionType() { return this.transmissionType; }
+    public void setContent(String content) { this.content = content; }
+    public void setId(String id) { this.id = id; }
+    public void setIsEnabled(Boolean isEnabled) { this.isEnabled = isEnabled; }
+    public void setNotificationType(TemplateContentNotificationType notificationType) { this.notificationType = notificationType; }
+    public void setOwnerId(String ownerId) { this.ownerId = ownerId; }
+    public void setOwnerType(InheritedConfigurationOwnerType ownerType) { this.ownerType = ownerType; }
+    public void setSubject(String subject) { this.subject = subject; }
+    public void setTransmissionType(TemplateContentTransmissionType transmissionType) { this.transmissionType = transmissionType; }
+  }
+  public enum TemplateContentNotificationType {
+    ADD_USER_TO_TENANT,
+    DOCUMENT_NOTIFICATION,
+    DOCUMENT_NOTIFICATION_LINK,
+    DOCUMENT_NOTIFICATION_WITH_LINK,
+    ERE,
+    ERE_ANONYMOUS,
+    INTERNAL_NOT_ARCHIVED_FILES,
+    INVITE_USER,
+    LSE,
+    LSE_ANONYMOUS,
+    LSE_ERE_END_OF_JOB,
+    NEW_USER_LOGIN,
+    NEW_USER_PASSWORD
+    
+  }
+  
+  public enum TemplateContentNotificationTypeFilterField {
+    NOTIFICATION_TYPE
+    
+  }
+  
+  public enum TemplateContentOwnerTypeFilterField {
+    OWNER_TYPE
+    
+  }
+  
+  public static class TemplateContentQueryParamsInput {
+    private Iterable<TemplateContentBoolFilterInput> boolFilters;
+    private Iterable<TemplateContentDateFilterInput> dateFilters;
+    private Iterable<TemplateContentTemplateContentNotificationTypeEnumFilterInput> notificationTypeFilters;
+    private Iterable<TemplateContentInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters;
+    private SortDirection sortDirection;
+    private TemplateContentSortField sortField;
+    private Iterable<TemplateContentStringFilterInput> stringFilters;
+    private Iterable<TemplateContentTemplateContentTransmissionTypeEnumFilterInput> transmissionTypeFilters;
+  
+    public TemplateContentQueryParamsInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("boolFilters") != null) {
+        		this.boolFilters = (Iterable<TemplateContentBoolFilterInput>) args.get("boolFilters");
+        }
+        if (args.get("dateFilters") != null) {
+        		this.dateFilters = (Iterable<TemplateContentDateFilterInput>) args.get("dateFilters");
+        }
+        if (args.get("notificationTypeFilters") != null) {
+        		this.notificationTypeFilters = (Iterable<TemplateContentTemplateContentNotificationTypeEnumFilterInput>) args.get("notificationTypeFilters");
+        }
+        if (args.get("ownerTypeFilters") != null) {
+        		this.ownerTypeFilters = (Iterable<TemplateContentInheritedConfigurationOwnerTypeEnumFilterInput>) args.get("ownerTypeFilters");
+        }
+        if (args.get("sortDirection") instanceof SortDirection) {
+          this.sortDirection = (SortDirection) args.get("sortDirection");
+        } else {
+          this.sortDirection = SortDirection.valueOf((String) args.get("sortDirection"));
+        }
+        if (args.get("sortField") instanceof TemplateContentSortField) {
+          this.sortField = (TemplateContentSortField) args.get("sortField");
+        } else {
+          this.sortField = TemplateContentSortField.valueOf((String) args.get("sortField"));
+        }
+        if (args.get("stringFilters") != null) {
+        		this.stringFilters = (Iterable<TemplateContentStringFilterInput>) args.get("stringFilters");
+        }
+        if (args.get("transmissionTypeFilters") != null) {
+        		this.transmissionTypeFilters = (Iterable<TemplateContentTemplateContentTransmissionTypeEnumFilterInput>) args.get("transmissionTypeFilters");
+        }
+      }
+    }
+  
+    public Iterable<TemplateContentBoolFilterInput> getBoolFilters() { return this.boolFilters; }
+    public Iterable<TemplateContentDateFilterInput> getDateFilters() { return this.dateFilters; }
+    public Iterable<TemplateContentTemplateContentNotificationTypeEnumFilterInput> getNotificationTypeFilters() { return this.notificationTypeFilters; }
+    public Iterable<TemplateContentInheritedConfigurationOwnerTypeEnumFilterInput> getOwnerTypeFilters() { return this.ownerTypeFilters; }
+    public SortDirection getSortDirection() { return this.sortDirection; }
+    public TemplateContentSortField getSortField() { return this.sortField; }
+    public Iterable<TemplateContentStringFilterInput> getStringFilters() { return this.stringFilters; }
+    public Iterable<TemplateContentTemplateContentTransmissionTypeEnumFilterInput> getTransmissionTypeFilters() { return this.transmissionTypeFilters; }
+    public void setBoolFilters(Iterable<TemplateContentBoolFilterInput> boolFilters) { this.boolFilters = boolFilters; }
+    public void setDateFilters(Iterable<TemplateContentDateFilterInput> dateFilters) { this.dateFilters = dateFilters; }
+    public void setNotificationTypeFilters(Iterable<TemplateContentTemplateContentNotificationTypeEnumFilterInput> notificationTypeFilters) { this.notificationTypeFilters = notificationTypeFilters; }
+    public void setOwnerTypeFilters(Iterable<TemplateContentInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters) { this.ownerTypeFilters = ownerTypeFilters; }
+    public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
+    public void setSortField(TemplateContentSortField sortField) { this.sortField = sortField; }
+    public void setStringFilters(Iterable<TemplateContentStringFilterInput> stringFilters) { this.stringFilters = stringFilters; }
+    public void setTransmissionTypeFilters(Iterable<TemplateContentTemplateContentTransmissionTypeEnumFilterInput> transmissionTypeFilters) { this.transmissionTypeFilters = transmissionTypeFilters; }
+  }
+  public enum TemplateContentSortField {
+    CREATION_DATE,
+    IS_ENABLED,
+    NOTIFICATION_TYPE,
+    OWNER_ID,
+    OWNER_TYPE,
+    SUBJECT,
+    TRANSMISSION_TYPE
+    
+  }
+  
+  public static class TemplateContentStringFilterInput {
+    private TemplateContentStringFilterField field;
+    private String filterValue1;
+    private StringFilterOperator operator;
+  
+    public TemplateContentStringFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateContentStringFilterField) {
+          this.field = (TemplateContentStringFilterField) args.get("field");
+        } else {
+          this.field = TemplateContentStringFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (String) args.get("filterValue1");
+        if (args.get("operator") instanceof StringFilterOperator) {
+          this.operator = (StringFilterOperator) args.get("operator");
+        } else {
+          this.operator = StringFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateContentStringFilterField getField() { return this.field; }
+    public String getFilterValue1() { return this.filterValue1; }
+    public StringFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateContentStringFilterField field) { this.field = field; }
+    public void setFilterValue1(String filterValue1) { this.filterValue1 = filterValue1; }
+    public void setOperator(StringFilterOperator operator) { this.operator = operator; }
+  }
+  public enum TemplateContentStringFilterField {
+    ID,
+    OWNER_ID,
+    SUBJECT
+    
+  }
+  
+  public static class TemplateContentTemplateContentNotificationTypeEnumFilterInput {
+    private TemplateContentNotificationTypeFilterField field;
+    private TemplateContentNotificationType filterValue1;
+    private TemplateContentNotificationType filterValue2;
+    private NumberFilterOperator operator;
+  
+    public TemplateContentTemplateContentNotificationTypeEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateContentNotificationTypeFilterField) {
+          this.field = (TemplateContentNotificationTypeFilterField) args.get("field");
+        } else {
+          this.field = TemplateContentNotificationTypeFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof TemplateContentNotificationType) {
+          this.filterValue1 = (TemplateContentNotificationType) args.get("filterValue1");
+        } else {
+          this.filterValue1 = TemplateContentNotificationType.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof TemplateContentNotificationType) {
+          this.filterValue2 = (TemplateContentNotificationType) args.get("filterValue2");
+        } else {
+          this.filterValue2 = TemplateContentNotificationType.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateContentNotificationTypeFilterField getField() { return this.field; }
+    public TemplateContentNotificationType getFilterValue1() { return this.filterValue1; }
+    public TemplateContentNotificationType getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateContentNotificationTypeFilterField field) { this.field = field; }
+    public void setFilterValue1(TemplateContentNotificationType filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(TemplateContentNotificationType filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class TemplateContentTemplateContentTransmissionTypeEnumFilterInput {
+    private TemplateContentTransmissionTypeFilterField field;
+    private TemplateContentTransmissionType filterValue1;
+    private TemplateContentTransmissionType filterValue2;
+    private NumberFilterOperator operator;
+  
+    public TemplateContentTemplateContentTransmissionTypeEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateContentTransmissionTypeFilterField) {
+          this.field = (TemplateContentTransmissionTypeFilterField) args.get("field");
+        } else {
+          this.field = TemplateContentTransmissionTypeFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof TemplateContentTransmissionType) {
+          this.filterValue1 = (TemplateContentTransmissionType) args.get("filterValue1");
+        } else {
+          this.filterValue1 = TemplateContentTransmissionType.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof TemplateContentTransmissionType) {
+          this.filterValue2 = (TemplateContentTransmissionType) args.get("filterValue2");
+        } else {
+          this.filterValue2 = TemplateContentTransmissionType.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateContentTransmissionTypeFilterField getField() { return this.field; }
+    public TemplateContentTransmissionType getFilterValue1() { return this.filterValue1; }
+    public TemplateContentTransmissionType getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateContentTransmissionTypeFilterField field) { this.field = field; }
+    public void setFilterValue1(TemplateContentTransmissionType filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(TemplateContentTransmissionType filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public enum TemplateContentTransmissionType {
+    EMAIL,
+    SMS,
+    WEB_NOTIFICATION
+    
+  }
+  
+  public enum TemplateContentTransmissionTypeFilterField {
+    TRANSMISSION_TYPE
+    
+  }
+  
+  
+  
+  public static class TemplateStructureBoolFilterInput {
+    private TemplateStructureBoolFilterField field;
+    private Boolean filterValue1;
+    private BoolFilterOperator operator;
+  
+    public TemplateStructureBoolFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateStructureBoolFilterField) {
+          this.field = (TemplateStructureBoolFilterField) args.get("field");
+        } else {
+          this.field = TemplateStructureBoolFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (Boolean) args.get("filterValue1");
+        if (args.get("operator") instanceof BoolFilterOperator) {
+          this.operator = (BoolFilterOperator) args.get("operator");
+        } else {
+          this.operator = BoolFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateStructureBoolFilterField getField() { return this.field; }
+    public Boolean getFilterValue1() { return this.filterValue1; }
+    public BoolFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateStructureBoolFilterField field) { this.field = field; }
+    public void setFilterValue1(Boolean filterValue1) { this.filterValue1 = filterValue1; }
+    public void setOperator(BoolFilterOperator operator) { this.operator = operator; }
+  }
+  public enum TemplateStructureBoolFilterField {
+    IS_ENABLED
+    
+  }
+  
+  public static class TemplateStructureDateFilterInput {
+    private TemplateStructureDateFilterField field;
+    private Object filterValue1;
+    private Object filterValue2;
+    private NumberFilterOperator operator;
+  
+    public TemplateStructureDateFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateStructureDateFilterField) {
+          this.field = (TemplateStructureDateFilterField) args.get("field");
+        } else {
+          this.field = TemplateStructureDateFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (Object) args.get("filterValue1");
+        this.filterValue2 = (Object) args.get("filterValue2");
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateStructureDateFilterField getField() { return this.field; }
+    public Object getFilterValue1() { return this.filterValue1; }
+    public Object getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateStructureDateFilterField field) { this.field = field; }
+    public void setFilterValue1(Object filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(Object filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public enum TemplateStructureDateFilterField {
+    CREATION_DATE
+    
+  }
+  
+  public static class TemplateStructureInheritedConfigurationOwnerTypeEnumFilterInput {
+    private TemplateStructureOwnerTypeFilterField field;
+    private InheritedConfigurationOwnerType filterValue1;
+    private InheritedConfigurationOwnerType filterValue2;
+    private NumberFilterOperator operator;
+  
+    public TemplateStructureInheritedConfigurationOwnerTypeEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateStructureOwnerTypeFilterField) {
+          this.field = (TemplateStructureOwnerTypeFilterField) args.get("field");
+        } else {
+          this.field = TemplateStructureOwnerTypeFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof InheritedConfigurationOwnerType) {
+          this.filterValue1 = (InheritedConfigurationOwnerType) args.get("filterValue1");
+        } else {
+          this.filterValue1 = InheritedConfigurationOwnerType.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof InheritedConfigurationOwnerType) {
+          this.filterValue2 = (InheritedConfigurationOwnerType) args.get("filterValue2");
+        } else {
+          this.filterValue2 = InheritedConfigurationOwnerType.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateStructureOwnerTypeFilterField getField() { return this.field; }
+    public InheritedConfigurationOwnerType getFilterValue1() { return this.filterValue1; }
+    public InheritedConfigurationOwnerType getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateStructureOwnerTypeFilterField field) { this.field = field; }
+    public void setFilterValue1(InheritedConfigurationOwnerType filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(InheritedConfigurationOwnerType filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class TemplateStructureInput {
+    private String contentBase64;
+    private String id;
+    private Boolean isEnabled;
+    private String ownerId;
+    private InheritedConfigurationOwnerType ownerType;
+  
+    public TemplateStructureInput(Map<String, Object> args) {
+      if (args != null) {
+        this.contentBase64 = (String) args.get("contentBase64");
+        this.id = (String) args.get("id");
+        this.isEnabled = (Boolean) args.get("isEnabled");
+        this.ownerId = (String) args.get("ownerId");
+        if (args.get("ownerType") instanceof InheritedConfigurationOwnerType) {
+          this.ownerType = (InheritedConfigurationOwnerType) args.get("ownerType");
+        } else {
+          this.ownerType = InheritedConfigurationOwnerType.valueOf((String) args.get("ownerType"));
+        }
+      }
+    }
+  
+    public String getContentBase64() { return this.contentBase64; }
+    public String getId() { return this.id; }
+    public Boolean getIsEnabled() { return this.isEnabled; }
+    public String getOwnerId() { return this.ownerId; }
+    public InheritedConfigurationOwnerType getOwnerType() { return this.ownerType; }
+    public void setContentBase64(String contentBase64) { this.contentBase64 = contentBase64; }
+    public void setId(String id) { this.id = id; }
+    public void setIsEnabled(Boolean isEnabled) { this.isEnabled = isEnabled; }
+    public void setOwnerId(String ownerId) { this.ownerId = ownerId; }
+    public void setOwnerType(InheritedConfigurationOwnerType ownerType) { this.ownerType = ownerType; }
+  }
+  public enum TemplateStructureOwnerTypeFilterField {
+    OWNER_TYPE
+    
+  }
+  
+  public static class TemplateStructureQueryParamsInput {
+    private Iterable<TemplateStructureBoolFilterInput> boolFilters;
+    private Iterable<TemplateStructureDateFilterInput> dateFilters;
+    private Iterable<TemplateStructureInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters;
+    private SortDirection sortDirection;
+    private TemplateStructureSortField sortField;
+    private Iterable<TemplateStructureStringFilterInput> stringFilters;
+  
+    public TemplateStructureQueryParamsInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("boolFilters") != null) {
+        		this.boolFilters = (Iterable<TemplateStructureBoolFilterInput>) args.get("boolFilters");
+        }
+        if (args.get("dateFilters") != null) {
+        		this.dateFilters = (Iterable<TemplateStructureDateFilterInput>) args.get("dateFilters");
+        }
+        if (args.get("ownerTypeFilters") != null) {
+        		this.ownerTypeFilters = (Iterable<TemplateStructureInheritedConfigurationOwnerTypeEnumFilterInput>) args.get("ownerTypeFilters");
+        }
+        if (args.get("sortDirection") instanceof SortDirection) {
+          this.sortDirection = (SortDirection) args.get("sortDirection");
+        } else {
+          this.sortDirection = SortDirection.valueOf((String) args.get("sortDirection"));
+        }
+        if (args.get("sortField") instanceof TemplateStructureSortField) {
+          this.sortField = (TemplateStructureSortField) args.get("sortField");
+        } else {
+          this.sortField = TemplateStructureSortField.valueOf((String) args.get("sortField"));
+        }
+        if (args.get("stringFilters") != null) {
+        		this.stringFilters = (Iterable<TemplateStructureStringFilterInput>) args.get("stringFilters");
+        }
+      }
+    }
+  
+    public Iterable<TemplateStructureBoolFilterInput> getBoolFilters() { return this.boolFilters; }
+    public Iterable<TemplateStructureDateFilterInput> getDateFilters() { return this.dateFilters; }
+    public Iterable<TemplateStructureInheritedConfigurationOwnerTypeEnumFilterInput> getOwnerTypeFilters() { return this.ownerTypeFilters; }
+    public SortDirection getSortDirection() { return this.sortDirection; }
+    public TemplateStructureSortField getSortField() { return this.sortField; }
+    public Iterable<TemplateStructureStringFilterInput> getStringFilters() { return this.stringFilters; }
+    public void setBoolFilters(Iterable<TemplateStructureBoolFilterInput> boolFilters) { this.boolFilters = boolFilters; }
+    public void setDateFilters(Iterable<TemplateStructureDateFilterInput> dateFilters) { this.dateFilters = dateFilters; }
+    public void setOwnerTypeFilters(Iterable<TemplateStructureInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters) { this.ownerTypeFilters = ownerTypeFilters; }
+    public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
+    public void setSortField(TemplateStructureSortField sortField) { this.sortField = sortField; }
+    public void setStringFilters(Iterable<TemplateStructureStringFilterInput> stringFilters) { this.stringFilters = stringFilters; }
+  }
+  public enum TemplateStructureSortField {
+    CREATION_DATE,
+    IS_ENABLED,
+    OWNER_ID,
+    OWNER_TYPE
+    
+  }
+  
+  public static class TemplateStructureStringFilterInput {
+    private TemplateStructureStringFilterField field;
+    private String filterValue1;
+    private StringFilterOperator operator;
+  
+    public TemplateStructureStringFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof TemplateStructureStringFilterField) {
+          this.field = (TemplateStructureStringFilterField) args.get("field");
+        } else {
+          this.field = TemplateStructureStringFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (String) args.get("filterValue1");
+        if (args.get("operator") instanceof StringFilterOperator) {
+          this.operator = (StringFilterOperator) args.get("operator");
+        } else {
+          this.operator = StringFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public TemplateStructureStringFilterField getField() { return this.field; }
+    public String getFilterValue1() { return this.filterValue1; }
+    public StringFilterOperator getOperator() { return this.operator; }
+    public void setField(TemplateStructureStringFilterField field) { this.field = field; }
+    public void setFilterValue1(String filterValue1) { this.filterValue1 = filterValue1; }
+    public void setOperator(StringFilterOperator operator) { this.operator = operator; }
+  }
+  public enum TemplateStructureStringFilterField {
+    ID,
+    OWNER_ID
+    
+  }
+  
+  
   
   
   public static class TemporaryDocumentContentInput {
@@ -10461,6 +11696,7 @@ public class Types {
   
   /** The application rights for tenant user. */
   public enum TenantRightType {
+    CANCEL_JOB_MESSAGE,
     CHANGE_ACTIVITY,
     CHANGE_CLICKED_LINK_DOCUMENT,
     CHANGE_CONTACT,
@@ -10475,9 +11711,11 @@ public class Types {
     CHANGE_NOTE,
     CHANGE_OMS_RESOURCES,
     CHANGE_POSTAL_JOB,
+    CHANGE_POSTAL_PARAMETER_CONFIGURATION,
     CHANGE_SERVICE,
     CHANGE_TEMPLATE_CONTENT,
     CHANGE_TEMPLATE_STRUCTURE,
+    CHANGE_TEMPLATE_VARIABLE_CONFIGURATION,
     CHANGE_TENANT_API_USER,
     CHANGE_TENANT_EDC_OMS_INFO,
     CHANGE_TENANT_USER,
@@ -10501,9 +11739,12 @@ public class Types {
     READ_NOTE,
     READ_OMS_RESOURCES,
     READ_POSTAL_JOB,
+    READ_POSTAL_PARAMETER_CONFIGURATION,
     READ_SERVICE,
+    READ_STATUS_ACTION,
     READ_TEMPLATE_CONTENT,
     READ_TEMPLATE_STRUCTURE,
+    READ_TEMPLATE_VARIABLE_CONFIGURATION,
     READ_TENANT,
     READ_TENANT_API_USER,
     READ_TENANT_EDC_OMS_INFO,
@@ -10775,8 +12016,8 @@ public class Types {
     private String code;
     private String id;
     private Boolean isEnabled;
-    private Boolean isMoralPerson;
     private String name;
+    private ThirdPartyPersonType personType;
     private Iterable<String> thirdPartyTypeIds;
   
     public ThirdPartyInput(Map<String, Object> args) {
@@ -10785,8 +12026,12 @@ public class Types {
         this.code = (String) args.get("code");
         this.id = (String) args.get("id");
         this.isEnabled = (Boolean) args.get("isEnabled");
-        this.isMoralPerson = (Boolean) args.get("isMoralPerson");
         this.name = (String) args.get("name");
+        if (args.get("personType") instanceof ThirdPartyPersonType) {
+          this.personType = (ThirdPartyPersonType) args.get("personType");
+        } else {
+          this.personType = ThirdPartyPersonType.valueOf((String) args.get("personType"));
+        }
         this.thirdPartyTypeIds = (Iterable<String>) args.get("thirdPartyTypeIds");
       }
     }
@@ -10795,17 +12040,24 @@ public class Types {
     public String getCode() { return this.code; }
     public String getId() { return this.id; }
     public Boolean getIsEnabled() { return this.isEnabled; }
-    public Boolean getIsMoralPerson() { return this.isMoralPerson; }
     public String getName() { return this.name; }
+    public ThirdPartyPersonType getPersonType() { return this.personType; }
     public Iterable<String> getThirdPartyTypeIds() { return this.thirdPartyTypeIds; }
     public void setAddress(PostalAddressInput address) { this.address = address; }
     public void setCode(String code) { this.code = code; }
     public void setId(String id) { this.id = id; }
     public void setIsEnabled(Boolean isEnabled) { this.isEnabled = isEnabled; }
-    public void setIsMoralPerson(Boolean isMoralPerson) { this.isMoralPerson = isMoralPerson; }
     public void setName(String name) { this.name = name; }
+    public void setPersonType(ThirdPartyPersonType personType) { this.personType = personType; }
     public void setThirdPartyTypeIds(Iterable<String> thirdPartyTypeIds) { this.thirdPartyTypeIds = thirdPartyTypeIds; }
   }
+  public enum ThirdPartyPersonType {
+    MORAL_PERSON_PRIVATE,
+    MORAL_PERSON_PUBLIC,
+    PRIVATE_PERSON
+    
+  }
+  
   public static class ThirdPartyQueryParamsInput {
     private Iterable<ThirdPartyBoolFilterInput> boolFilters;
     private SortDirection sortDirection;

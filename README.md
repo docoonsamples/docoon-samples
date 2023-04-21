@@ -20,7 +20,7 @@ https://nodejs.org/en/
 npm install
 ```
 
-### Generate the files
+### Run (Generate the files)
 
 Run this command in the root folder:
 ```cmd
@@ -29,6 +29,7 @@ npm run generate
 
 ## Get the last graphql schema
 
+### Install
 1. Create a .env file in the root folder with your ApiKey
 
 ```cmd
@@ -36,7 +37,16 @@ ApiKey=<YourApiKeyGeneratedFronWebsite>
 Endpoint=https://graphqlapi.docoon.com/api/BusinessApi
 ```
 
-2. Launch the loadschema cmd file in the root folder
+2. Install the modules in the get-schema folder
+
+```cmd
+cd get-schema
+npm install
+```
+
+### Run (get the graphql schema)
+
+Launch the loadschema cmd file in the root folder
 ```cmd
 loadschema.cmd
 ```
