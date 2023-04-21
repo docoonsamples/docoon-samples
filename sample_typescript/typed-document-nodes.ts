@@ -72,16 +72,21 @@ export enum ActivityActorTypeFilterField {
 }
 
 export enum ActivityCategory {
+  AddAttachmentsDocument = 'ADD_ATTACHMENTS_DOCUMENT',
+  ChangeStatusChorusB_2G = 'CHANGE_STATUS_CHORUS_B_2_G',
+  CompleteChorusB_2G = 'COMPLETE_CHORUS_B_2_G',
   DocumentArchived = 'DOCUMENT_ARCHIVED',
   DocumentCanceled = 'DOCUMENT_CANCELED',
   DocumentRead = 'DOCUMENT_READ',
   DocumentSigned = 'DOCUMENT_SIGNED',
+  EditMetadataDocument = 'EDIT_METADATA_DOCUMENT',
   Error = 'ERROR',
   ExternalProcess = 'EXTERNAL_PROCESS',
   JobCreated = 'JOB_CREATED',
   JobLaunched = 'JOB_LAUNCHED',
   JobProcessing = 'JOB_PROCESSING',
-  NotificationSent = 'NOTIFICATION_SENT'
+  NotificationSent = 'NOTIFICATION_SENT',
+  SendChorusB_2G = 'SEND_CHORUS_B_2_G'
 }
 
 export enum ActivityCategoryFilterField {
@@ -511,7 +516,7 @@ export type BusinessSchemaMutation = {
   addListOfValues?: Maybe<ListOfValues>;
   addMetadata?: Maybe<Metadata>;
   addNote?: Maybe<Note>;
-  addPaperMailJob?: Maybe<JobCreationResult>;
+  addPostalJob?: Maybe<JobCreationResult>;
   addPowerBiAuthToken?: Maybe<PowerBiAuthToken>;
   addPushJob?: Maybe<JobResult>;
   addService?: Maybe<Service>;
@@ -564,12 +569,16 @@ export type BusinessSchemaMutation = {
   editThirdPartyType?: Maybe<ThirdPartyType>;
   editValueOfList?: Maybe<ValueOfList>;
   readDocument?: Maybe<Scalars['Void']>;
+  relaunchJobMessage?: Maybe<Scalars['Void']>;
   renewApiDomainUser?: Maybe<ApiDomainUser>;
   renewApiEnvironmentUser?: Maybe<ApiEnvironmentUser>;
   renewApiTenantUser?: Maybe<ApiTenantUser>;
   resendInviteDomainUser?: Maybe<Scalars['Void']>;
   resendInviteEnvironmentUser?: Maybe<Scalars['Void']>;
   resendInviteTenantUser?: Maybe<Scalars['Void']>;
+  runActionOnDocument?: Maybe<Scalars['Void']>;
+  runActionOnJob?: Maybe<Scalars['Void']>;
+  runActionOnJobMessage?: Maybe<Scalars['Void']>;
   validateDomainUser?: Maybe<DomainUser>;
   validateEnvironmentUser?: Maybe<EnvironmentUser>;
   validateTenantUser?: Maybe<TenantUser>;
@@ -686,8 +695,8 @@ export type BusinessSchemaMutationAddNoteArgs = {
 };
 
 
-export type BusinessSchemaMutationAddPaperMailJobArgs = {
-  item: PaperMailJobInput;
+export type BusinessSchemaMutationAddPostalJobArgs = {
+  item: PostalJobInput;
   tenantId?: InputMaybe<Scalars['String']>;
 };
 
@@ -1012,9 +1021,15 @@ export type BusinessSchemaMutationEditValueOfListArgs = {
 
 
 export type BusinessSchemaMutationReadDocumentArgs = {
+  documentId: Scalars['String'];
   jobId: Scalars['String'];
   jobMessageId: Scalars['String'];
   tenantId: Scalars['String'];
+};
+
+
+export type BusinessSchemaMutationRelaunchJobMessageArgs = {
+  item: RelaunchJobMessageOptionsInput;
 };
 
 
@@ -1050,6 +1065,27 @@ export type BusinessSchemaMutationResendInviteTenantUserArgs = {
 };
 
 
+export type BusinessSchemaMutationRunActionOnDocumentArgs = {
+  documentId: Scalars['String'];
+  options: DocumentActionOptions;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationRunActionOnJobArgs = {
+  jobId: Scalars['String'];
+  options: JobActionOptions;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationRunActionOnJobMessageArgs = {
+  jobMessageId: Scalars['String'];
+  options: JobMessageActionOptions;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
 export type BusinessSchemaMutationValidateDomainUserArgs = {
   key: Scalars['String'];
 };
@@ -1077,6 +1113,7 @@ export type BusinessSchemaQuery = {
   apiTenantUserItems?: Maybe<Array<Maybe<ApiTenantUser>>>;
   apiTenantUserList?: Maybe<ApiTenantUserTypeConnection>;
   apiTenantUserRightList?: Maybe<TenantRightValueTypeConnection>;
+  chorusB2GProvidersList?: Maybe<Array<Maybe<ChorusProviderIdName>>>;
   clickedLinkDocumentItems?: Maybe<ClickedLinkDocument>;
   contactFunctionItems?: Maybe<Array<Maybe<ContactFunction>>>;
   contactFunctionList?: Maybe<ContactFunctionTypeConnection>;
@@ -1135,7 +1172,7 @@ export type BusinessSchemaQuery = {
   natureList?: Maybe<NatureTypeConnection>;
   noteItems?: Maybe<Array<Maybe<Note>>>;
   noteList?: Maybe<NoteTypeConnection>;
-  postalJobItems?: Maybe<Array<Maybe<PaperMailJob>>>;
+  postalJobItems?: Maybe<Array<Maybe<PostalJob>>>;
   postalJobList?: Maybe<PostalJobTypeConnection>;
   processingJobCountStatistics?: Maybe<JobCountStatistics>;
   rightInitialValueList?: Maybe<RightInitialValueTypeConnection>;
@@ -1227,6 +1264,13 @@ export type BusinessSchemaQueryApiTenantUserRightListArgs = {
   after?: InputMaybe<Scalars['String']>;
   apiUserId: Scalars['String'];
   params?: InputMaybe<RightValueQueryParams>;
+};
+
+
+export type BusinessSchemaQueryChorusB2GProvidersListArgs = {
+  login: Scalars['String'];
+  password: Scalars['String'];
+  serverType: ChorusServerType;
 };
 
 
@@ -1725,14 +1769,83 @@ export type BusinessSchemaQueryValueOfListSystemListArgs = {
   params?: InputMaybe<ValueOfListQueryParams>;
 };
 
+export type ChorusB2GAddress = {
+  __typename?: 'ChorusB2GAddress';
+  name: Scalars['String'];
+};
+
 export type ChorusB2GAdhocRecipientInput = {
   name: Scalars['String'];
-  service: Scalars['String'];
 };
+
+export type ChorusB2GConfig = {
+  __typename?: 'ChorusB2GConfig';
+  isTestMode: Scalars['Boolean'];
+  login: Scalars['String'];
+  password: Scalars['String'];
+  providerId: Scalars['String'];
+  recalculate: Scalars['Boolean'];
+  serverType: ChorusServerType;
+};
+
+export type ChorusB2GConfigInput = {
+  isTestMode: Scalars['Boolean'];
+  login: Scalars['String'];
+  password: Scalars['String'];
+  providerId: Scalars['String'];
+  recalculate: Scalars['Boolean'];
+  serverType: ChorusServerType;
+};
+
+export enum ChorusB2GErrorType {
+  InvalidAttachmentType = 'INVALID_ATTACHMENT_TYPE',
+  InvalidExemptionReason = 'INVALID_EXEMPTION_REASON',
+  InvalidServiceCode = 'INVALID_SERVICE_CODE',
+  InvalidSiret = 'INVALID_SIRET',
+  InvalidStructure = 'INVALID_STRUCTURE',
+  InvoiceAlreadyExists = 'INVOICE_ALREADY_EXISTS',
+  MissingAttachmentType = 'MISSING_ATTACHMENT_TYPE',
+  MissingChorusProviderId = 'MISSING_CHORUS_PROVIDER_ID',
+  MissingCurrency = 'MISSING_CURRENCY',
+  MissingDiscountReason = 'MISSING_DISCOUNT_REASON',
+  MissingExemptionReason = 'MISSING_EXEMPTION_REASON',
+  MissingGrandTotalAmount = 'MISSING_GRAND_TOTAL_AMOUNT',
+  MissingInvoiceDate = 'MISSING_INVOICE_DATE',
+  MissingInvoiceNumber = 'MISSING_INVOICE_NUMBER',
+  MissingOriginalInvoiceNumber = 'MISSING_ORIGINAL_INVOICE_NUMBER',
+  MissingPurchaseOrderNumber = 'MISSING_PURCHASE_ORDER_NUMBER',
+  MissingServiceCode = 'MISSING_SERVICE_CODE',
+  MissingServiceCodeOrPurchaseOrderNumber = 'MISSING_SERVICE_CODE_OR_PURCHASE_ORDER_NUMBER',
+  MissingSiret = 'MISSING_SIRET',
+  MissingTaxDueDateType = 'MISSING_TAX_DUE_DATE_TYPE',
+  MissingTaxTotalAmount = 'MISSING_TAX_TOTAL_AMOUNT',
+  MissingValiderInformations = 'MISSING_VALIDER_INFORMATIONS',
+  MissingVatInformations = 'MISSING_VAT_INFORMATIONS',
+  ReceiverIsOnlyMoa = 'RECEIVER_IS_ONLY_MOA',
+  UnknownError = 'UNKNOWN_ERROR'
+}
+
+export type ChorusB2GValidationError = {
+  __typename?: 'ChorusB2GValidationError';
+  errorString: Scalars['String'];
+  errorType: ChorusB2GErrorType;
+};
+
+export type ChorusProviderIdName = {
+  __typename?: 'ChorusProviderIdName';
+  providerId: Scalars['String'];
+  providerName: Scalars['String'];
+};
+
+export enum ChorusServerType {
+  Prod = 'PROD',
+  Qualif = 'QUALIF'
+}
 
 export type ClickedLinkDocument = {
   __typename?: 'ClickedLinkDocument';
   content: Scalars['String'];
+  documentId: Scalars['String'];
   documentName: Scalars['String'];
   expirationDate?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
@@ -2012,8 +2125,10 @@ export enum DashboardVisibilityType {
 
 export type Document = {
   __typename?: 'Document';
-  archiveId: Scalars['String'];
+  archiveDate?: Maybe<Scalars['DateTime']>;
+  archiveId?: Maybe<Scalars['String']>;
   archiver?: Maybe<ArchiverProvider>;
+  attachmentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   creationDate?: Maybe<Scalars['DateTime']>;
   creationUserId?: Maybe<Scalars['String']>;
   creationUserLabel?: Maybe<Scalars['String']>;
@@ -2034,8 +2149,25 @@ export type Document = {
   signType?: Maybe<DocumentTypeSignType>;
   signedDate?: Maybe<Scalars['DateTime']>;
   status: DocumentStatus;
+  subStatus?: Maybe<DocumentSubStatus>;
   tenantId: Scalars['String'];
+  typedMetadata?: Maybe<Array<Maybe<KeyMultipleTypeValue>>>;
 };
+
+export type DocumentActionOptions = {
+  action: DocumentActionType;
+  attachments?: InputMaybe<Array<InputMaybe<AttachmentInput>>>;
+  comment?: InputMaybe<Scalars['String']>;
+  metadata?: InputMaybe<Array<InputMaybe<GedFieldInput>>>;
+};
+
+export enum DocumentActionType {
+  Cancel = 'CANCEL',
+  CancelDocumentLink = 'CANCEL_DOCUMENT_LINK',
+  Complete = 'COMPLETE',
+  EditMetadata = 'EDIT_METADATA',
+  Resend = 'RESEND'
+}
 
 export enum DocumentArrayElementFilterField {
   Metadata = 'METADATA'
@@ -2157,10 +2289,18 @@ export type DocumentInput = {
 export type DocumentJob = {
   __typename?: 'DocumentJob';
   attachmentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  completedDate?: Maybe<Scalars['DateTime']>;
+  creationDate?: Maybe<Scalars['DateTime']>;
   documentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  failedCount: Scalars['Int'];
   id: Scalars['String'];
+  jobType?: Maybe<JobBaseType>;
   note?: Maybe<Scalars['String']>;
+  readCount: Scalars['Int'];
+  recipientCount: Scalars['Int'];
+  sentCount: Scalars['Int'];
   serviceId?: Maybe<Scalars['String']>;
+  status: JobBaseStatus;
   tenantId: Scalars['String'];
   trackingId: Scalars['String'];
   validationType: DocumentJobValidationType;
@@ -2181,7 +2321,7 @@ export type DocumentJobInput = {
   document: DocumentIdOrNewInput;
   emailAdhocRecipients?: InputMaybe<Array<InputMaybe<EmailAdhocRecipientInput>>>;
   note?: InputMaybe<Scalars['String']>;
-  paperMailAdhocRecipients?: InputMaybe<Array<InputMaybe<PostalAdhocRecipientInput>>>;
+  postalAdhocRecipients?: InputMaybe<Array<InputMaybe<PostalAdhocRecipientInput>>>;
   serviceId?: InputMaybe<Scalars['String']>;
   thirdPartyRecipients?: InputMaybe<Array<InputMaybe<ThirdPartyRecipientInput>>>;
   trackingId?: InputMaybe<Scalars['String']>;
@@ -2197,6 +2337,7 @@ export type DocumentJobJobBaseStatusEnumFilter = {
 
 export type DocumentJobQueryParams = {
   dateFilters?: InputMaybe<Array<InputMaybe<DocumentJobDateFilter>>>;
+  jobTypeFilters?: InputMaybe<Array<InputMaybe<JobBaseJobBaseTypeEnumFilter>>>;
   sortDirection?: InputMaybe<SortDirection>;
   sortField?: InputMaybe<JobSortField>;
   statusFilters?: InputMaybe<Array<InputMaybe<DocumentJobJobBaseStatusEnumFilter>>>;
@@ -2224,12 +2365,19 @@ export enum DocumentJobValidationType {
 export type DocumentProbativeJob = {
   __typename?: 'DocumentProbativeJob';
   attachmentsId?: Maybe<Array<Maybe<Scalars['String']>>>;
+  completedDate?: Maybe<Scalars['DateTime']>;
+  creationDate?: Maybe<Scalars['DateTime']>;
   documentsId?: Maybe<Array<Maybe<Scalars['String']>>>;
+  failedCount: Scalars['Int'];
   id: Scalars['String'];
+  jobType?: Maybe<JobBaseType>;
   joinedMessage: Scalars['String'];
   note?: Maybe<Scalars['String']>;
+  recipientCount: Scalars['Int'];
   registeredPostalOptions?: Maybe<RegisteredPostalOptions>;
+  sentCount: Scalars['Int'];
   serviceId?: Maybe<Scalars['String']>;
+  status: JobBaseStatus;
   subject: Scalars['String'];
   tenantId: Scalars['String'];
   trackingId: Scalars['String'];
@@ -2269,6 +2417,7 @@ export type DocumentProbativeJobJobBaseStatusEnumFilter = {
 
 export type DocumentProbativeJobQueryParams = {
   dateFilters?: InputMaybe<Array<InputMaybe<DocumentProbativeJobDateFilter>>>;
+  jobTypeFilters?: InputMaybe<Array<InputMaybe<JobBaseJobBaseTypeEnumFilter>>>;
   sortDirection?: InputMaybe<SortDirection>;
   sortField?: InputMaybe<JobSortField>;
   statusFilters?: InputMaybe<Array<InputMaybe<DocumentProbativeJobJobBaseStatusEnumFilter>>>;
@@ -2364,6 +2513,26 @@ export enum DocumentStringFilterField {
   DocumentTypeCode = 'DOCUMENT_TYPE_CODE',
   FileName = 'FILE_NAME',
   TenantId = 'TENANT_ID'
+}
+
+export enum DocumentSubStatus {
+  Approved = 'APPROVED',
+  Canceled = 'CANCELED',
+  Completed = 'COMPLETED',
+  Dispute = 'DISPUTE',
+  Draft = 'DRAFT',
+  Error = 'ERROR',
+  InHand = 'IN_HAND',
+  MadeAvailable = 'MADE_AVAILABLE',
+  PartiallyApproved = 'PARTIALLY_APPROVED',
+  PaymentReceived = 'PAYMENT_RECEIVED',
+  PaymentSent = 'PAYMENT_SENT',
+  ReceivedByPlatform = 'RECEIVED_BY_PLATFORM',
+  Refused = 'REFUSED',
+  Rejected = 'REJECTED',
+  SentByPlatform = 'SENT_BY_PLATFORM',
+  Submited = 'SUBMITED',
+  Suspended = 'SUSPENDED'
 }
 
 export type DocumentSubType = {
@@ -2495,12 +2664,30 @@ export type DocumentTypeTypeConnection = {
 export enum DomainRightType {
   /** Create tenants */
   AddTenant = 'ADD_TENANT',
+  /** Create or edit configurations */
+  ChangeConfiguration = 'CHANGE_CONFIGURATION',
+  /** Create, edit or delete dashboards */
+  ChangeDashboard = 'CHANGE_DASHBOARD',
   /** Create or edit domains */
   ChangeDomain = 'CHANGE_DOMAIN',
   /** Create, edit or renew Domain Api users */
   ChangeDomainApiUser = 'CHANGE_DOMAIN_API_USER',
   /** Create or edit domain administrators */
   ChangeDomainUser = 'CHANGE_DOMAIN_USER',
+  /** Create or edit OMS resources */
+  ChangeOmsResources = 'CHANGE_OMS_RESOURCES',
+  /** Create or edit PowerBi auth token */
+  ChangePowerBiAuthToken = 'CHANGE_POWER_BI_AUTH_TOKEN',
+  /** Create or edit products */
+  ChangeProduct = 'CHANGE_PRODUCT',
+  /** Create or edit product installs */
+  ChangeProductInstall = 'CHANGE_PRODUCT_INSTALL',
+  /** Create, edit or delete template contents */
+  ChangeTemplateContent = 'CHANGE_TEMPLATE_CONTENT',
+  /** Create, edit or delete template structures */
+  ChangeTemplateStructure = 'CHANGE_TEMPLATE_STRUCTURE',
+  /** Create, edit or renew Api users */
+  ChangeTenantApiUser = 'CHANGE_TENANT_API_USER',
   /** Create or edit tenant internal info */
   ChangeTenantEdcOmsInfo = 'CHANGE_TENANT_EDC_OMS_INFO',
   /** Create or edit tenant users */
@@ -2511,12 +2698,34 @@ export enum DomainRightType {
   GrantInternalRight = 'GRANT_INTERNAL_RIGHT',
   /** Grant user rights */
   GrantRight = 'GRANT_RIGHT',
+  /** Get or list configurations */
+  ReadConfiguration = 'READ_CONFIGURATION',
+  /** Get or list dashboards */
+  ReadDashboard = 'READ_DASHBOARD',
+  /** Get or list domains */
+  ReadDomain = 'READ_DOMAIN',
   /** Get or list Domain Api users */
   ReadDomainApiUser = 'READ_DOMAIN_API_USER',
+  /** Get or list OMS resources */
+  ReadOmsResources = 'READ_OMS_RESOURCES',
+  /** Get or list products */
+  ReadProduct = 'READ_PRODUCT',
+  /** Get or list product installs */
+  ReadProductInstall = 'READ_PRODUCT_INSTALL',
+  /** Get or list template contents */
+  ReadTemplateContent = 'READ_TEMPLATE_CONTENT',
+  /** Get or list template structures */
+  ReadTemplateStructure = 'READ_TEMPLATE_STRUCTURE',
+  /** Get or list tenants */
+  ReadTenant = 'READ_TENANT',
+  /** Get or list Api users */
+  ReadTenantApiUser = 'READ_TENANT_API_USER',
   /** Get or list tenants with internal info */
   ReadTenantEdcOmsInfo = 'READ_TENANT_EDC_OMS_INFO',
   /** Synchronize EDC resources */
-  SynchronizeEdcResources = 'SYNCHRONIZE_EDC_RESOURCES'
+  SynchronizeEdcResources = 'SYNCHRONIZE_EDC_RESOURCES',
+  /** Validate invited user */
+  ValidateUser = 'VALIDATE_USER'
 }
 
 export type DomainRightValue = {
@@ -2676,9 +2885,13 @@ export enum EmailTrackingType {
 
 export enum EngineEventAction {
   AcceptEre = 'ACCEPT_ERE',
+  AddAttachmentsDocument = 'ADD_ATTACHMENTS_DOCUMENT',
   ArchiveDocument = 'ARCHIVE_DOCUMENT',
   CancelDocument = 'CANCEL_DOCUMENT',
+  ChangeStatusChorusB_2G = 'CHANGE_STATUS_CHORUS_B_2_G',
+  CompleteChorusB_2G = 'COMPLETE_CHORUS_B_2_G',
   CreateJob = 'CREATE_JOB',
+  EditMetadataDocument = 'EDIT_METADATA_DOCUMENT',
   GenerateProof = 'GENERATE_PROOF',
   LaunchJob = 'LAUNCH_JOB',
   NotReadEre = 'NOT_READ_ERE',
@@ -2687,6 +2900,7 @@ export enum EngineEventAction {
   ReadEreNotification = 'READ_ERE_NOTIFICATION',
   RefuseEre = 'REFUSE_ERE',
   RelaunchEre = 'RELAUNCH_ERE',
+  SendChorusB_2G = 'SEND_CHORUS_B_2_G',
   SendNotification = 'SEND_NOTIFICATION',
   SendPostal = 'SEND_POSTAL',
   SignDocument = 'SIGN_DOCUMENT',
@@ -3030,7 +3244,8 @@ export type FileReferenceBase = {
 
 export type GedFieldInput = {
   key: Scalars['String'];
-  value: Scalars['String'];
+  typedValue?: InputMaybe<MultipleTypeValueInput>;
+  value?: InputMaybe<Scalars['String']>;
 };
 
 export type IdName = {
@@ -3187,14 +3402,25 @@ export type Job = {
   completedDate?: Maybe<Scalars['DateTime']>;
   creationDate?: Maybe<Scalars['DateTime']>;
   documentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  failedCount: Scalars['Int'];
   id: Scalars['String'];
   jobType?: Maybe<JobBaseType>;
   note?: Maybe<Scalars['String']>;
+  recipientCount: Scalars['Int'];
+  sentCount: Scalars['Int'];
   serviceId?: Maybe<Scalars['String']>;
   status: JobBaseStatus;
   tenantId: Scalars['String'];
   trackingId: Scalars['String'];
 };
+
+export type JobActionOptions = {
+  action: JobActionType;
+};
+
+export enum JobActionType {
+  None = 'NONE'
+}
 
 export type JobBaseDateFilter = {
   field: JobDateFilterField;
@@ -3383,12 +3609,19 @@ export type JobItemTypeConnection = {
 
 export type JobMessage = {
   __typename?: 'JobMessage';
+  chorusActionType?: Maybe<JobMessageChorusActionType>;
+  chorusAddedAttachmentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  chorusB2GAddress?: Maybe<ChorusB2GAddress>;
+  chorusStatus?: Maybe<JobMessageChorusStatus>;
   contactId?: Maybe<Scalars['String']>;
   creationDate?: Maybe<Scalars['DateTime']>;
   creationUserId?: Maybe<Scalars['String']>;
   creationUserLabel?: Maybe<Scalars['String']>;
-  documentIds: Array<Maybe<Scalars['String']>>;
+  /** @deprecated This property has been deprecated. Use Documents instead. */
+  documentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  documents?: Maybe<Array<Maybe<JobMessageDocument>>>;
   emailAddress: Scalars['String'];
+  hasReadDocument: Scalars['Boolean'];
   id: Scalars['String'];
   jobId: Scalars['String'];
   lastModificationDate?: Maybe<Scalars['DateTime']>;
@@ -3397,12 +3630,55 @@ export type JobMessage = {
   messageType: JobMessageType;
   name?: Maybe<Scalars['String']>;
   recipientName: Scalars['String'];
+  retryCount: Scalars['Int'];
   status: JobMessageStatus;
   tenantId: Scalars['String'];
   thirdPartyId?: Maybe<Scalars['String']>;
   trackingId: Scalars['String'];
+  transmissionMode?: Maybe<DocumentTransmissionMode>;
   transmissionStatus: JobMessageTransmissionStatus;
+  validationErrors?: Maybe<Array<Maybe<ChorusB2GValidationError>>>;
 };
+
+export type JobMessageActionOptions = {
+  action: JobMessageActionType;
+};
+
+export enum JobMessageActionType {
+  None = 'NONE'
+}
+
+export enum JobMessageChorusActionType {
+  Complete = 'COMPLETE',
+  Send = 'SEND'
+}
+
+export enum JobMessageChorusStatus {
+  Completed = 'COMPLETED',
+  Draft = 'DRAFT',
+  MadeAvailableToTheAccountingOfficer = 'MADE_AVAILABLE_TO_THE_ACCOUNTING_OFFICER',
+  MadeAvailableToTheFirstValidator = 'MADE_AVAILABLE_TO_THE_FIRST_VALIDATOR',
+  MadeAvailableToTheRecipient = 'MADE_AVAILABLE_TO_THE_RECIPIENT',
+  MadeAvailableToTheSecondValidator = 'MADE_AVAILABLE_TO_THE_SECOND_VALIDATOR',
+  Mandated = 'MANDATED',
+  PostedInTheAccounts = 'POSTED_IN_THE_ACCOUNTS',
+  Rejected = 'REJECTED',
+  RejectedByFirstValidator = 'REJECTED_BY_FIRST_VALIDATOR',
+  RejectedBySecondValidator = 'REJECTED_BY_SECOND_VALIDATOR',
+  ReleasedForPayment = 'RELEASED_FOR_PAYMENT',
+  ServiceRendered = 'SERVICE_RENDERED',
+  Submited = 'SUBMITED',
+  Suspended = 'SUSPENDED',
+  TransmissionInProgress = 'TRANSMISSION_IN_PROGRESS',
+  Unknown = 'UNKNOWN',
+  ValidatedByFirstValidator = 'VALIDATED_BY_FIRST_VALIDATOR',
+  ValidatedBySecondValidator = 'VALIDATED_BY_SECOND_VALIDATOR',
+  Validation_1OverTheDeadline = 'VALIDATION_1_OVER_THE_DEADLINE',
+  Validation_2OverTheDeadline = 'VALIDATION_2_OVER_THE_DEADLINE',
+  WrongReceiverInformations = 'WRONG_RECEIVER_INFORMATIONS',
+  WrongValidatorByCocontractor = 'WRONG_VALIDATOR_BY_COCONTRACTOR',
+  WrongValidatorBySupplier = 'WRONG_VALIDATOR_BY_SUPPLIER'
+}
 
 export type JobMessageDateFilter = {
   field: JobMessageDateFilterField;
@@ -3414,6 +3690,12 @@ export type JobMessageDateFilter = {
 export enum JobMessageDateFilterField {
   CreationDate = 'CREATION_DATE'
 }
+
+export type JobMessageDocument = {
+  __typename?: 'JobMessageDocument';
+  attachmentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  documentId: Scalars['String'];
+};
 
 export type JobMessageJobMessageStatusEnumFilter = {
   field: JobMessageStatusFilterField;
@@ -3470,12 +3752,17 @@ export enum JobMessageStringFilterField {
 }
 
 export enum JobMessageTransmissionStatus {
+  ExpiredCredentials = 'EXPIRED_CREDENTIALS',
   InvalidDocument = 'INVALID_DOCUMENT',
   Pending = 'PENDING',
+  Rejected = 'REJECTED',
+  StatusDelayExpired = 'STATUS_DELAY_EXPIRED',
   Success = 'SUCCESS',
+  UnknownChorusB_2GTransmissionError = 'UNKNOWN_CHORUS_B_2_G_TRANSMISSION_ERROR',
   UnknownEmailTransmissionError = 'UNKNOWN_EMAIL_TRANSMISSION_ERROR',
   UnknownPostalTransmissionError = 'UNKNOWN_POSTAL_TRANSMISSION_ERROR',
   UnknownWebNotificationTransmissionError = 'UNKNOWN_WEB_NOTIFICATION_TRANSMISSION_ERROR',
+  ValidationError = 'VALIDATION_ERROR',
   WrongDeliveryAddress = 'WRONG_DELIVERY_ADDRESS'
 }
 
@@ -3662,6 +3949,12 @@ export type JobTypeConnection = {
 export enum JobTypeFilterField {
   JobType = 'JOB_TYPE'
 }
+
+export type KeyMultipleTypeValue = {
+  __typename?: 'KeyMultipleTypeValue';
+  key: Scalars['String'];
+  value?: Maybe<MultipleTypeValue>;
+};
 
 export type KeyValue = {
   __typename?: 'KeyValue';
@@ -3857,6 +4150,25 @@ export type MetadataTypeConnection = {
   pageInfo?: Maybe<PageInfo>;
 };
 
+export type MultipleTypeValue = {
+  __typename?: 'MultipleTypeValue';
+  boolValue?: Maybe<Scalars['Boolean']>;
+  dateValue?: Maybe<Scalars['DateTime']>;
+  doubleValue?: Maybe<Scalars['Float']>;
+  intValue?: Maybe<Scalars['Int']>;
+  listValues?: Maybe<Array<Maybe<Scalars['String']>>>;
+  stringValue?: Maybe<Scalars['String']>;
+};
+
+export type MultipleTypeValueInput = {
+  boolValue?: InputMaybe<Scalars['Boolean']>;
+  dateValue?: InputMaybe<Scalars['DateTime']>;
+  doubleValue?: InputMaybe<Scalars['Float']>;
+  intValue?: InputMaybe<Scalars['Int']>;
+  listValues?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  stringValue?: InputMaybe<Scalars['String']>;
+};
+
 export type Nature = {
   __typename?: 'Nature';
   archiveConfiguration?: Maybe<ArchiveConfiguration>;
@@ -3974,27 +4286,6 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
 };
 
-export type PaperMailJob = {
-  __typename?: 'PaperMailJob';
-  completedDate?: Maybe<Scalars['DateTime']>;
-  documentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
-  id: Scalars['String'];
-  note?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['String']>;
-  status: JobBaseStatus;
-  trackingId: Scalars['String'];
-};
-
-export type PaperMailJobInput = {
-  adhocRecipientFiles?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
-  documents?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
-  note?: InputMaybe<Scalars['String']>;
-  parameter?: InputMaybe<PostalParameter>;
-  postalAdhocRecipients?: InputMaybe<Array<InputMaybe<PostalAdhocRecipientInput>>>;
-  serviceId?: InputMaybe<Scalars['String']>;
-  trackingId?: InputMaybe<Scalars['String']>;
-};
-
 export type PostalAddress = {
   __typename?: 'PostalAddress';
   additionalGeographicInfo?: Maybe<Scalars['String']>;
@@ -4027,11 +4318,39 @@ export type PostalAdhocRecipientInput = {
   postalCode: Scalars['String'];
 };
 
+export type PostalJob = {
+  __typename?: 'PostalJob';
+  completedDate?: Maybe<Scalars['DateTime']>;
+  creationDate?: Maybe<Scalars['DateTime']>;
+  documentIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  failedCount: Scalars['Int'];
+  id: Scalars['String'];
+  jobType?: Maybe<JobBaseType>;
+  note?: Maybe<Scalars['String']>;
+  recipientCount: Scalars['Int'];
+  sentCount: Scalars['Int'];
+  serviceId?: Maybe<Scalars['String']>;
+  status: JobBaseStatus;
+  tenantId: Scalars['String'];
+  trackingId: Scalars['String'];
+  undeliveredCount: Scalars['Int'];
+};
+
 export type PostalJobDateFilter = {
   field: JobDateFilterField;
   filterValue1?: InputMaybe<Scalars['DateTime']>;
   filterValue2?: InputMaybe<Scalars['DateTime']>;
   operator: NumberFilterOperator;
+};
+
+export type PostalJobInput = {
+  adhocRecipientFiles?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
+  documents?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
+  note?: InputMaybe<Scalars['String']>;
+  parameter?: InputMaybe<PostalParameter>;
+  postalAdhocRecipients?: InputMaybe<Array<InputMaybe<PostalAdhocRecipientInput>>>;
+  serviceId?: InputMaybe<Scalars['String']>;
+  trackingId?: InputMaybe<Scalars['String']>;
 };
 
 export type PostalJobJobBaseStatusEnumFilter = {
@@ -4043,6 +4362,7 @@ export type PostalJobJobBaseStatusEnumFilter = {
 
 export type PostalJobQueryParams = {
   dateFilters?: InputMaybe<Array<InputMaybe<PostalJobDateFilter>>>;
+  jobTypeFilters?: InputMaybe<Array<InputMaybe<JobBaseJobBaseTypeEnumFilter>>>;
   sortDirection?: InputMaybe<SortDirection>;
   sortField?: InputMaybe<JobSortField>;
   statusFilters?: InputMaybe<Array<InputMaybe<PostalJobJobBaseStatusEnumFilter>>>;
@@ -4057,7 +4377,7 @@ export type PostalJobStringFilter = {
 
 export type PostalJobTypeConnection = {
   __typename?: 'PostalJobTypeConnection';
-  edges?: Maybe<Array<Maybe<PaperMailJob>>>;
+  edges?: Maybe<Array<Maybe<PostalJob>>>;
   pageInfo?: Maybe<PageInfo>;
 };
 
@@ -4117,6 +4437,16 @@ export type RegisteredPostalOptions = {
 
 export type RegisteredPostalOptionsInput = {
   anonymous: Scalars['Boolean'];
+};
+
+export type RelaunchJobMessageOptionsInput = {
+  documentId?: InputMaybe<Scalars['String']>;
+  domainId?: InputMaybe<Scalars['String']>;
+  jobId?: InputMaybe<Scalars['String']>;
+  jobMessageId?: InputMaybe<Scalars['String']>;
+  messageType?: InputMaybe<JobMessageType>;
+  tenantId?: InputMaybe<Scalars['String']>;
+  transmissionStatus: JobMessageTransmissionStatus;
 };
 
 /** The application rights action type. */
@@ -4181,6 +4511,8 @@ export enum RightType {
   AddTenant = 'ADD_TENANT',
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
+  /** Create, edit or delete document links */
+  ChangeClickedLinkDocument = 'CHANGE_CLICKED_LINK_DOCUMENT',
   /** Create or edit configurations */
   ChangeConfiguration = 'CHANGE_CONFIGURATION',
   /** Create, edit or delete contacts */
@@ -4239,6 +4571,8 @@ export enum RightType {
   ChangeThirdParty = 'CHANGE_THIRD_PARTY',
   /** Create, edit or delete third party types */
   ChangeThirdPartyType = 'CHANGE_THIRD_PARTY_TYPE',
+  /** Complete document */
+  CompleteDocument = 'COMPLETE_DOCUMENT',
   /** Edit environments */
   EditEnvironment = 'EDIT_ENVIRONMENT',
   /** Edit tenants */
@@ -4247,8 +4581,12 @@ export enum RightType {
   GrantInternalRight = 'GRANT_INTERNAL_RIGHT',
   /** Grant user rights */
   GrantRight = 'GRANT_RIGHT',
+  /** Read clicked link document */
+  MarkDocumentAsRead = 'MARK_DOCUMENT_AS_READ',
   /** Get or list activities */
   ReadActivity = 'READ_ACTIVITY',
+  /** Mark document as read */
+  ReadClickedLinkDocument = 'READ_CLICKED_LINK_DOCUMENT',
   /** Get or list configurations */
   ReadConfiguration = 'READ_CONFIGURATION',
   /** Get or list contacts */
@@ -4313,6 +4651,10 @@ export enum RightType {
   ReadThirdParty = 'READ_THIRD_PARTY',
   /** Get or list third party types */
   ReadThirdPartyType = 'READ_THIRD_PARTY_TYPE',
+  /** RelaunchJobMessage */
+  RelaunchJobMessage = 'RELAUNCH_JOB_MESSAGE',
+  /** Resend document to chorusRight */
+  ResendDocument = 'RESEND_DOCUMENT',
   /** Synchronize EDC resources */
   SynchronizeEdcResources = 'SYNCHRONIZE_EDC_RESOURCES',
   /** Validate invited user */
@@ -4342,6 +4684,7 @@ export enum RightValueSortField {
 
 export type Service = {
   __typename?: 'Service';
+  chorusB2GConfig?: Maybe<ChorusB2GConfig>;
   creationDate?: Maybe<Scalars['DateTime']>;
   creationUserId?: Maybe<Scalars['String']>;
   creationUserLabel?: Maybe<Scalars['String']>;
@@ -4369,6 +4712,7 @@ export enum ServiceBoolFilterField {
 }
 
 export type ServiceInput = {
+  chorusB2GConfig?: InputMaybe<ChorusB2GConfigInput>;
   customSmtpConfig?: InputMaybe<SmtpConfigInput>;
   id?: InputMaybe<Scalars['String']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
@@ -4590,6 +4934,8 @@ export type TemporaryDocumentHeaderTypeConnection = {
 export enum TenantRightType {
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
+  /** Create, edit or delete document links */
+  ChangeClickedLinkDocument = 'CHANGE_CLICKED_LINK_DOCUMENT',
   /** Create, edit or delete contacts */
   ChangeContact = 'CHANGE_CONTACT',
   /** Create, edit or delete contact functions */
@@ -4630,6 +4976,8 @@ export enum TenantRightType {
   ChangeThirdParty = 'CHANGE_THIRD_PARTY',
   /** Create, edit or delete third party types */
   ChangeThirdPartyType = 'CHANGE_THIRD_PARTY_TYPE',
+  /** Complete document */
+  CompleteDocument = 'COMPLETE_DOCUMENT',
   /** Edit tenants */
   EditTenant = 'EDIT_TENANT',
   /** Grant internal user rights */
@@ -4664,6 +5012,8 @@ export enum TenantRightType {
   ReadOmsResources = 'READ_OMS_RESOURCES',
   /** Get or list mailJob */
   ReadPostalJob = 'READ_POSTAL_JOB',
+  /** Get or list services */
+  ReadService = 'READ_SERVICE',
   /** Get or list template contents */
   ReadTemplateContent = 'READ_TEMPLATE_CONTENT',
   /** Get or list template structures */
@@ -4674,10 +5024,18 @@ export enum TenantRightType {
   ReadTenantApiUser = 'READ_TENANT_API_USER',
   /** Get or list tenants with internal info */
   ReadTenantEdcOmsInfo = 'READ_TENANT_EDC_OMS_INFO',
+  /** Get or list tenant users */
+  ReadTenantUser = 'READ_TENANT_USER',
   /** Get or list third parties */
   ReadThirdParty = 'READ_THIRD_PARTY',
   /** Get or list third party types */
-  ReadThirdPartyType = 'READ_THIRD_PARTY_TYPE'
+  ReadThirdPartyType = 'READ_THIRD_PARTY_TYPE',
+  /** RelaunchJobMessage */
+  RelaunchJobMessage = 'RELAUNCH_JOB_MESSAGE',
+  /** Resend document to chorusRight */
+  ResendDocument = 'RESEND_DOCUMENT',
+  /** Validate invited user */
+  ValidateUser = 'VALIDATE_USER'
 }
 
 export type TenantRightValue = {

@@ -145,16 +145,21 @@ public class Types {
   }
   
   public enum ActivityCategory {
+    ADD_ATTACHMENTS_DOCUMENT,
+    CHANGE_STATUS_CHORUS_B_2_G,
+    COMPLETE_CHORUS_B_2_G,
     DOCUMENT_ARCHIVED,
     DOCUMENT_CANCELED,
     DOCUMENT_READ,
     DOCUMENT_SIGNED,
+    EDIT_METADATA_DOCUMENT,
     ERROR,
     EXTERNAL_PROCESS,
     JOB_CREATED,
     JOB_LAUNCHED,
     JOB_PROCESSING,
-    NOTIFICATION_SENT
+    NOTIFICATION_SENT,
+    SEND_CHORUS_B_2_G
     
   }
   
@@ -1286,20 +1291,20 @@ public class Types {
     public void setItem(NoteInput item) { this.item = item; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
-  public static class BusinessSchemaMutationAddPaperMailJobArgs {
-    private PaperMailJobInput item;
+  public static class BusinessSchemaMutationAddPostalJobArgs {
+    private PostalJobInput item;
     private String tenantId;
   
-    public BusinessSchemaMutationAddPaperMailJobArgs(Map<String, Object> args) {
+    public BusinessSchemaMutationAddPostalJobArgs(Map<String, Object> args) {
       if (args != null) {
-        this.item = new PaperMailJobInput((Map<String, Object>) args.get("item"));
+        this.item = new PostalJobInput((Map<String, Object>) args.get("item"));
         this.tenantId = (String) args.get("tenantId");
       }
     }
   
-    public PaperMailJobInput getItem() { return this.item; }
+    public PostalJobInput getItem() { return this.item; }
     public String getTenantId() { return this.tenantId; }
-    public void setItem(PaperMailJobInput item) { this.item = item; }
+    public void setItem(PostalJobInput item) { this.item = item; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaMutationAddPowerBiAuthTokenArgs {
@@ -2183,24 +2188,40 @@ public class Types {
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaMutationReadDocumentArgs {
+    private String documentId;
     private String jobId;
     private String jobMessageId;
     private String tenantId;
   
     public BusinessSchemaMutationReadDocumentArgs(Map<String, Object> args) {
       if (args != null) {
+        this.documentId = (String) args.get("documentId");
         this.jobId = (String) args.get("jobId");
         this.jobMessageId = (String) args.get("jobMessageId");
         this.tenantId = (String) args.get("tenantId");
       }
     }
   
+    public String getDocumentId() { return this.documentId; }
     public String getJobId() { return this.jobId; }
     public String getJobMessageId() { return this.jobMessageId; }
     public String getTenantId() { return this.tenantId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
     public void setJobId(String jobId) { this.jobId = jobId; }
     public void setJobMessageId(String jobMessageId) { this.jobMessageId = jobMessageId; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationRelaunchJobMessageArgs {
+    private RelaunchJobMessageOptionsInput item;
+  
+    public BusinessSchemaMutationRelaunchJobMessageArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.item = new RelaunchJobMessageOptionsInput((Map<String, Object>) args.get("item"));
+      }
+    }
+  
+    public RelaunchJobMessageOptionsInput getItem() { return this.item; }
+    public void setItem(RelaunchJobMessageOptionsInput item) { this.item = item; }
   }
   public static class BusinessSchemaMutationRenewApiDomainUserArgs {
     private String id;
@@ -2280,6 +2301,66 @@ public class Types {
     public String getId() { return this.id; }
     public String getTenantId() { return this.tenantId; }
     public void setId(String id) { this.id = id; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationRunActionOnDocumentArgs {
+    private String documentId;
+    private DocumentActionOptionsInput options;
+    private String tenantId;
+  
+    public BusinessSchemaMutationRunActionOnDocumentArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.documentId = (String) args.get("documentId");
+        this.options = new DocumentActionOptionsInput((Map<String, Object>) args.get("options"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getDocumentId() { return this.documentId; }
+    public DocumentActionOptionsInput getOptions() { return this.options; }
+    public String getTenantId() { return this.tenantId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
+    public void setOptions(DocumentActionOptionsInput options) { this.options = options; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationRunActionOnJobArgs {
+    private String jobId;
+    private JobActionOptionsInput options;
+    private String tenantId;
+  
+    public BusinessSchemaMutationRunActionOnJobArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.jobId = (String) args.get("jobId");
+        this.options = new JobActionOptionsInput((Map<String, Object>) args.get("options"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getJobId() { return this.jobId; }
+    public JobActionOptionsInput getOptions() { return this.options; }
+    public String getTenantId() { return this.tenantId; }
+    public void setJobId(String jobId) { this.jobId = jobId; }
+    public void setOptions(JobActionOptionsInput options) { this.options = options; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationRunActionOnJobMessageArgs {
+    private String jobMessageId;
+    private JobMessageActionOptionsInput options;
+    private String tenantId;
+  
+    public BusinessSchemaMutationRunActionOnJobMessageArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.jobMessageId = (String) args.get("jobMessageId");
+        this.options = new JobMessageActionOptionsInput((Map<String, Object>) args.get("options"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getJobMessageId() { return this.jobMessageId; }
+    public JobMessageActionOptionsInput getOptions() { return this.options; }
+    public String getTenantId() { return this.tenantId; }
+    public void setJobMessageId(String jobMessageId) { this.jobMessageId = jobMessageId; }
+    public void setOptions(JobMessageActionOptionsInput options) { this.options = options; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaMutationValidateDomainUserArgs {
@@ -2521,6 +2602,30 @@ public class Types {
     public void setAfter(String after) { this.after = after; }
     public void setApiUserId(String apiUserId) { this.apiUserId = apiUserId; }
     public void setParams(RightValueQueryParamsInput params) { this.params = params; }
+  }
+  public static class BusinessSchemaQueryChorusB2GProvidersListArgs {
+    private String login;
+    private String password;
+    private ChorusServerType serverType;
+  
+    public BusinessSchemaQueryChorusB2GProvidersListArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.login = (String) args.get("login");
+        this.password = (String) args.get("password");
+        if (args.get("serverType") instanceof ChorusServerType) {
+          this.serverType = (ChorusServerType) args.get("serverType");
+        } else {
+          this.serverType = ChorusServerType.valueOf((String) args.get("serverType"));
+        }
+      }
+    }
+  
+    public String getLogin() { return this.login; }
+    public String getPassword() { return this.password; }
+    public ChorusServerType getServerType() { return this.serverType; }
+    public void setLogin(String login) { this.login = login; }
+    public void setPassword(String password) { this.password = password; }
+    public void setServerType(ChorusServerType serverType) { this.serverType = serverType; }
   }
   public static class BusinessSchemaQueryClickedLinkDocumentItemsArgs {
     private String id;
@@ -3960,22 +4065,93 @@ public class Types {
     public void setLanguage(Language language) { this.language = language; }
     public void setParams(ValueOfListQueryParamsInput params) { this.params = params; }
   }
+  
   public static class ChorusB2GAdhocRecipientInput {
     private String name;
-    private String service;
   
     public ChorusB2GAdhocRecipientInput(Map<String, Object> args) {
       if (args != null) {
         this.name = (String) args.get("name");
-        this.service = (String) args.get("service");
       }
     }
   
     public String getName() { return this.name; }
-    public String getService() { return this.service; }
     public void setName(String name) { this.name = name; }
-    public void setService(String service) { this.service = service; }
   }
+  
+  public static class ChorusB2GConfigInput {
+    private Boolean isTestMode;
+    private String login;
+    private String password;
+    private String providerId;
+    private Boolean recalculate;
+    private ChorusServerType serverType;
+  
+    public ChorusB2GConfigInput(Map<String, Object> args) {
+      if (args != null) {
+        this.isTestMode = (Boolean) args.get("isTestMode");
+        this.login = (String) args.get("login");
+        this.password = (String) args.get("password");
+        this.providerId = (String) args.get("providerId");
+        this.recalculate = (Boolean) args.get("recalculate");
+        if (args.get("serverType") instanceof ChorusServerType) {
+          this.serverType = (ChorusServerType) args.get("serverType");
+        } else {
+          this.serverType = ChorusServerType.valueOf((String) args.get("serverType"));
+        }
+      }
+    }
+  
+    public Boolean getIsTestMode() { return this.isTestMode; }
+    public String getLogin() { return this.login; }
+    public String getPassword() { return this.password; }
+    public String getProviderId() { return this.providerId; }
+    public Boolean getRecalculate() { return this.recalculate; }
+    public ChorusServerType getServerType() { return this.serverType; }
+    public void setIsTestMode(Boolean isTestMode) { this.isTestMode = isTestMode; }
+    public void setLogin(String login) { this.login = login; }
+    public void setPassword(String password) { this.password = password; }
+    public void setProviderId(String providerId) { this.providerId = providerId; }
+    public void setRecalculate(Boolean recalculate) { this.recalculate = recalculate; }
+    public void setServerType(ChorusServerType serverType) { this.serverType = serverType; }
+  }
+  public enum ChorusB2GErrorType {
+    INVALID_ATTACHMENT_TYPE,
+    INVALID_EXEMPTION_REASON,
+    INVALID_SERVICE_CODE,
+    INVALID_SIRET,
+    INVALID_STRUCTURE,
+    INVOICE_ALREADY_EXISTS,
+    MISSING_ATTACHMENT_TYPE,
+    MISSING_CHORUS_PROVIDER_ID,
+    MISSING_CURRENCY,
+    MISSING_DISCOUNT_REASON,
+    MISSING_EXEMPTION_REASON,
+    MISSING_GRAND_TOTAL_AMOUNT,
+    MISSING_INVOICE_DATE,
+    MISSING_INVOICE_NUMBER,
+    MISSING_ORIGINAL_INVOICE_NUMBER,
+    MISSING_PURCHASE_ORDER_NUMBER,
+    MISSING_SERVICE_CODE,
+    MISSING_SERVICE_CODE_OR_PURCHASE_ORDER_NUMBER,
+    MISSING_SIRET,
+    MISSING_TAX_DUE_DATE_TYPE,
+    MISSING_TAX_TOTAL_AMOUNT,
+    MISSING_VALIDER_INFORMATIONS,
+    MISSING_VAT_INFORMATIONS,
+    RECEIVER_IS_ONLY_MOA,
+    UNKNOWN_ERROR
+    
+  }
+  
+  
+  
+  public enum ChorusServerType {
+    PROD,
+    QUALIF
+    
+  }
+  
   
   
   public static class ContactBoolFilterInput {
@@ -4558,6 +4734,47 @@ public class Types {
   }
   
   
+  public static class DocumentActionOptionsInput {
+    private DocumentActionType action;
+    private Iterable<AttachmentInput> attachments;
+    private String comment;
+    private Iterable<GedFieldInput> metadata;
+  
+    public DocumentActionOptionsInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("action") instanceof DocumentActionType) {
+          this.action = (DocumentActionType) args.get("action");
+        } else {
+          this.action = DocumentActionType.valueOf((String) args.get("action"));
+        }
+        if (args.get("attachments") != null) {
+        		this.attachments = (Iterable<AttachmentInput>) args.get("attachments");
+        }
+        this.comment = (String) args.get("comment");
+        if (args.get("metadata") != null) {
+        		this.metadata = (Iterable<GedFieldInput>) args.get("metadata");
+        }
+      }
+    }
+  
+    public DocumentActionType getAction() { return this.action; }
+    public Iterable<AttachmentInput> getAttachments() { return this.attachments; }
+    public String getComment() { return this.comment; }
+    public Iterable<GedFieldInput> getMetadata() { return this.metadata; }
+    public void setAction(DocumentActionType action) { this.action = action; }
+    public void setAttachments(Iterable<AttachmentInput> attachments) { this.attachments = attachments; }
+    public void setComment(String comment) { this.comment = comment; }
+    public void setMetadata(Iterable<GedFieldInput> metadata) { this.metadata = metadata; }
+  }
+  public enum DocumentActionType {
+    CANCEL,
+    CANCEL_DOCUMENT_LINK,
+    COMPLETE,
+    EDIT_METADATA,
+    RESEND
+    
+  }
+  
   public enum DocumentArrayElementFilterField {
     METADATA
     
@@ -4989,7 +5206,7 @@ public class Types {
     private DocumentIdOrNewInput document;
     private Iterable<EmailAdhocRecipientInput> emailAdhocRecipients;
     private String note;
-    private Iterable<PostalAdhocRecipientInput> paperMailAdhocRecipients;
+    private Iterable<PostalAdhocRecipientInput> postalAdhocRecipients;
     private String serviceId;
     private Iterable<ThirdPartyRecipientInput> thirdPartyRecipients;
     private String trackingId;
@@ -5012,8 +5229,8 @@ public class Types {
         		this.emailAdhocRecipients = (Iterable<EmailAdhocRecipientInput>) args.get("emailAdhocRecipients");
         }
         this.note = (String) args.get("note");
-        if (args.get("paperMailAdhocRecipients") != null) {
-        		this.paperMailAdhocRecipients = (Iterable<PostalAdhocRecipientInput>) args.get("paperMailAdhocRecipients");
+        if (args.get("postalAdhocRecipients") != null) {
+        		this.postalAdhocRecipients = (Iterable<PostalAdhocRecipientInput>) args.get("postalAdhocRecipients");
         }
         this.serviceId = (String) args.get("serviceId");
         if (args.get("thirdPartyRecipients") != null) {
@@ -5035,7 +5252,7 @@ public class Types {
     public DocumentIdOrNewInput getDocument() { return this.document; }
     public Iterable<EmailAdhocRecipientInput> getEmailAdhocRecipients() { return this.emailAdhocRecipients; }
     public String getNote() { return this.note; }
-    public Iterable<PostalAdhocRecipientInput> getPaperMailAdhocRecipients() { return this.paperMailAdhocRecipients; }
+    public Iterable<PostalAdhocRecipientInput> getPostalAdhocRecipients() { return this.postalAdhocRecipients; }
     public String getServiceId() { return this.serviceId; }
     public Iterable<ThirdPartyRecipientInput> getThirdPartyRecipients() { return this.thirdPartyRecipients; }
     public String getTrackingId() { return this.trackingId; }
@@ -5047,7 +5264,7 @@ public class Types {
     public void setDocument(DocumentIdOrNewInput document) { this.document = document; }
     public void setEmailAdhocRecipients(Iterable<EmailAdhocRecipientInput> emailAdhocRecipients) { this.emailAdhocRecipients = emailAdhocRecipients; }
     public void setNote(String note) { this.note = note; }
-    public void setPaperMailAdhocRecipients(Iterable<PostalAdhocRecipientInput> paperMailAdhocRecipients) { this.paperMailAdhocRecipients = paperMailAdhocRecipients; }
+    public void setPostalAdhocRecipients(Iterable<PostalAdhocRecipientInput> postalAdhocRecipients) { this.postalAdhocRecipients = postalAdhocRecipients; }
     public void setServiceId(String serviceId) { this.serviceId = serviceId; }
     public void setThirdPartyRecipients(Iterable<ThirdPartyRecipientInput> thirdPartyRecipients) { this.thirdPartyRecipients = thirdPartyRecipients; }
     public void setTrackingId(String trackingId) { this.trackingId = trackingId; }
@@ -5095,6 +5312,7 @@ public class Types {
   }
   public static class DocumentJobQueryParamsInput {
     private Iterable<DocumentJobDateFilterInput> dateFilters;
+    private Iterable<JobBaseJobBaseTypeEnumFilterInput> jobTypeFilters;
     private SortDirection sortDirection;
     private JobSortField sortField;
     private Iterable<DocumentJobJobBaseStatusEnumFilterInput> statusFilters;
@@ -5104,6 +5322,9 @@ public class Types {
       if (args != null) {
         if (args.get("dateFilters") != null) {
         		this.dateFilters = (Iterable<DocumentJobDateFilterInput>) args.get("dateFilters");
+        }
+        if (args.get("jobTypeFilters") != null) {
+        		this.jobTypeFilters = (Iterable<JobBaseJobBaseTypeEnumFilterInput>) args.get("jobTypeFilters");
         }
         if (args.get("sortDirection") instanceof SortDirection) {
           this.sortDirection = (SortDirection) args.get("sortDirection");
@@ -5125,11 +5346,13 @@ public class Types {
     }
   
     public Iterable<DocumentJobDateFilterInput> getDateFilters() { return this.dateFilters; }
+    public Iterable<JobBaseJobBaseTypeEnumFilterInput> getJobTypeFilters() { return this.jobTypeFilters; }
     public SortDirection getSortDirection() { return this.sortDirection; }
     public JobSortField getSortField() { return this.sortField; }
     public Iterable<DocumentJobJobBaseStatusEnumFilterInput> getStatusFilters() { return this.statusFilters; }
     public Iterable<DocumentJobStringFilterInput> getStringFilters() { return this.stringFilters; }
     public void setDateFilters(Iterable<DocumentJobDateFilterInput> dateFilters) { this.dateFilters = dateFilters; }
+    public void setJobTypeFilters(Iterable<JobBaseJobBaseTypeEnumFilterInput> jobTypeFilters) { this.jobTypeFilters = jobTypeFilters; }
     public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
     public void setSortField(JobSortField sortField) { this.sortField = sortField; }
     public void setStatusFilters(Iterable<DocumentJobJobBaseStatusEnumFilterInput> statusFilters) { this.statusFilters = statusFilters; }
@@ -5328,6 +5551,7 @@ public class Types {
   }
   public static class DocumentProbativeJobQueryParamsInput {
     private Iterable<DocumentProbativeJobDateFilterInput> dateFilters;
+    private Iterable<JobBaseJobBaseTypeEnumFilterInput> jobTypeFilters;
     private SortDirection sortDirection;
     private JobSortField sortField;
     private Iterable<DocumentProbativeJobJobBaseStatusEnumFilterInput> statusFilters;
@@ -5337,6 +5561,9 @@ public class Types {
       if (args != null) {
         if (args.get("dateFilters") != null) {
         		this.dateFilters = (Iterable<DocumentProbativeJobDateFilterInput>) args.get("dateFilters");
+        }
+        if (args.get("jobTypeFilters") != null) {
+        		this.jobTypeFilters = (Iterable<JobBaseJobBaseTypeEnumFilterInput>) args.get("jobTypeFilters");
         }
         if (args.get("sortDirection") instanceof SortDirection) {
           this.sortDirection = (SortDirection) args.get("sortDirection");
@@ -5358,11 +5585,13 @@ public class Types {
     }
   
     public Iterable<DocumentProbativeJobDateFilterInput> getDateFilters() { return this.dateFilters; }
+    public Iterable<JobBaseJobBaseTypeEnumFilterInput> getJobTypeFilters() { return this.jobTypeFilters; }
     public SortDirection getSortDirection() { return this.sortDirection; }
     public JobSortField getSortField() { return this.sortField; }
     public Iterable<DocumentProbativeJobJobBaseStatusEnumFilterInput> getStatusFilters() { return this.statusFilters; }
     public Iterable<DocumentProbativeJobStringFilterInput> getStringFilters() { return this.stringFilters; }
     public void setDateFilters(Iterable<DocumentProbativeJobDateFilterInput> dateFilters) { this.dateFilters = dateFilters; }
+    public void setJobTypeFilters(Iterable<JobBaseJobBaseTypeEnumFilterInput> jobTypeFilters) { this.jobTypeFilters = jobTypeFilters; }
     public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
     public void setSortField(JobSortField sortField) { this.sortField = sortField; }
     public void setStatusFilters(Iterable<DocumentProbativeJobJobBaseStatusEnumFilterInput> statusFilters) { this.statusFilters = statusFilters; }
@@ -5588,6 +5817,27 @@ public class Types {
     
   }
   
+  public enum DocumentSubStatus {
+    APPROVED,
+    CANCELED,
+    COMPLETED,
+    DISPUTE,
+    DRAFT,
+    ERROR,
+    IN_HAND,
+    MADE_AVAILABLE,
+    PARTIALLY_APPROVED,
+    PAYMENT_RECEIVED,
+    PAYMENT_SENT,
+    RECEIVED_BY_PLATFORM,
+    REFUSED,
+    REJECTED,
+    SENT_BY_PLATFORM,
+    SUBMITED,
+    SUSPENDED
+    
+  }
+  
   
   public static class DocumentSubTypeQueryParamsInput {
     private SortDirection sortDirection;
@@ -5794,17 +6044,37 @@ public class Types {
   /** The application rights for domain user. */
   public enum DomainRightType {
     ADD_TENANT,
+    CHANGE_CONFIGURATION,
+    CHANGE_DASHBOARD,
     CHANGE_DOMAIN,
     CHANGE_DOMAIN_API_USER,
     CHANGE_DOMAIN_USER,
+    CHANGE_OMS_RESOURCES,
+    CHANGE_POWER_BI_AUTH_TOKEN,
+    CHANGE_PRODUCT,
+    CHANGE_PRODUCT_INSTALL,
+    CHANGE_TEMPLATE_CONTENT,
+    CHANGE_TEMPLATE_STRUCTURE,
+    CHANGE_TENANT_API_USER,
     CHANGE_TENANT_EDC_OMS_INFO,
     CHANGE_TENANT_USER,
     EDIT_TENANT,
     GRANT_INTERNAL_RIGHT,
     GRANT_RIGHT,
+    READ_CONFIGURATION,
+    READ_DASHBOARD,
+    READ_DOMAIN,
     READ_DOMAIN_API_USER,
+    READ_OMS_RESOURCES,
+    READ_PRODUCT,
+    READ_PRODUCT_INSTALL,
+    READ_TEMPLATE_CONTENT,
+    READ_TEMPLATE_STRUCTURE,
+    READ_TENANT,
+    READ_TENANT_API_USER,
     READ_TENANT_EDC_OMS_INFO,
-    SYNCHRONIZE_EDC_RESOURCES
+    SYNCHRONIZE_EDC_RESOURCES,
+    VALIDATE_USER
     
   }
   
@@ -6172,9 +6442,13 @@ public class Types {
   
   public enum EngineEventAction {
     ACCEPT_ERE,
+    ADD_ATTACHMENTS_DOCUMENT,
     ARCHIVE_DOCUMENT,
     CANCEL_DOCUMENT,
+    CHANGE_STATUS_CHORUS_B_2_G,
+    COMPLETE_CHORUS_B_2_G,
     CREATE_JOB,
+    EDIT_METADATA_DOCUMENT,
     GENERATE_PROOF,
     LAUNCH_JOB,
     NOT_READ_ERE,
@@ -6183,6 +6457,7 @@ public class Types {
     READ_ERE_NOTIFICATION,
     REFUSE_ERE,
     RELAUNCH_ERE,
+    SEND_CHORUS_B_2_G,
     SEND_NOTIFICATION,
     SEND_POSTAL,
     SIGN_DOCUMENT,
@@ -6947,18 +7222,22 @@ public class Types {
   }
   public static class GedFieldInput {
     private String key;
+    private MultipleTypeValueInput typedValue;
     private String value;
   
     public GedFieldInput(Map<String, Object> args) {
       if (args != null) {
         this.key = (String) args.get("key");
+        this.typedValue = new MultipleTypeValueInput((Map<String, Object>) args.get("typedValue"));
         this.value = (String) args.get("value");
       }
     }
   
     public String getKey() { return this.key; }
+    public MultipleTypeValueInput getTypedValue() { return this.typedValue; }
     public String getValue() { return this.value; }
     public void setKey(String key) { this.key = key; }
+    public void setTypedValue(MultipleTypeValueInput typedValue) { this.typedValue = typedValue; }
     public void setValue(String value) { this.value = value; }
   }
   
@@ -7261,6 +7540,27 @@ public class Types {
   }
   
   
+  
+  public static class JobActionOptionsInput {
+    private JobActionType action;
+  
+    public JobActionOptionsInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("action") instanceof JobActionType) {
+          this.action = (JobActionType) args.get("action");
+        } else {
+          this.action = JobActionType.valueOf((String) args.get("action"));
+        }
+      }
+    }
+  
+    public JobActionType getAction() { return this.action; }
+    public void setAction(JobActionType action) { this.action = action; }
+  }
+  public enum JobActionType {
+    NONE
+    
+  }
   
   public static class JobBaseDateFilterInput {
     private JobDateFilterField field;
@@ -7662,6 +7962,61 @@ public class Types {
   
   
   
+  public static class JobMessageActionOptionsInput {
+    private JobMessageActionType action;
+  
+    public JobMessageActionOptionsInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("action") instanceof JobMessageActionType) {
+          this.action = (JobMessageActionType) args.get("action");
+        } else {
+          this.action = JobMessageActionType.valueOf((String) args.get("action"));
+        }
+      }
+    }
+  
+    public JobMessageActionType getAction() { return this.action; }
+    public void setAction(JobMessageActionType action) { this.action = action; }
+  }
+  public enum JobMessageActionType {
+    NONE
+    
+  }
+  
+  public enum JobMessageChorusActionType {
+    COMPLETE,
+    SEND
+    
+  }
+  
+  public enum JobMessageChorusStatus {
+    COMPLETED,
+    DRAFT,
+    MADE_AVAILABLE_TO_THE_ACCOUNTING_OFFICER,
+    MADE_AVAILABLE_TO_THE_FIRST_VALIDATOR,
+    MADE_AVAILABLE_TO_THE_RECIPIENT,
+    MADE_AVAILABLE_TO_THE_SECOND_VALIDATOR,
+    MANDATED,
+    POSTED_IN_THE_ACCOUNTS,
+    REJECTED,
+    REJECTED_BY_FIRST_VALIDATOR,
+    REJECTED_BY_SECOND_VALIDATOR,
+    RELEASED_FOR_PAYMENT,
+    SERVICE_RENDERED,
+    SUBMITED,
+    SUSPENDED,
+    TRANSMISSION_IN_PROGRESS,
+    UNKNOWN,
+    VALIDATED_BY_FIRST_VALIDATOR,
+    VALIDATED_BY_SECOND_VALIDATOR,
+    VALIDATION_1_OVER_THE_DEADLINE,
+    VALIDATION_2_OVER_THE_DEADLINE,
+    WRONG_RECEIVER_INFORMATIONS,
+    WRONG_VALIDATOR_BY_COCONTRACTOR,
+    WRONG_VALIDATOR_BY_SUPPLIER
+    
+  }
+  
   public static class JobMessageDateFilterInput {
     private JobMessageDateFilterField field;
     private Object filterValue1;
@@ -7698,6 +8053,7 @@ public class Types {
     CREATION_DATE
     
   }
+  
   
   public static class JobMessageJobMessageStatusEnumFilterInput {
     private JobMessageStatusFilterField field;
@@ -7885,12 +8241,17 @@ public class Types {
   }
   
   public enum JobMessageTransmissionStatus {
+    EXPIRED_CREDENTIALS,
     INVALID_DOCUMENT,
     PENDING,
+    REJECTED,
+    STATUS_DELAY_EXPIRED,
     SUCCESS,
+    UNKNOWN_CHORUS_B_2_G_TRANSMISSION_ERROR,
     UNKNOWN_EMAIL_TRANSMISSION_ERROR,
     UNKNOWN_POSTAL_TRANSMISSION_ERROR,
     UNKNOWN_WEB_NOTIFICATION_TRANSMISSION_ERROR,
+    VALIDATION_ERROR,
     WRONG_DELIVERY_ADDRESS
     
   }
@@ -8227,6 +8588,7 @@ public class Types {
     JOB_TYPE
     
   }
+  
   
   
   
@@ -8589,6 +8951,39 @@ public class Types {
   
   
   
+  public static class MultipleTypeValueInput {
+    private Boolean boolValue;
+    private Object dateValue;
+    private Double doubleValue;
+    private Integer intValue;
+    private Iterable<String> listValues;
+    private String stringValue;
+  
+    public MultipleTypeValueInput(Map<String, Object> args) {
+      if (args != null) {
+        this.boolValue = (Boolean) args.get("boolValue");
+        this.dateValue = (Object) args.get("dateValue");
+        this.doubleValue = (Double) args.get("doubleValue");
+        this.intValue = (Integer) args.get("intValue");
+        this.listValues = (Iterable<String>) args.get("listValues");
+        this.stringValue = (String) args.get("stringValue");
+      }
+    }
+  
+    public Boolean getBoolValue() { return this.boolValue; }
+    public Object getDateValue() { return this.dateValue; }
+    public Double getDoubleValue() { return this.doubleValue; }
+    public Integer getIntValue() { return this.intValue; }
+    public Iterable<String> getListValues() { return this.listValues; }
+    public String getStringValue() { return this.stringValue; }
+    public void setBoolValue(Boolean boolValue) { this.boolValue = boolValue; }
+    public void setDateValue(Object dateValue) { this.dateValue = dateValue; }
+    public void setDoubleValue(Double doubleValue) { this.doubleValue = doubleValue; }
+    public void setIntValue(Integer intValue) { this.intValue = intValue; }
+    public void setListValues(Iterable<String> listValues) { this.listValues = listValues; }
+    public void setStringValue(String stringValue) { this.stringValue = stringValue; }
+  }
+  
   public enum NatureCycle {
     O_2_C,
     P_2_P
@@ -8800,49 +9195,6 @@ public class Types {
   
   
   
-  public static class PaperMailJobInput {
-    private Iterable<FileIdOrNewInputTypeInput> adhocRecipientFiles;
-    private Iterable<FileIdOrNewInputTypeInput> documents;
-    private String note;
-    private PostalParameterInput parameter;
-    private Iterable<PostalAdhocRecipientInput> postalAdhocRecipients;
-    private String serviceId;
-    private String trackingId;
-  
-    public PaperMailJobInput(Map<String, Object> args) {
-      if (args != null) {
-        if (args.get("adhocRecipientFiles") != null) {
-        		this.adhocRecipientFiles = (Iterable<FileIdOrNewInputTypeInput>) args.get("adhocRecipientFiles");
-        }
-        if (args.get("documents") != null) {
-        		this.documents = (Iterable<FileIdOrNewInputTypeInput>) args.get("documents");
-        }
-        this.note = (String) args.get("note");
-        this.parameter = new PostalParameterInput((Map<String, Object>) args.get("parameter"));
-        if (args.get("postalAdhocRecipients") != null) {
-        		this.postalAdhocRecipients = (Iterable<PostalAdhocRecipientInput>) args.get("postalAdhocRecipients");
-        }
-        this.serviceId = (String) args.get("serviceId");
-        this.trackingId = (String) args.get("trackingId");
-      }
-    }
-  
-    public Iterable<FileIdOrNewInputTypeInput> getAdhocRecipientFiles() { return this.adhocRecipientFiles; }
-    public Iterable<FileIdOrNewInputTypeInput> getDocuments() { return this.documents; }
-    public String getNote() { return this.note; }
-    public PostalParameterInput getParameter() { return this.parameter; }
-    public Iterable<PostalAdhocRecipientInput> getPostalAdhocRecipients() { return this.postalAdhocRecipients; }
-    public String getServiceId() { return this.serviceId; }
-    public String getTrackingId() { return this.trackingId; }
-    public void setAdhocRecipientFiles(Iterable<FileIdOrNewInputTypeInput> adhocRecipientFiles) { this.adhocRecipientFiles = adhocRecipientFiles; }
-    public void setDocuments(Iterable<FileIdOrNewInputTypeInput> documents) { this.documents = documents; }
-    public void setNote(String note) { this.note = note; }
-    public void setParameter(PostalParameterInput parameter) { this.parameter = parameter; }
-    public void setPostalAdhocRecipients(Iterable<PostalAdhocRecipientInput> postalAdhocRecipients) { this.postalAdhocRecipients = postalAdhocRecipients; }
-    public void setServiceId(String serviceId) { this.serviceId = serviceId; }
-    public void setTrackingId(String trackingId) { this.trackingId = trackingId; }
-  }
-  
   public static class PostalAddressInput {
     private String additionalGeographicInfo;
     private String additionalInfo;
@@ -8915,6 +9267,7 @@ public class Types {
     public void setName(String name) { this.name = name; }
     public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
   }
+  
   public static class PostalJobDateFilterInput {
     private JobDateFilterField field;
     private Object filterValue1;
@@ -8946,6 +9299,48 @@ public class Types {
     public void setFilterValue1(Object filterValue1) { this.filterValue1 = filterValue1; }
     public void setFilterValue2(Object filterValue2) { this.filterValue2 = filterValue2; }
     public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class PostalJobInput {
+    private Iterable<FileIdOrNewInputTypeInput> adhocRecipientFiles;
+    private Iterable<FileIdOrNewInputTypeInput> documents;
+    private String note;
+    private PostalParameterInput parameter;
+    private Iterable<PostalAdhocRecipientInput> postalAdhocRecipients;
+    private String serviceId;
+    private String trackingId;
+  
+    public PostalJobInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("adhocRecipientFiles") != null) {
+        		this.adhocRecipientFiles = (Iterable<FileIdOrNewInputTypeInput>) args.get("adhocRecipientFiles");
+        }
+        if (args.get("documents") != null) {
+        		this.documents = (Iterable<FileIdOrNewInputTypeInput>) args.get("documents");
+        }
+        this.note = (String) args.get("note");
+        this.parameter = new PostalParameterInput((Map<String, Object>) args.get("parameter"));
+        if (args.get("postalAdhocRecipients") != null) {
+        		this.postalAdhocRecipients = (Iterable<PostalAdhocRecipientInput>) args.get("postalAdhocRecipients");
+        }
+        this.serviceId = (String) args.get("serviceId");
+        this.trackingId = (String) args.get("trackingId");
+      }
+    }
+  
+    public Iterable<FileIdOrNewInputTypeInput> getAdhocRecipientFiles() { return this.adhocRecipientFiles; }
+    public Iterable<FileIdOrNewInputTypeInput> getDocuments() { return this.documents; }
+    public String getNote() { return this.note; }
+    public PostalParameterInput getParameter() { return this.parameter; }
+    public Iterable<PostalAdhocRecipientInput> getPostalAdhocRecipients() { return this.postalAdhocRecipients; }
+    public String getServiceId() { return this.serviceId; }
+    public String getTrackingId() { return this.trackingId; }
+    public void setAdhocRecipientFiles(Iterable<FileIdOrNewInputTypeInput> adhocRecipientFiles) { this.adhocRecipientFiles = adhocRecipientFiles; }
+    public void setDocuments(Iterable<FileIdOrNewInputTypeInput> documents) { this.documents = documents; }
+    public void setNote(String note) { this.note = note; }
+    public void setParameter(PostalParameterInput parameter) { this.parameter = parameter; }
+    public void setPostalAdhocRecipients(Iterable<PostalAdhocRecipientInput> postalAdhocRecipients) { this.postalAdhocRecipients = postalAdhocRecipients; }
+    public void setServiceId(String serviceId) { this.serviceId = serviceId; }
+    public void setTrackingId(String trackingId) { this.trackingId = trackingId; }
   }
   public static class PostalJobJobBaseStatusEnumFilterInput {
     private JobStatusFilterField field;
@@ -8989,6 +9384,7 @@ public class Types {
   }
   public static class PostalJobQueryParamsInput {
     private Iterable<PostalJobDateFilterInput> dateFilters;
+    private Iterable<JobBaseJobBaseTypeEnumFilterInput> jobTypeFilters;
     private SortDirection sortDirection;
     private JobSortField sortField;
     private Iterable<PostalJobJobBaseStatusEnumFilterInput> statusFilters;
@@ -8998,6 +9394,9 @@ public class Types {
       if (args != null) {
         if (args.get("dateFilters") != null) {
         		this.dateFilters = (Iterable<PostalJobDateFilterInput>) args.get("dateFilters");
+        }
+        if (args.get("jobTypeFilters") != null) {
+        		this.jobTypeFilters = (Iterable<JobBaseJobBaseTypeEnumFilterInput>) args.get("jobTypeFilters");
         }
         if (args.get("sortDirection") instanceof SortDirection) {
           this.sortDirection = (SortDirection) args.get("sortDirection");
@@ -9019,11 +9418,13 @@ public class Types {
     }
   
     public Iterable<PostalJobDateFilterInput> getDateFilters() { return this.dateFilters; }
+    public Iterable<JobBaseJobBaseTypeEnumFilterInput> getJobTypeFilters() { return this.jobTypeFilters; }
     public SortDirection getSortDirection() { return this.sortDirection; }
     public JobSortField getSortField() { return this.sortField; }
     public Iterable<PostalJobJobBaseStatusEnumFilterInput> getStatusFilters() { return this.statusFilters; }
     public Iterable<PostalJobStringFilterInput> getStringFilters() { return this.stringFilters; }
     public void setDateFilters(Iterable<PostalJobDateFilterInput> dateFilters) { this.dateFilters = dateFilters; }
+    public void setJobTypeFilters(Iterable<JobBaseJobBaseTypeEnumFilterInput> jobTypeFilters) { this.jobTypeFilters = jobTypeFilters; }
     public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
     public void setSortField(JobSortField sortField) { this.sortField = sortField; }
     public void setStatusFilters(Iterable<PostalJobJobBaseStatusEnumFilterInput> statusFilters) { this.statusFilters = statusFilters; }
@@ -9220,6 +9621,50 @@ public class Types {
     public Boolean getAnonymous() { return this.anonymous; }
     public void setAnonymous(Boolean anonymous) { this.anonymous = anonymous; }
   }
+  public static class RelaunchJobMessageOptionsInput {
+    private String documentId;
+    private String domainId;
+    private String jobId;
+    private String jobMessageId;
+    private JobMessageType messageType;
+    private String tenantId;
+    private JobMessageTransmissionStatus transmissionStatus;
+  
+    public RelaunchJobMessageOptionsInput(Map<String, Object> args) {
+      if (args != null) {
+        this.documentId = (String) args.get("documentId");
+        this.domainId = (String) args.get("domainId");
+        this.jobId = (String) args.get("jobId");
+        this.jobMessageId = (String) args.get("jobMessageId");
+        if (args.get("messageType") instanceof JobMessageType) {
+          this.messageType = (JobMessageType) args.get("messageType");
+        } else {
+          this.messageType = JobMessageType.valueOf((String) args.get("messageType"));
+        }
+        this.tenantId = (String) args.get("tenantId");
+        if (args.get("transmissionStatus") instanceof JobMessageTransmissionStatus) {
+          this.transmissionStatus = (JobMessageTransmissionStatus) args.get("transmissionStatus");
+        } else {
+          this.transmissionStatus = JobMessageTransmissionStatus.valueOf((String) args.get("transmissionStatus"));
+        }
+      }
+    }
+  
+    public String getDocumentId() { return this.documentId; }
+    public String getDomainId() { return this.domainId; }
+    public String getJobId() { return this.jobId; }
+    public String getJobMessageId() { return this.jobMessageId; }
+    public JobMessageType getMessageType() { return this.messageType; }
+    public String getTenantId() { return this.tenantId; }
+    public JobMessageTransmissionStatus getTransmissionStatus() { return this.transmissionStatus; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
+    public void setDomainId(String domainId) { this.domainId = domainId; }
+    public void setJobId(String jobId) { this.jobId = jobId; }
+    public void setJobMessageId(String jobMessageId) { this.jobMessageId = jobMessageId; }
+    public void setMessageType(JobMessageType messageType) { this.messageType = messageType; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+    public void setTransmissionStatus(JobMessageTransmissionStatus transmissionStatus) { this.transmissionStatus = transmissionStatus; }
+  }
   /** The application rights action type. */
   public enum RightActionType {
     CHANGE,
@@ -9354,6 +9799,7 @@ public class Types {
     ADD_ENVIRONMENT,
     ADD_TENANT,
     CHANGE_ACTIVITY,
+    CHANGE_CLICKED_LINK_DOCUMENT,
     CHANGE_CONFIGURATION,
     CHANGE_CONTACT,
     CHANGE_CONTACT_FUNCTION,
@@ -9383,11 +9829,14 @@ public class Types {
     CHANGE_TENANT_USER,
     CHANGE_THIRD_PARTY,
     CHANGE_THIRD_PARTY_TYPE,
+    COMPLETE_DOCUMENT,
     EDIT_ENVIRONMENT,
     EDIT_TENANT,
     GRANT_INTERNAL_RIGHT,
     GRANT_RIGHT,
+    MARK_DOCUMENT_AS_READ,
     READ_ACTIVITY,
+    READ_CLICKED_LINK_DOCUMENT,
     READ_CONFIGURATION,
     READ_CONTACT,
     READ_CONTACT_FUNCTION,
@@ -9420,6 +9869,8 @@ public class Types {
     READ_TENANT_USER,
     READ_THIRD_PARTY,
     READ_THIRD_PARTY_TYPE,
+    RELAUNCH_JOB_MESSAGE,
+    RESEND_DOCUMENT,
     SYNCHRONIZE_EDC_RESOURCES,
     VALIDATE_USER
     
@@ -9530,6 +9981,7 @@ public class Types {
   }
   
   public static class ServiceInput {
+    private ChorusB2GConfigInput chorusB2GConfig;
     private SmtpConfigInput customSmtpConfig;
     private String id;
     private Boolean isEnabled;
@@ -9537,6 +9989,7 @@ public class Types {
   
     public ServiceInput(Map<String, Object> args) {
       if (args != null) {
+        this.chorusB2GConfig = new ChorusB2GConfigInput((Map<String, Object>) args.get("chorusB2GConfig"));
         this.customSmtpConfig = new SmtpConfigInput((Map<String, Object>) args.get("customSmtpConfig"));
         this.id = (String) args.get("id");
         this.isEnabled = (Boolean) args.get("isEnabled");
@@ -9544,10 +9997,12 @@ public class Types {
       }
     }
   
+    public ChorusB2GConfigInput getChorusB2GConfig() { return this.chorusB2GConfig; }
     public SmtpConfigInput getCustomSmtpConfig() { return this.customSmtpConfig; }
     public String getId() { return this.id; }
     public Boolean getIsEnabled() { return this.isEnabled; }
     public String getName() { return this.name; }
+    public void setChorusB2GConfig(ChorusB2GConfigInput chorusB2GConfig) { this.chorusB2GConfig = chorusB2GConfig; }
     public void setCustomSmtpConfig(SmtpConfigInput customSmtpConfig) { this.customSmtpConfig = customSmtpConfig; }
     public void setId(String id) { this.id = id; }
     public void setIsEnabled(Boolean isEnabled) { this.isEnabled = isEnabled; }
@@ -10007,6 +10462,7 @@ public class Types {
   /** The application rights for tenant user. */
   public enum TenantRightType {
     CHANGE_ACTIVITY,
+    CHANGE_CLICKED_LINK_DOCUMENT,
     CHANGE_CONTACT,
     CHANGE_CONTACT_FUNCTION,
     CHANGE_DASHBOARD,
@@ -10027,6 +10483,7 @@ public class Types {
     CHANGE_TENANT_USER,
     CHANGE_THIRD_PARTY,
     CHANGE_THIRD_PARTY_TYPE,
+    COMPLETE_DOCUMENT,
     EDIT_TENANT,
     GRANT_INTERNAL_RIGHT,
     GRANT_RIGHT,
@@ -10044,13 +10501,18 @@ public class Types {
     READ_NOTE,
     READ_OMS_RESOURCES,
     READ_POSTAL_JOB,
+    READ_SERVICE,
     READ_TEMPLATE_CONTENT,
     READ_TEMPLATE_STRUCTURE,
     READ_TENANT,
     READ_TENANT_API_USER,
     READ_TENANT_EDC_OMS_INFO,
+    READ_TENANT_USER,
     READ_THIRD_PARTY,
-    READ_THIRD_PARTY_TYPE
+    READ_THIRD_PARTY_TYPE,
+    RELAUNCH_JOB_MESSAGE,
+    RESEND_DOCUMENT,
+    VALIDATE_USER
     
   }
   

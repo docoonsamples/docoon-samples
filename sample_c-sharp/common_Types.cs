@@ -359,14 +359,23 @@ namespace GraphQLCodeGen {
     #region ChorusB2GConfig
     public class ChorusB2GConfig {
       #region members
+      [JsonProperty("isTestMode")]
+      public bool isTestMode { get; set; }
+    
       [JsonProperty("login")]
       public string login { get; set; }
     
       [JsonProperty("password")]
       public string password { get; set; }
     
-      [JsonProperty("technicalAccount")]
-      public string technicalAccount { get; set; }
+      [JsonProperty("providerId")]
+      public string providerId { get; set; }
+    
+      [JsonProperty("recalculate")]
+      public bool recalculate { get; set; }
+    
+      [JsonProperty("serverType")]
+      public ChorusServerType serverType { get; set; }
       #endregion
     }
     #endregion
@@ -374,11 +383,29 @@ namespace GraphQLCodeGen {
     #region ChorusB2GConfigInput
     public class ChorusB2GConfigInput {
       #region members
+      [Required]
+      [JsonRequired]
+      public bool isTestMode { get; set; }
+    
+      [Required]
+      [JsonRequired]
       public string login { get; set; }
     
+      [Required]
+      [JsonRequired]
       public string password { get; set; }
     
-      public string technicalAccount { get; set; }
+      [Required]
+      [JsonRequired]
+      public string providerId { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public bool recalculate { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public ChorusServerType serverType { get; set; }
       #endregion
     
       #region methods
@@ -404,6 +431,11 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    public enum ChorusServerType {
+      PROD,
+      QUALIF
+    }
+    
     
     #region CommonSchemaMutation
     public class CommonSchemaMutation {
@@ -1572,6 +1604,47 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
+    #region PostalConfiguration
+    public class PostalConfiguration {
+      #region members
+      [JsonProperty("isTestMode")]
+      public bool isTestMode { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalConfigurationInput
+    public class PostalConfigurationInput {
+      #region members
+      [Required]
+      [JsonRequired]
+      public bool isTestMode { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
     #region Product
     public class Product {
       #region members
@@ -2135,6 +2208,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_ACTIVITY,
       /// <summary>
+      /// Create, edit or delete document links
+      /// </summary>
+      CHANGE_CLICKED_LINK_DOCUMENT,
+      /// <summary>
       /// Create or edit configurations
       /// </summary>
       CHANGE_CONFIGURATION,
@@ -2251,6 +2328,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_THIRD_PARTY_TYPE,
       /// <summary>
+      /// Complete document
+      /// </summary>
+      COMPLETE_DOCUMENT,
+      /// <summary>
       /// Edit environments
       /// </summary>
       EDIT_ENVIRONMENT,
@@ -2267,9 +2348,17 @@ namespace GraphQLCodeGen {
       /// </summary>
       GRANT_RIGHT,
       /// <summary>
+      /// Read clicked link document
+      /// </summary>
+      MARK_DOCUMENT_AS_READ,
+      /// <summary>
       /// Get or list activities
       /// </summary>
       READ_ACTIVITY,
+      /// <summary>
+      /// Mark document as read
+      /// </summary>
+      READ_CLICKED_LINK_DOCUMENT,
       /// <summary>
       /// Get or list configurations
       /// </summary>
@@ -2398,6 +2487,14 @@ namespace GraphQLCodeGen {
       /// Get or list third party types
       /// </summary>
       READ_THIRD_PARTY_TYPE,
+      /// <summary>
+      /// RelaunchJobMessage
+      /// </summary>
+      RELAUNCH_JOB_MESSAGE,
+      /// <summary>
+      /// Resend document to chorusRight
+      /// </summary>
+      RESEND_DOCUMENT,
       /// <summary>
       /// Synchronize EDC resources
       /// </summary>
@@ -2616,6 +2713,9 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("phone")]
       public string phone { get; set; }
+    
+      [JsonProperty("postalConfig")]
+      public PostalConfiguration postalConfig { get; set; }
       #endregion
     }
     #endregion
@@ -2690,6 +2790,8 @@ namespace GraphQLCodeGen {
       public OmsUserAccountInput omsServiceAccount { get; set; }
     
       public string phone { get; set; }
+    
+      public PostalConfigurationInput postalConfig { get; set; }
       #endregion
     
       #region methods

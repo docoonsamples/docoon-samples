@@ -24,7 +24,7 @@ npm install
 
 Run this command in the root folder:
 ```cmd
-npm generate
+npm run generate
 ```
 
 ## Get the last graphql schema

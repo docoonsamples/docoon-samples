@@ -57,10 +57,15 @@ enum ActivityCategory {
   DOCUMENT_ARCHIVED
   DOCUMENT_CANCELED
   DOCUMENT_READ
+  EDIT_METADATA_DOCUMENT
+  ADD_ATTACHMENTS_DOCUMENT
   JOB_CREATED
   JOB_LAUNCHED
   JOB_PROCESSING
   NOTIFICATION_SENT
+  SEND_CHORUS_B_2_G
+  CHANGE_STATUS_CHORUS_B_2_G
+  COMPLETE_CHORUS_B_2_G
   EXTERNAL_PROCESS
   ERROR
 }
@@ -485,7 +490,8 @@ type BusinessSchemaMutation {
   deleteDashboardRight(id: String!): Void
   addDocumentJob(item: DocumentJobInput!, tenantId: String): JobCreationResult
   addDocumentProbativeJob(item: DocumentProbativeJobInput!, tenantId: String): JobCreationResult
-  readDocument(tenantId: String!, jobId: String!, jobMessageId: String!): Void
+  readDocument(tenantId: String!, jobId: String!, jobMessageId: String!, documentId: String!): Void
+  runActionOnDocument(tenantId: String, documentId: String!, options: DocumentActionOptions!): Void
   addDocumentType(item: DocumentTypeInput!, tenantId: String): DocumentType
   editDocumentType(id: String!, item: DocumentTypeInput!, tenantId: String): DocumentType
   deleteDocumentType(id: String!, tenantId: String): Void
@@ -509,11 +515,14 @@ type BusinessSchemaMutation {
   addHostedListFile(item: FileContentInput!, tenantId: String): FileContent
   deleteHostedListFile(id: String!, tenantId: String): Void
   deleteHostedReportFile(id: String!, tenantId: String): Void
+  runActionOnJobMessage(tenantId: String, jobMessageId: String!, options: JobMessageActionOptions!): Void
+  relaunchJobMessage(item: RelaunchJobMessageOptionsInput!): Void
   addFaxJob(item: FaxJob!, tenantId: String): JobResult
   addSmsJob(item: SmsJob!, tenantId: String): JobResult
   addVoiceJob(item: VoiceJob!, tenantId: String): JobResult
   addPushJob(item: PushJob!, tenantId: String): JobResult
   addEmailJob(item: EmailJob!, tenantId: String): JobResult
+  runActionOnJob(tenantId: String, jobId: String!, options: JobActionOptions!): Void
   addListOfValues(item: ListOfValuesInput!, tenantId: String): ListOfValues
   editListOfValues(id: String!, item: ListOfValuesInput!, tenantId: String): ListOfValues
   deleteListOfValues(id: String!, tenantId: String): Void
@@ -523,7 +532,7 @@ type BusinessSchemaMutation {
   addNote(item: NoteInput!, tenantId: String): Note
   editNote(id: String!, item: NoteInput!, tenantId: String): Note
   deleteNote(id: String!, tenantId: String): Void
-  addPaperMailJob(item: PaperMailJobInput!, tenantId: String): JobCreationResult
+  addPostalJob(item: PostalJobInput!, tenantId: String): JobCreationResult
   addPowerBiAuthToken(id: String!): PowerBiAuthToken
   addService(item: ServiceInput!, tenantId: String): Service
   editService(id: String!, item: ServiceInput!, tenantId: String): Service
@@ -559,6 +568,7 @@ type BusinessSchemaQuery {
   apiTenantUserItems(idList: [String!]!, tenantId: String): [ApiTenantUser]
   apiTenantUserList(params: ApiTenantUserQueryParams, after: String, tenantId: String): ApiTenantUserTypeConnection
   apiTenantUserRightList(apiUserId: String!, params: RightValueQueryParams, after: String): TenantRightValueTypeConnection
+  chorusB2GProvidersList(login: String!, password: String!, serverType: ChorusServerType!): [ChorusProviderIdName]
   clickedLinkDocumentItems(id: String!): ClickedLinkDocument
   contactFunctionItems(idList: [String!]!, tenantId: String, language: Language): [ContactFunction]
   contactFunctionList(params: ContactFunctionQueryParams, after: String, tenantId: String): ContactFunctionTypeConnection
@@ -618,7 +628,7 @@ type BusinessSchemaQuery {
   natureList(params: NatureQueryParams, after: String, language: Language): NatureTypeConnection
   noteItems(idList: [String!]!, tenantId: String): [Note]
   noteList(params: NoteQueryParams, after: String, tenantId: String): NoteTypeConnection
-  postalJobItems(idList: [String!]!, tenantId: String): [PaperMailJob]
+  postalJobItems(idList: [String!]!, tenantId: String): [PostalJob]
   postalJobList(params: PostalJobQueryParams, after: String, tenantId: String): PostalJobTypeConnection
   rightInitialValueList(profile: UserProfile!, params: RightInitialValueQueryParams, after: String): RightInitialValueTypeConnection
   serviceItems(idList: [String!]!, tenantId: String): [Service]
@@ -641,9 +651,73 @@ type BusinessSchemaQuery {
 
 scalar Byte
 
+type ChorusB2GAddress {
+  name: String!
+}
+
 input ChorusB2GAdhocRecipientInput {
   name: String!
-  service: String!
+}
+
+type ChorusB2GConfig {
+  login: String!
+  password: String!
+  serverType: ChorusServerType!
+  providerId: String!
+  recalculate: Boolean!
+  isTestMode: Boolean!
+}
+
+input ChorusB2GConfigInput {
+  login: String!
+  password: String!
+  serverType: ChorusServerType!
+  providerId: String!
+  recalculate: Boolean!
+  isTestMode: Boolean!
+}
+
+enum ChorusB2GErrorType {
+  MISSING_INVOICE_NUMBER
+  MISSING_INVOICE_DATE
+  MISSING_SIRET
+  MISSING_CHORUS_PROVIDER_ID
+  MISSING_VALIDER_INFORMATIONS
+  MISSING_CURRENCY
+  MISSING_TAX_DUE_DATE_TYPE
+  MISSING_EXEMPTION_REASON
+  MISSING_ORIGINAL_INVOICE_NUMBER
+  MISSING_VAT_INFORMATIONS
+  MISSING_TAX_TOTAL_AMOUNT
+  MISSING_DISCOUNT_REASON
+  MISSING_GRAND_TOTAL_AMOUNT
+  MISSING_ATTACHMENT_TYPE
+  INVALID_SIRET
+  INVALID_STRUCTURE
+  MISSING_SERVICE_CODE
+  INVALID_SERVICE_CODE
+  MISSING_PURCHASE_ORDER_NUMBER
+  MISSING_SERVICE_CODE_OR_PURCHASE_ORDER_NUMBER
+  RECEIVER_IS_ONLY_MOA
+  INVALID_EXEMPTION_REASON
+  INVALID_ATTACHMENT_TYPE
+  UNKNOWN_ERROR
+  INVOICE_ALREADY_EXISTS
+}
+
+type ChorusB2GValidationError {
+  errorString: String!
+  errorType: ChorusB2GErrorType!
+}
+
+type ChorusProviderIdName {
+  providerId: String!
+  providerName: String!
+}
+
+enum ChorusServerType {
+  QUALIF
+  PROD
 }
 
 type ClickedLinkDocument {
@@ -655,6 +729,7 @@ type ClickedLinkDocument {
   expirationDate: DateTime
   isCountExpired: Boolean!
   content: String!
+  documentId: String!
 }
 
 type Contact {
@@ -937,10 +1012,13 @@ type Document {
   documentTypeCode: String!
   documentSubTypeCode: String
   status: DocumentStatus!
+  subStatus: DocumentSubStatus
   jobIds: [String]
   metadata: [KeyValue]
+  typedMetadata: [KeyMultipleTypeValue]
   fileContent: String
-  archiveId: String!
+  archiveId: String
+  archiveDate: DateTime
   archiver: ArchiverProvider
   signRequired: Boolean!
   hash: String!
@@ -948,6 +1026,22 @@ type Document {
   signedDate: DateTime
   sentDate: DateTime
   signType: DocumentTypeSignType
+  attachmentIds: [String]
+}
+
+input DocumentActionOptions {
+  action: DocumentActionType!
+  metadata: [GedFieldInput]
+  comment: String
+  attachments: [AttachmentInput]
+}
+
+enum DocumentActionType {
+  CANCEL_DOCUMENT_LINK
+  RESEND
+  EDIT_METADATA
+  CANCEL
+  COMPLETE
 }
 
 enum DocumentArrayElementFilterField {
@@ -1069,11 +1163,19 @@ type DocumentJob {
   id: String!
   tenantId: String!
   trackingId: String!
+  completedDate: DateTime
+  status: JobBaseStatus!
+  documentIds: [String]
   serviceId: String
   note: String
+  creationDate: DateTime
+  jobType: JobBaseType
   validationType: DocumentJobValidationType!
-  documentIds: [String]
   attachmentIds: [String]
+  recipientCount: Int!
+  sentCount: Int!
+  failedCount: Int!
+  readCount: Int!
 }
 
 input DocumentJobDateFilter {
@@ -1093,7 +1195,7 @@ input DocumentJobInput {
   contactRecipients: [ContactRecipientInput]
   thirdPartyRecipients: [ThirdPartyRecipientInput]
   adhocRecipientsFiles: [FileIdOrBase64Input]
-  paperMailAdhocRecipients: [PostalAdhocRecipientInput]
+  postalAdhocRecipients: [PostalAdhocRecipientInput]
   emailAdhocRecipients: [EmailAdhocRecipientInput]
   chorusB2GAdhocRecipient: ChorusB2GAdhocRecipientInput
 }
@@ -1111,6 +1213,7 @@ input DocumentJobQueryParams {
   stringFilters: [DocumentJobStringFilter]
   dateFilters: [DocumentJobDateFilter]
   statusFilters: [DocumentJobJobBaseStatusEnumFilter]
+  jobTypeFilters: [JobBaseJobBaseTypeEnumFilter]
 }
 
 input DocumentJobStringFilter {
@@ -1134,14 +1237,21 @@ type DocumentProbativeJob {
   id: String!
   tenantId: String!
   trackingId: String!
+  completedDate: DateTime
+  status: JobBaseStatus!
+  documentsId: [String]
   serviceId: String
   note: String
+  creationDate: DateTime
+  jobType: JobBaseType
   validationType: DocumentJobValidationType!
   joinedMessage: String!
   subject: String!
   registeredPostalOptions: RegisteredPostalOptions
-  documentsId: [String]
   attachmentsId: [String]
+  recipientCount: Int!
+  sentCount: Int!
+  failedCount: Int!
 }
 
 input DocumentProbativeJobDateFilter {
@@ -1181,6 +1291,7 @@ input DocumentProbativeJobQueryParams {
   stringFilters: [DocumentProbativeJobStringFilter]
   dateFilters: [DocumentProbativeJobDateFilter]
   statusFilters: [DocumentProbativeJobJobBaseStatusEnumFilter]
+  jobTypeFilters: [JobBaseJobBaseTypeEnumFilter]
 }
 
 input DocumentProbativeJobStringFilter {
@@ -1270,6 +1381,26 @@ enum DocumentStringFilterField {
   DOCUMENT_TYPE_CODE
   FILE_NAME
   DOCUMENT_SUB_TYPE_CODE
+}
+
+enum DocumentSubStatus {
+  SUBMITED
+  SENT_BY_PLATFORM
+  RECEIVED_BY_PLATFORM
+  MADE_AVAILABLE
+  IN_HAND
+  APPROVED
+  PARTIALLY_APPROVED
+  COMPLETED
+  PAYMENT_SENT
+  PAYMENT_RECEIVED
+  DISPUTE
+  SUSPENDED
+  REFUSED
+  REJECTED
+  ERROR
+  DRAFT
+  CANCELED
 }
 
 type DocumentSubType {
@@ -1394,8 +1525,14 @@ type DocumentTypeTypeConnection {
 
 """The application rights for domain user."""
 enum DomainRightType {
+  """Get or list domains"""
+  READ_DOMAIN
+
   """Create or edit domains"""
   CHANGE_DOMAIN
+
+  """Get or list tenants"""
+  READ_TENANT
 
   """Create tenants"""
   ADD_TENANT
@@ -1415,14 +1552,68 @@ enum DomainRightType {
   """Create or edit domain administrators"""
   CHANGE_DOMAIN_USER
 
+  """Get or list Api users"""
+  READ_TENANT_API_USER
+
+  """Create, edit or renew Api users"""
+  CHANGE_TENANT_API_USER
+
   """Get or list tenants with internal info"""
   READ_TENANT_EDC_OMS_INFO
 
   """Create or edit tenant internal info"""
   CHANGE_TENANT_EDC_OMS_INFO
 
+  """Get or list products"""
+  READ_PRODUCT
+
+  """Create or edit products"""
+  CHANGE_PRODUCT
+
+  """Get or list product installs"""
+  READ_PRODUCT_INSTALL
+
+  """Create or edit product installs"""
+  CHANGE_PRODUCT_INSTALL
+
+  """Get or list configurations"""
+  READ_CONFIGURATION
+
+  """Create or edit configurations"""
+  CHANGE_CONFIGURATION
+
+  """Get or list OMS resources"""
+  READ_OMS_RESOURCES
+
+  """Create or edit OMS resources"""
+  CHANGE_OMS_RESOURCES
+
   """Synchronize EDC resources"""
   SYNCHRONIZE_EDC_RESOURCES
+
+  """Create or edit PowerBi auth token"""
+  CHANGE_POWER_BI_AUTH_TOKEN
+
+  """Validate invited user"""
+  VALIDATE_USER
+
+  """Get or list dashboards"""
+  READ_DASHBOARD
+
+  """Create, edit or delete dashboards"""
+  CHANGE_DASHBOARD
+
+  """Get or list template structures"""
+  READ_TEMPLATE_STRUCTURE
+
+  """Create, edit or delete template structures"""
+  CHANGE_TEMPLATE_STRUCTURE
+
+  """Get or list template contents"""
+  READ_TEMPLATE_CONTENT
+
+  """Create, edit or delete template contents"""
+  CHANGE_TEMPLATE_CONTENT
 
   """Get or list Domain Api users"""
   READ_DOMAIN_API_USER
@@ -1599,6 +1790,11 @@ enum EngineEventAction {
   GENERATE_PROOF
   SEND_POSTAL
   UNDELIVERED_POSTAL
+  SEND_CHORUS_B_2_G
+  CHANGE_STATUS_CHORUS_B_2_G
+  COMPLETE_CHORUS_B_2_G
+  EDIT_METADATA_DOCUMENT
+  ADD_ATTACHMENTS_DOCUMENT
 }
 
 enum EnvelopeType {
@@ -1935,7 +2131,8 @@ input FileReferenceBase {
 
 input GedFieldInput {
   key: String!
-  value: String!
+  value: String
+  typedValue: MultipleTypeValueInput
 }
 
 type IdName {
@@ -2092,6 +2289,17 @@ type Job {
   note: String
   creationDate: DateTime
   jobType: JobBaseType
+  recipientCount: Int!
+  sentCount: Int!
+  failedCount: Int!
+}
+
+input JobActionOptions {
+  action: JobActionType!
+}
+
+enum JobActionType {
+  NONE
 }
 
 input JobBaseDateFilter {
@@ -2287,7 +2495,7 @@ type JobMessage {
   trackingId: String!
   name: String
   jobId: String!
-  documentIds: [String]!
+  documentIds: [String] @deprecated(reason: "This property has been deprecated. Use Documents instead.")
   thirdPartyId: String
   contactId: String
   messageType: JobMessageType!
@@ -2295,6 +2503,55 @@ type JobMessage {
   transmissionStatus: JobMessageTransmissionStatus!
   emailAddress: String!
   recipientName: String!
+  transmissionMode: DocumentTransmissionMode
+  documents: [JobMessageDocument]
+  chorusStatus: JobMessageChorusStatus
+  validationErrors: [ChorusB2GValidationError]
+  chorusB2GAddress: ChorusB2GAddress
+  hasReadDocument: Boolean!
+  chorusActionType: JobMessageChorusActionType
+  chorusAddedAttachmentIds: [String]
+  retryCount: Int!
+}
+
+input JobMessageActionOptions {
+  action: JobMessageActionType!
+}
+
+enum JobMessageActionType {
+  NONE
+}
+
+enum JobMessageChorusActionType {
+  SEND
+  COMPLETE
+}
+
+enum JobMessageChorusStatus {
+  UNKNOWN
+  DRAFT
+  MADE_AVAILABLE_TO_THE_FIRST_VALIDATOR
+  WRONG_VALIDATOR_BY_SUPPLIER
+  REJECTED_BY_FIRST_VALIDATOR
+  VALIDATED_BY_FIRST_VALIDATOR
+  VALIDATION_1_OVER_THE_DEADLINE
+  MADE_AVAILABLE_TO_THE_SECOND_VALIDATOR
+  WRONG_VALIDATOR_BY_COCONTRACTOR
+  REJECTED_BY_SECOND_VALIDATOR
+  VALIDATED_BY_SECOND_VALIDATOR
+  VALIDATION_2_OVER_THE_DEADLINE
+  SUBMITED
+  TRANSMISSION_IN_PROGRESS
+  MADE_AVAILABLE_TO_THE_RECIPIENT
+  WRONG_RECEIVER_INFORMATIONS
+  SUSPENDED
+  COMPLETED
+  REJECTED
+  MANDATED
+  RELEASED_FOR_PAYMENT
+  POSTED_IN_THE_ACCOUNTS
+  MADE_AVAILABLE_TO_THE_ACCOUNTING_OFFICER
+  SERVICE_RENDERED
 }
 
 input JobMessageDateFilter {
@@ -2306,6 +2563,11 @@ input JobMessageDateFilter {
 
 enum JobMessageDateFilterField {
   CREATION_DATE
+}
+
+type JobMessageDocument {
+  documentId: String!
+  attachmentIds: [String]
 }
 
 input JobMessageJobMessageStatusEnumFilter {
@@ -2370,6 +2632,11 @@ enum JobMessageTransmissionStatus {
   UNKNOWN_POSTAL_TRANSMISSION_ERROR
   WRONG_DELIVERY_ADDRESS
   INVALID_DOCUMENT
+  UNKNOWN_CHORUS_B_2_G_TRANSMISSION_ERROR
+  VALIDATION_ERROR
+  EXPIRED_CREDENTIALS
+  STATUS_DELAY_EXPIRED
+  REJECTED
 }
 
 enum JobMessageTransmissionStatusFilterField {
@@ -2549,6 +2816,11 @@ type JobTypeConnection {
 
 enum JobTypeFilterField {
   JOB_TYPE
+}
+
+type KeyMultipleTypeValue {
+  key: String!
+  value: MultipleTypeValue
 }
 
 type KeyValue {
@@ -2740,6 +3012,24 @@ type MetadataTypeConnection {
   pageInfo: PageInfo
 }
 
+type MultipleTypeValue {
+  stringValue: String
+  intValue: Int
+  doubleValue: Float
+  boolValue: Boolean
+  dateValue: DateTime
+  listValues: [String]
+}
+
+input MultipleTypeValueInput {
+  stringValue: String
+  intValue: Int
+  doubleValue: Float
+  boolValue: Boolean
+  dateValue: DateTime
+  listValues: [String]
+}
+
 type Nature {
   id: String!
   cycle: NatureCycle!
@@ -2852,26 +3142,6 @@ type PageInfo {
   endCursor: String
 }
 
-type PaperMailJob {
-  id: String!
-  trackingId: String!
-  status: JobBaseStatus!
-  completedDate: DateTime
-  documentIds: [String]
-  serviceId: String
-  note: String
-}
-
-input PaperMailJobInput {
-  trackingId: String
-  adhocRecipientFiles: [FileIdOrNewInputType]
-  postalAdhocRecipients: [PostalAdhocRecipientInput]
-  documents: [FileIdOrNewInputType]
-  parameter: PostalParameter
-  serviceId: String
-  note: String
-}
-
 type PostalAddress {
   additionalGeographicInfo: String
   additionalInfo: String
@@ -2903,11 +3173,38 @@ input PostalAdhocRecipientInput {
   country: String!
 }
 
+type PostalJob {
+  id: String!
+  tenantId: String!
+  trackingId: String!
+  completedDate: DateTime
+  status: JobBaseStatus!
+  documentIds: [String]
+  serviceId: String
+  note: String
+  creationDate: DateTime
+  jobType: JobBaseType
+  recipientCount: Int!
+  sentCount: Int!
+  failedCount: Int!
+  undeliveredCount: Int!
+}
+
 input PostalJobDateFilter {
   field: JobDateFilterField!
   operator: NumberFilterOperator!
   filterValue1: DateTime
   filterValue2: DateTime
+}
+
+input PostalJobInput {
+  trackingId: String
+  adhocRecipientFiles: [FileIdOrNewInputType]
+  postalAdhocRecipients: [PostalAdhocRecipientInput]
+  documents: [FileIdOrNewInputType]
+  parameter: PostalParameter
+  serviceId: String
+  note: String
 }
 
 input PostalJobJobBaseStatusEnumFilter {
@@ -2923,6 +3220,7 @@ input PostalJobQueryParams {
   stringFilters: [PostalJobStringFilter]
   dateFilters: [PostalJobDateFilter]
   statusFilters: [PostalJobJobBaseStatusEnumFilter]
+  jobTypeFilters: [JobBaseJobBaseTypeEnumFilter]
 }
 
 input PostalJobStringFilter {
@@ -2932,7 +3230,7 @@ input PostalJobStringFilter {
 }
 
 type PostalJobTypeConnection {
-  edges: [PaperMailJob]
+  edges: [PostalJob]
   pageInfo: PageInfo
 }
 
@@ -2990,6 +3288,16 @@ type RegisteredPostalOptions {
 
 input RegisteredPostalOptionsInput {
   anonymous: Boolean!
+}
+
+input RelaunchJobMessageOptionsInput {
+  transmissionStatus: JobMessageTransmissionStatus!
+  domainId: String
+  tenantId: String
+  jobId: String
+  documentId: String
+  messageType: JobMessageType
+  jobMessageId: String
 }
 
 """The application rights action type."""
@@ -3258,6 +3566,24 @@ enum RightType {
 
   """Create, edit or renew Environment Api users"""
   CHANGE_ENVIRONMENT_API_USER
+
+  """Mark document as read"""
+  READ_CLICKED_LINK_DOCUMENT
+
+  """Read clicked link document"""
+  MARK_DOCUMENT_AS_READ
+
+  """Create, edit or delete document links"""
+  CHANGE_CLICKED_LINK_DOCUMENT
+
+  """Resend document to chorusRight"""
+  RESEND_DOCUMENT
+
+  """Complete document"""
+  COMPLETE_DOCUMENT
+
+  """RelaunchJobMessage"""
+  RELAUNCH_JOB_MESSAGE
 }
 
 input RightValueBoolFilter {
@@ -3295,6 +3621,7 @@ type Service {
   hasCustomSmtpConfig: Boolean!
   customSmtpConfig: SmtpConfig
   isEnabled: Boolean!
+  chorusB2GConfig: ChorusB2GConfig
 }
 
 input ServiceBoolFilter {
@@ -3313,6 +3640,7 @@ input ServiceInput {
   name: String!
   customSmtpConfig: SmtpConfigInput
   isEnabled: Boolean
+  chorusB2GConfig: ChorusB2GConfigInput
 }
 
 input ServiceIntFilter {
@@ -3535,6 +3863,9 @@ enum TenantRightType {
   """Grant internal user rights"""
   GRANT_INTERNAL_RIGHT
 
+  """Get or list tenant users"""
+  READ_TENANT_USER
+
   """Create or edit tenant users"""
   CHANGE_TENANT_USER
 
@@ -3543,6 +3874,9 @@ enum TenantRightType {
 
   """Create, edit or renew Api users"""
   CHANGE_TENANT_API_USER
+
+  """Get or list services"""
+  READ_SERVICE
 
   """Create, edit or delete services"""
   CHANGE_SERVICE
@@ -3604,6 +3938,9 @@ enum TenantRightType {
   """Create or edit OMS resources"""
   CHANGE_OMS_RESOURCES
 
+  """Validate invited user"""
+  VALIDATE_USER
+
   """Get or list list of values"""
   READ_LIST_OF_VALUES
 
@@ -3657,6 +3994,18 @@ enum TenantRightType {
 
   """Create, edit or delete mailJob"""
   CHANGE_POSTAL_JOB
+
+  """Create, edit or delete document links"""
+  CHANGE_CLICKED_LINK_DOCUMENT
+
+  """Resend document to chorusRight"""
+  RESEND_DOCUMENT
+
+  """Complete document"""
+  COMPLETE_DOCUMENT
+
+  """RelaunchJobMessage"""
+  RELAUNCH_JOB_MESSAGE
 }
 
 type TenantRightValue {

@@ -183,16 +183,21 @@ namespace GraphQLCodeGen {
     }
     
     public enum ActivityCategory {
+      ADD_ATTACHMENTS_DOCUMENT,
+      CHANGE_STATUS_CHORUS_B_2_G,
+      COMPLETE_CHORUS_B_2_G,
       DOCUMENT_ARCHIVED,
       DOCUMENT_CANCELED,
       DOCUMENT_READ,
       DOCUMENT_SIGNED,
+      EDIT_METADATA_DOCUMENT,
       ERROR,
       EXTERNAL_PROCESS,
       JOB_CREATED,
       JOB_LAUNCHED,
       JOB_PROCESSING,
-      NOTIFICATION_SENT
+      NOTIFICATION_SENT,
+      SEND_CHORUS_B_2_G
     }
     
     public enum ActivityCategoryFilterField {
@@ -1449,8 +1454,8 @@ namespace GraphQLCodeGen {
       [JsonProperty("addNote")]
       public Note addNote { get; set; }
     
-      [JsonProperty("addPaperMailJob")]
-      public JobCreationResult addPaperMailJob { get; set; }
+      [JsonProperty("addPostalJob")]
+      public JobCreationResult addPostalJob { get; set; }
     
       [JsonProperty("addPowerBiAuthToken")]
       public PowerBiAuthToken addPowerBiAuthToken { get; set; }
@@ -1608,6 +1613,9 @@ namespace GraphQLCodeGen {
       [JsonProperty("readDocument")]
       public any readDocument { get; set; }
     
+      [JsonProperty("relaunchJobMessage")]
+      public any relaunchJobMessage { get; set; }
+    
       [JsonProperty("renewApiDomainUser")]
       public ApiDomainUser renewApiDomainUser { get; set; }
     
@@ -1625,6 +1633,15 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("resendInviteTenantUser")]
       public any resendInviteTenantUser { get; set; }
+    
+      [JsonProperty("runActionOnDocument")]
+      public any runActionOnDocument { get; set; }
+    
+      [JsonProperty("runActionOnJob")]
+      public any runActionOnJob { get; set; }
+    
+      [JsonProperty("runActionOnJobMessage")]
+      public any runActionOnJobMessage { get; set; }
     
       [JsonProperty("validateDomainUser")]
       public DomainUser validateDomainUser { get; set; }
@@ -1673,6 +1690,9 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("apiTenantUserRightList")]
       public TenantRightValueTypeConnection apiTenantUserRightList { get; set; }
+    
+      [JsonProperty("chorusB2GProvidersList")]
+      public List<ChorusProviderIdName> chorusB2GProvidersList { get; set; }
     
       [JsonProperty("clickedLinkDocumentItems")]
       public ClickedLinkDocument clickedLinkDocumentItems { get; set; }
@@ -1849,7 +1869,7 @@ namespace GraphQLCodeGen {
       public NoteTypeConnection noteList { get; set; }
     
       [JsonProperty("postalJobItems")]
-      public List<PaperMailJob> postalJobItems { get; set; }
+      public List<PostalJob> postalJobItems { get; set; }
     
       [JsonProperty("postalJobList")]
       public PostalJobTypeConnection postalJobList { get; set; }
@@ -1914,16 +1934,21 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
+    #region ChorusB2GAddress
+    public class ChorusB2GAddress {
+      #region members
+      [JsonProperty("name")]
+      public string name { get; set; }
+      #endregion
+    }
+    #endregion
+    
     #region ChorusB2GAdhocRecipientInput
     public class ChorusB2GAdhocRecipientInput {
       #region members
       [Required]
       [JsonRequired]
       public string name { get; set; }
-    
-      [Required]
-      [JsonRequired]
-      public string service { get; set; }
       #endregion
     
       #region methods
@@ -1950,11 +1975,147 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
+    #region ChorusB2GConfig
+    public class ChorusB2GConfig {
+      #region members
+      [JsonProperty("isTestMode")]
+      public bool isTestMode { get; set; }
+    
+      [JsonProperty("login")]
+      public string login { get; set; }
+    
+      [JsonProperty("password")]
+      public string password { get; set; }
+    
+      [JsonProperty("providerId")]
+      public string providerId { get; set; }
+    
+      [JsonProperty("recalculate")]
+      public bool recalculate { get; set; }
+    
+      [JsonProperty("serverType")]
+      public ChorusServerType serverType { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region ChorusB2GConfigInput
+    public class ChorusB2GConfigInput {
+      #region members
+      [Required]
+      [JsonRequired]
+      public bool isTestMode { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string login { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string password { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public string providerId { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public bool recalculate { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public ChorusServerType serverType { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum ChorusB2GErrorType {
+      INVALID_ATTACHMENT_TYPE,
+      INVALID_EXEMPTION_REASON,
+      INVALID_SERVICE_CODE,
+      INVALID_SIRET,
+      INVALID_STRUCTURE,
+      INVOICE_ALREADY_EXISTS,
+      MISSING_ATTACHMENT_TYPE,
+      MISSING_CHORUS_PROVIDER_ID,
+      MISSING_CURRENCY,
+      MISSING_DISCOUNT_REASON,
+      MISSING_EXEMPTION_REASON,
+      MISSING_GRAND_TOTAL_AMOUNT,
+      MISSING_INVOICE_DATE,
+      MISSING_INVOICE_NUMBER,
+      MISSING_ORIGINAL_INVOICE_NUMBER,
+      MISSING_PURCHASE_ORDER_NUMBER,
+      MISSING_SERVICE_CODE,
+      MISSING_SERVICE_CODE_OR_PURCHASE_ORDER_NUMBER,
+      MISSING_SIRET,
+      MISSING_TAX_DUE_DATE_TYPE,
+      MISSING_TAX_TOTAL_AMOUNT,
+      MISSING_VALIDER_INFORMATIONS,
+      MISSING_VAT_INFORMATIONS,
+      RECEIVER_IS_ONLY_MOA,
+      UNKNOWN_ERROR
+    }
+    
+    
+    #region ChorusB2GValidationError
+    public class ChorusB2GValidationError {
+      #region members
+      [JsonProperty("errorString")]
+      public string errorString { get; set; }
+    
+      [JsonProperty("errorType")]
+      public ChorusB2GErrorType errorType { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region ChorusProviderIdName
+    public class ChorusProviderIdName {
+      #region members
+      [JsonProperty("providerId")]
+      public string providerId { get; set; }
+    
+      [JsonProperty("providerName")]
+      public string providerName { get; set; }
+      #endregion
+    }
+    #endregion
+    public enum ChorusServerType {
+      PROD,
+      QUALIF
+    }
+    
+    
     #region ClickedLinkDocument
     public class ClickedLinkDocument {
       #region members
       [JsonProperty("content")]
       public string content { get; set; }
+    
+      [JsonProperty("documentId")]
+      public string documentId { get; set; }
     
       [JsonProperty("documentName")]
       public string documentName { get; set; }
@@ -2868,11 +3029,17 @@ namespace GraphQLCodeGen {
     #region Document
     public class Document {
       #region members
+      [JsonProperty("archiveDate")]
+      public any archiveDate { get; set; }
+    
       [JsonProperty("archiveId")]
       public string archiveId { get; set; }
     
       [JsonProperty("archiver")]
       public ArchiverProvider? archiver { get; set; }
+    
+      [JsonProperty("attachmentIds")]
+      public List<string> attachmentIds { get; set; }
     
       [JsonProperty("creationDate")]
       public any creationDate { get; set; }
@@ -2934,11 +3101,63 @@ namespace GraphQLCodeGen {
       [JsonProperty("status")]
       public DocumentStatus status { get; set; }
     
+      [JsonProperty("subStatus")]
+      public DocumentSubStatus? subStatus { get; set; }
+    
       [JsonProperty("tenantId")]
       public string tenantId { get; set; }
+    
+      [JsonProperty("typedMetadata")]
+      public List<KeyMultipleTypeValue> typedMetadata { get; set; }
       #endregion
     }
     #endregion
+    
+    #region DocumentActionOptions
+    public class DocumentActionOptions {
+      #region members
+      [Required]
+      [JsonRequired]
+      public DocumentActionType action { get; set; }
+    
+      public List<AttachmentInput> attachments { get; set; }
+    
+      public string comment { get; set; }
+    
+      public List<GedFieldInput> metadata { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum DocumentActionType {
+      CANCEL,
+      CANCEL_DOCUMENT_LINK,
+      COMPLETE,
+      EDIT_METADATA,
+      RESEND
+    }
+    
     public enum DocumentArrayElementFilterField {
       METADATA
     }
@@ -3419,17 +3638,41 @@ namespace GraphQLCodeGen {
       [JsonProperty("attachmentIds")]
       public List<string> attachmentIds { get; set; }
     
+      [JsonProperty("completedDate")]
+      public any completedDate { get; set; }
+    
+      [JsonProperty("creationDate")]
+      public any creationDate { get; set; }
+    
       [JsonProperty("documentIds")]
       public List<string> documentIds { get; set; }
+    
+      [JsonProperty("failedCount")]
+      public int failedCount { get; set; }
     
       [JsonProperty("id")]
       public string id { get; set; }
     
+      [JsonProperty("jobType")]
+      public JobBaseType? jobType { get; set; }
+    
       [JsonProperty("note")]
       public string note { get; set; }
     
+      [JsonProperty("readCount")]
+      public int readCount { get; set; }
+    
+      [JsonProperty("recipientCount")]
+      public int recipientCount { get; set; }
+    
+      [JsonProperty("sentCount")]
+      public int sentCount { get; set; }
+    
       [JsonProperty("serviceId")]
       public string serviceId { get; set; }
+    
+      [JsonProperty("status")]
+      public JobBaseStatus status { get; set; }
     
       [JsonProperty("tenantId")]
       public string tenantId { get; set; }
@@ -3502,7 +3745,7 @@ namespace GraphQLCodeGen {
     
       public string note { get; set; }
     
-      public List<PostalAdhocRecipientInput> paperMailAdhocRecipients { get; set; }
+      public List<PostalAdhocRecipientInput> postalAdhocRecipients { get; set; }
     
       public string serviceId { get; set; }
     
@@ -3585,6 +3828,8 @@ namespace GraphQLCodeGen {
     public class DocumentJobQueryParams {
       #region members
       public List<DocumentJobDateFilter> dateFilters { get; set; }
+    
+      public List<JobBaseJobBaseTypeEnumFilter> jobTypeFilters { get; set; }
     
       public SortDirection? sortDirection { get; set; }
     
@@ -3683,11 +3928,23 @@ namespace GraphQLCodeGen {
       [JsonProperty("attachmentsId")]
       public List<string> attachmentsId { get; set; }
     
+      [JsonProperty("completedDate")]
+      public any completedDate { get; set; }
+    
+      [JsonProperty("creationDate")]
+      public any creationDate { get; set; }
+    
       [JsonProperty("documentsId")]
       public List<string> documentsId { get; set; }
     
+      [JsonProperty("failedCount")]
+      public int failedCount { get; set; }
+    
       [JsonProperty("id")]
       public string id { get; set; }
+    
+      [JsonProperty("jobType")]
+      public JobBaseType? jobType { get; set; }
     
       [JsonProperty("joinedMessage")]
       public string joinedMessage { get; set; }
@@ -3695,11 +3952,20 @@ namespace GraphQLCodeGen {
       [JsonProperty("note")]
       public string note { get; set; }
     
+      [JsonProperty("recipientCount")]
+      public int recipientCount { get; set; }
+    
       [JsonProperty("registeredPostalOptions")]
       public RegisteredPostalOptions registeredPostalOptions { get; set; }
     
+      [JsonProperty("sentCount")]
+      public int sentCount { get; set; }
+    
       [JsonProperty("serviceId")]
       public string serviceId { get; set; }
+    
+      [JsonProperty("status")]
+      public JobBaseStatus status { get; set; }
     
       [JsonProperty("subject")]
       public string subject { get; set; }
@@ -3864,6 +4130,8 @@ namespace GraphQLCodeGen {
     public class DocumentProbativeJobQueryParams {
       #region members
       public List<DocumentProbativeJobDateFilter> dateFilters { get; set; }
+    
+      public List<JobBaseJobBaseTypeEnumFilter> jobTypeFilters { get; set; }
     
       public SortDirection? sortDirection { get; set; }
     
@@ -4157,6 +4425,26 @@ namespace GraphQLCodeGen {
       DOCUMENT_TYPE_CODE,
       FILE_NAME,
       TENANT_ID
+    }
+    
+    public enum DocumentSubStatus {
+      APPROVED,
+      CANCELED,
+      COMPLETED,
+      DISPUTE,
+      DRAFT,
+      ERROR,
+      IN_HAND,
+      MADE_AVAILABLE,
+      PARTIALLY_APPROVED,
+      PAYMENT_RECEIVED,
+      PAYMENT_SENT,
+      RECEIVED_BY_PLATFORM,
+      REFUSED,
+      REJECTED,
+      SENT_BY_PLATFORM,
+      SUBMITED,
+      SUSPENDED
     }
     
     
@@ -4526,6 +4814,14 @@ namespace GraphQLCodeGen {
       /// </summary>
       ADD_TENANT,
       /// <summary>
+      /// Create or edit configurations
+      /// </summary>
+      CHANGE_CONFIGURATION,
+      /// <summary>
+      /// Create, edit or delete dashboards
+      /// </summary>
+      CHANGE_DASHBOARD,
+      /// <summary>
       /// Create or edit domains
       /// </summary>
       CHANGE_DOMAIN,
@@ -4537,6 +4833,34 @@ namespace GraphQLCodeGen {
       /// Create or edit domain administrators
       /// </summary>
       CHANGE_DOMAIN_USER,
+      /// <summary>
+      /// Create or edit OMS resources
+      /// </summary>
+      CHANGE_OMS_RESOURCES,
+      /// <summary>
+      /// Create or edit PowerBi auth token
+      /// </summary>
+      CHANGE_POWER_BI_AUTH_TOKEN,
+      /// <summary>
+      /// Create or edit products
+      /// </summary>
+      CHANGE_PRODUCT,
+      /// <summary>
+      /// Create or edit product installs
+      /// </summary>
+      CHANGE_PRODUCT_INSTALL,
+      /// <summary>
+      /// Create, edit or delete template contents
+      /// </summary>
+      CHANGE_TEMPLATE_CONTENT,
+      /// <summary>
+      /// Create, edit or delete template structures
+      /// </summary>
+      CHANGE_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Create, edit or renew Api users
+      /// </summary>
+      CHANGE_TENANT_API_USER,
       /// <summary>
       /// Create or edit tenant internal info
       /// </summary>
@@ -4558,9 +4882,49 @@ namespace GraphQLCodeGen {
       /// </summary>
       GRANT_RIGHT,
       /// <summary>
+      /// Get or list configurations
+      /// </summary>
+      READ_CONFIGURATION,
+      /// <summary>
+      /// Get or list dashboards
+      /// </summary>
+      READ_DASHBOARD,
+      /// <summary>
+      /// Get or list domains
+      /// </summary>
+      READ_DOMAIN,
+      /// <summary>
       /// Get or list Domain Api users
       /// </summary>
       READ_DOMAIN_API_USER,
+      /// <summary>
+      /// Get or list OMS resources
+      /// </summary>
+      READ_OMS_RESOURCES,
+      /// <summary>
+      /// Get or list products
+      /// </summary>
+      READ_PRODUCT,
+      /// <summary>
+      /// Get or list product installs
+      /// </summary>
+      READ_PRODUCT_INSTALL,
+      /// <summary>
+      /// Get or list template contents
+      /// </summary>
+      READ_TEMPLATE_CONTENT,
+      /// <summary>
+      /// Get or list template structures
+      /// </summary>
+      READ_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Get or list tenants
+      /// </summary>
+      READ_TENANT,
+      /// <summary>
+      /// Get or list Api users
+      /// </summary>
+      READ_TENANT_API_USER,
       /// <summary>
       /// Get or list tenants with internal info
       /// </summary>
@@ -4568,7 +4932,11 @@ namespace GraphQLCodeGen {
       /// <summary>
       /// Synchronize EDC resources
       /// </summary>
-      SYNCHRONIZE_EDC_RESOURCES
+      SYNCHRONIZE_EDC_RESOURCES,
+      /// <summary>
+      /// Validate invited user
+      /// </summary>
+      VALIDATE_USER
     }
     
     
@@ -5089,9 +5457,13 @@ namespace GraphQLCodeGen {
     
     public enum EngineEventAction {
       ACCEPT_ERE,
+      ADD_ATTACHMENTS_DOCUMENT,
       ARCHIVE_DOCUMENT,
       CANCEL_DOCUMENT,
+      CHANGE_STATUS_CHORUS_B_2_G,
+      COMPLETE_CHORUS_B_2_G,
       CREATE_JOB,
+      EDIT_METADATA_DOCUMENT,
       GENERATE_PROOF,
       LAUNCH_JOB,
       NOT_READ_ERE,
@@ -5100,6 +5472,7 @@ namespace GraphQLCodeGen {
       READ_ERE_NOTIFICATION,
       REFUSE_ERE,
       RELAUNCH_ERE,
+      SEND_CHORUS_B_2_G,
       SEND_NOTIFICATION,
       SEND_POSTAL,
       SIGN_DOCUMENT,
@@ -6226,8 +6599,8 @@ namespace GraphQLCodeGen {
       [JsonRequired]
       public string key { get; set; }
     
-      [Required]
-      [JsonRequired]
+      public MultipleTypeValueInput typedValue { get; set; }
+    
       public string value { get; set; }
       #endregion
     
@@ -6740,6 +7113,9 @@ namespace GraphQLCodeGen {
       [JsonProperty("documentIds")]
       public List<string> documentIds { get; set; }
     
+      [JsonProperty("failedCount")]
+      public int failedCount { get; set; }
+    
       [JsonProperty("id")]
       public string id { get; set; }
     
@@ -6748,6 +7124,12 @@ namespace GraphQLCodeGen {
     
       [JsonProperty("note")]
       public string note { get; set; }
+    
+      [JsonProperty("recipientCount")]
+      public int recipientCount { get; set; }
+    
+      [JsonProperty("sentCount")]
+      public int sentCount { get; set; }
     
       [JsonProperty("serviceId")]
       public string serviceId { get; set; }
@@ -6763,6 +7145,42 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    
+    #region JobActionOptions
+    public class JobActionOptions {
+      #region members
+      [Required]
+      [JsonRequired]
+      public JobActionType action { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum JobActionType {
+      NONE
+    }
+    
     
     #region JobBaseDateFilter
     public class JobBaseDateFilter {
@@ -7373,6 +7791,18 @@ namespace GraphQLCodeGen {
     #region JobMessage
     public class JobMessage {
       #region members
+      [JsonProperty("chorusActionType")]
+      public JobMessageChorusActionType? chorusActionType { get; set; }
+    
+      [JsonProperty("chorusAddedAttachmentIds")]
+      public List<string> chorusAddedAttachmentIds { get; set; }
+    
+      [JsonProperty("chorusB2GAddress")]
+      public ChorusB2GAddress chorusB2GAddress { get; set; }
+    
+      [JsonProperty("chorusStatus")]
+      public JobMessageChorusStatus? chorusStatus { get; set; }
+    
       [JsonProperty("contactId")]
       public string contactId { get; set; }
     
@@ -7385,11 +7815,18 @@ namespace GraphQLCodeGen {
       [JsonProperty("creationUserLabel")]
       public string creationUserLabel { get; set; }
     
+      [Obsolete("This property has been deprecated. Use Documents instead.")]
       [JsonProperty("documentIds")]
       public List<string> documentIds { get; set; }
     
+      [JsonProperty("documents")]
+      public List<JobMessageDocument> documents { get; set; }
+    
       [JsonProperty("emailAddress")]
       public string emailAddress { get; set; }
+    
+      [JsonProperty("hasReadDocument")]
+      public bool hasReadDocument { get; set; }
     
       [JsonProperty("id")]
       public string id { get; set; }
@@ -7415,6 +7852,9 @@ namespace GraphQLCodeGen {
       [JsonProperty("recipientName")]
       public string recipientName { get; set; }
     
+      [JsonProperty("retryCount")]
+      public int retryCount { get; set; }
+    
       [JsonProperty("status")]
       public JobMessageStatus status { get; set; }
     
@@ -7427,11 +7867,85 @@ namespace GraphQLCodeGen {
       [JsonProperty("trackingId")]
       public string trackingId { get; set; }
     
+      [JsonProperty("transmissionMode")]
+      public DocumentTransmissionMode? transmissionMode { get; set; }
+    
       [JsonProperty("transmissionStatus")]
       public JobMessageTransmissionStatus transmissionStatus { get; set; }
+    
+      [JsonProperty("validationErrors")]
+      public List<ChorusB2GValidationError> validationErrors { get; set; }
       #endregion
     }
     #endregion
+    
+    #region JobMessageActionOptions
+    public class JobMessageActionOptions {
+      #region members
+      [Required]
+      [JsonRequired]
+      public JobMessageActionType action { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    public enum JobMessageActionType {
+      NONE
+    }
+    
+    public enum JobMessageChorusActionType {
+      COMPLETE,
+      SEND
+    }
+    
+    public enum JobMessageChorusStatus {
+      COMPLETED,
+      DRAFT,
+      MADE_AVAILABLE_TO_THE_ACCOUNTING_OFFICER,
+      MADE_AVAILABLE_TO_THE_FIRST_VALIDATOR,
+      MADE_AVAILABLE_TO_THE_RECIPIENT,
+      MADE_AVAILABLE_TO_THE_SECOND_VALIDATOR,
+      MANDATED,
+      POSTED_IN_THE_ACCOUNTS,
+      REJECTED,
+      REJECTED_BY_FIRST_VALIDATOR,
+      REJECTED_BY_SECOND_VALIDATOR,
+      RELEASED_FOR_PAYMENT,
+      SERVICE_RENDERED,
+      SUBMITED,
+      SUSPENDED,
+      TRANSMISSION_IN_PROGRESS,
+      UNKNOWN,
+      VALIDATED_BY_FIRST_VALIDATOR,
+      VALIDATED_BY_SECOND_VALIDATOR,
+      VALIDATION_1_OVER_THE_DEADLINE,
+      VALIDATION_2_OVER_THE_DEADLINE,
+      WRONG_RECEIVER_INFORMATIONS,
+      WRONG_VALIDATOR_BY_COCONTRACTOR,
+      WRONG_VALIDATOR_BY_SUPPLIER
+    }
+    
     
     #region JobMessageDateFilter
     public class JobMessageDateFilter {
@@ -7476,6 +7990,18 @@ namespace GraphQLCodeGen {
       CREATION_DATE
     }
     
+    
+    #region JobMessageDocument
+    public class JobMessageDocument {
+      #region members
+      [JsonProperty("attachmentIds")]
+      public List<string> attachmentIds { get; set; }
+    
+      [JsonProperty("documentId")]
+      public string documentId { get; set; }
+      #endregion
+    }
+    #endregion
     
     #region JobMessageJobMessageStatusEnumFilter
     public class JobMessageJobMessageStatusEnumFilter {
@@ -7666,12 +8192,17 @@ namespace GraphQLCodeGen {
     }
     
     public enum JobMessageTransmissionStatus {
+      EXPIRED_CREDENTIALS,
       INVALID_DOCUMENT,
       PENDING,
+      REJECTED,
+      STATUS_DELAY_EXPIRED,
       SUCCESS,
+      UNKNOWN_CHORUS_B_2_G_TRANSMISSION_ERROR,
       UNKNOWN_EMAIL_TRANSMISSION_ERROR,
       UNKNOWN_POSTAL_TRANSMISSION_ERROR,
       UNKNOWN_WEB_NOTIFICATION_TRANSMISSION_ERROR,
+      VALIDATION_ERROR,
       WRONG_DELIVERY_ADDRESS
     }
     
@@ -8123,6 +8654,18 @@ namespace GraphQLCodeGen {
       JOB_TYPE
     }
     
+    
+    #region KeyMultipleTypeValue
+    public class KeyMultipleTypeValue {
+      #region members
+      [JsonProperty("key")]
+      public string key { get; set; }
+    
+      [JsonProperty("value")]
+      public MultipleTypeValue value { get; set; }
+      #endregion
+    }
+    #endregion
     
     #region KeyValue
     public class KeyValue {
@@ -8712,6 +9255,70 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
+    #region MultipleTypeValue
+    public class MultipleTypeValue {
+      #region members
+      [JsonProperty("boolValue")]
+      public bool? boolValue { get; set; }
+    
+      [JsonProperty("dateValue")]
+      public any dateValue { get; set; }
+    
+      [JsonProperty("doubleValue")]
+      public double? doubleValue { get; set; }
+    
+      [JsonProperty("intValue")]
+      public int? intValue { get; set; }
+    
+      [JsonProperty("listValues")]
+      public List<string> listValues { get; set; }
+    
+      [JsonProperty("stringValue")]
+      public string stringValue { get; set; }
+      #endregion
+    }
+    #endregion
+    
+    #region MultipleTypeValueInput
+    public class MultipleTypeValueInput {
+      #region members
+      public bool? boolValue { get; set; }
+    
+      public any dateValue { get; set; }
+    
+      public double? doubleValue { get; set; }
+    
+      public int? intValue { get; set; }
+    
+      public List<string> listValues { get; set; }
+    
+      public string stringValue { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
     #region Nature
     public class Nature {
       #region members
@@ -9043,75 +9650,6 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
-    #region PaperMailJob
-    public class PaperMailJob {
-      #region members
-      [JsonProperty("completedDate")]
-      public any completedDate { get; set; }
-    
-      [JsonProperty("documentIds")]
-      public List<string> documentIds { get; set; }
-    
-      [JsonProperty("id")]
-      public string id { get; set; }
-    
-      [JsonProperty("note")]
-      public string note { get; set; }
-    
-      [JsonProperty("serviceId")]
-      public string serviceId { get; set; }
-    
-      [JsonProperty("status")]
-      public JobBaseStatus status { get; set; }
-    
-      [JsonProperty("trackingId")]
-      public string trackingId { get; set; }
-      #endregion
-    }
-    #endregion
-    
-    #region PaperMailJobInput
-    public class PaperMailJobInput {
-      #region members
-      public List<FileIdOrNewInputType> adhocRecipientFiles { get; set; }
-    
-      public List<FileIdOrNewInputType> documents { get; set; }
-    
-      public string note { get; set; }
-    
-      public PostalParameter parameter { get; set; }
-    
-      public List<PostalAdhocRecipientInput> postalAdhocRecipients { get; set; }
-    
-      public string serviceId { get; set; }
-    
-      public string trackingId { get; set; }
-      #endregion
-    
-      #region methods
-      public dynamic GetInputObject()
-      {
-        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
-    
-        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
-        foreach (var propertyInfo in properties)
-        {
-          var value = propertyInfo.GetValue(this);
-          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
-    
-          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
-    
-          if (requiredProp || value != defaultValue)
-          {
-            d[propertyInfo.Name] = value;
-          }
-        }
-        return d;
-      }
-      #endregion
-    }
-    #endregion
-    
     #region PostalAddress
     public class PostalAddress {
       #region members
@@ -9238,6 +9776,54 @@ namespace GraphQLCodeGen {
     }
     #endregion
     
+    #region PostalJob
+    public class PostalJob {
+      #region members
+      [JsonProperty("completedDate")]
+      public any completedDate { get; set; }
+    
+      [JsonProperty("creationDate")]
+      public any creationDate { get; set; }
+    
+      [JsonProperty("documentIds")]
+      public List<string> documentIds { get; set; }
+    
+      [JsonProperty("failedCount")]
+      public int failedCount { get; set; }
+    
+      [JsonProperty("id")]
+      public string id { get; set; }
+    
+      [JsonProperty("jobType")]
+      public JobBaseType? jobType { get; set; }
+    
+      [JsonProperty("note")]
+      public string note { get; set; }
+    
+      [JsonProperty("recipientCount")]
+      public int recipientCount { get; set; }
+    
+      [JsonProperty("sentCount")]
+      public int sentCount { get; set; }
+    
+      [JsonProperty("serviceId")]
+      public string serviceId { get; set; }
+    
+      [JsonProperty("status")]
+      public JobBaseStatus status { get; set; }
+    
+      [JsonProperty("tenantId")]
+      public string tenantId { get; set; }
+    
+      [JsonProperty("trackingId")]
+      public string trackingId { get; set; }
+    
+      [JsonProperty("undeliveredCount")]
+      public int undeliveredCount { get; set; }
+      #endregion
+    }
+    #endregion
+    
     #region PostalJobDateFilter
     public class PostalJobDateFilter {
       #region members
@@ -9252,6 +9838,48 @@ namespace GraphQLCodeGen {
       [Required]
       [JsonRequired]
       public NumberFilterOperator @operator { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
+    
+    #region PostalJobInput
+    public class PostalJobInput {
+      #region members
+      public List<FileIdOrNewInputType> adhocRecipientFiles { get; set; }
+    
+      public List<FileIdOrNewInputType> documents { get; set; }
+    
+      public string note { get; set; }
+    
+      public PostalParameter parameter { get; set; }
+    
+      public List<PostalAdhocRecipientInput> postalAdhocRecipients { get; set; }
+    
+      public string serviceId { get; set; }
+    
+      public string trackingId { get; set; }
       #endregion
     
       #region methods
@@ -9324,6 +9952,8 @@ namespace GraphQLCodeGen {
     public class PostalJobQueryParams {
       #region members
       public List<PostalJobDateFilter> dateFilters { get; set; }
+    
+      public List<JobBaseJobBaseTypeEnumFilter> jobTypeFilters { get; set; }
     
       public SortDirection? sortDirection { get; set; }
     
@@ -9402,7 +10032,7 @@ namespace GraphQLCodeGen {
     public class PostalJobTypeConnection {
       #region members
       [JsonProperty("edges")]
-      public List<PaperMailJob> edges { get; set; }
+      public List<PostalJob> edges { get; set; }
     
       [JsonProperty("pageInfo")]
       public PageInfo pageInfo { get; set; }
@@ -9646,6 +10276,50 @@ namespace GraphQLCodeGen {
       #endregion
     }
     #endregion
+    
+    #region RelaunchJobMessageOptionsInput
+    public class RelaunchJobMessageOptionsInput {
+      #region members
+      public string documentId { get; set; }
+    
+      public string domainId { get; set; }
+    
+      public string jobId { get; set; }
+    
+      public string jobMessageId { get; set; }
+    
+      public JobMessageType? messageType { get; set; }
+    
+      public string tenantId { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public JobMessageTransmissionStatus transmissionStatus { get; set; }
+      #endregion
+    
+      #region methods
+      public dynamic GetInputObject()
+      {
+        IDictionary<string, object> d = new System.Dynamic.ExpandoObject();
+    
+        var properties = GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        foreach (var propertyInfo in properties)
+        {
+          var value = propertyInfo.GetValue(this);
+          var defaultValue = propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
+    
+          var requiredProp = propertyInfo.GetCustomAttributes(typeof(JsonRequiredAttribute), false).Length > 0;
+    
+          if (requiredProp || value != defaultValue)
+          {
+            d[propertyInfo.Name] = value;
+          }
+        }
+        return d;
+      }
+      #endregion
+    }
+    #endregion
       /// <summary>
       /// The application rights action type.
       /// </summary>
@@ -9835,6 +10509,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_ACTIVITY,
       /// <summary>
+      /// Create, edit or delete document links
+      /// </summary>
+      CHANGE_CLICKED_LINK_DOCUMENT,
+      /// <summary>
       /// Create or edit configurations
       /// </summary>
       CHANGE_CONFIGURATION,
@@ -9951,6 +10629,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_THIRD_PARTY_TYPE,
       /// <summary>
+      /// Complete document
+      /// </summary>
+      COMPLETE_DOCUMENT,
+      /// <summary>
       /// Edit environments
       /// </summary>
       EDIT_ENVIRONMENT,
@@ -9967,9 +10649,17 @@ namespace GraphQLCodeGen {
       /// </summary>
       GRANT_RIGHT,
       /// <summary>
+      /// Read clicked link document
+      /// </summary>
+      MARK_DOCUMENT_AS_READ,
+      /// <summary>
       /// Get or list activities
       /// </summary>
       READ_ACTIVITY,
+      /// <summary>
+      /// Mark document as read
+      /// </summary>
+      READ_CLICKED_LINK_DOCUMENT,
       /// <summary>
       /// Get or list configurations
       /// </summary>
@@ -10099,6 +10789,14 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_THIRD_PARTY_TYPE,
       /// <summary>
+      /// RelaunchJobMessage
+      /// </summary>
+      RELAUNCH_JOB_MESSAGE,
+      /// <summary>
+      /// Resend document to chorusRight
+      /// </summary>
+      RESEND_DOCUMENT,
+      /// <summary>
       /// Synchronize EDC resources
       /// </summary>
       SYNCHRONIZE_EDC_RESOURCES,
@@ -10195,6 +10893,9 @@ namespace GraphQLCodeGen {
     #region Service
     public class Service {
       #region members
+      [JsonProperty("chorusB2GConfig")]
+      public ChorusB2GConfig chorusB2GConfig { get; set; }
+    
       [JsonProperty("creationDate")]
       public any creationDate { get; set; }
     
@@ -10285,6 +10986,8 @@ namespace GraphQLCodeGen {
     #region ServiceInput
     public class ServiceInput {
       #region members
+      public ChorusB2GConfigInput chorusB2GConfig { get; set; }
+    
       public SmtpConfigInput customSmtpConfig { get; set; }
     
       public string id { get; set; }
@@ -10964,6 +11667,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_ACTIVITY,
       /// <summary>
+      /// Create, edit or delete document links
+      /// </summary>
+      CHANGE_CLICKED_LINK_DOCUMENT,
+      /// <summary>
       /// Create, edit or delete contacts
       /// </summary>
       CHANGE_CONTACT,
@@ -11044,6 +11751,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_THIRD_PARTY_TYPE,
       /// <summary>
+      /// Complete document
+      /// </summary>
+      COMPLETE_DOCUMENT,
+      /// <summary>
       /// Edit tenants
       /// </summary>
       EDIT_TENANT,
@@ -11112,6 +11823,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_POSTAL_JOB,
       /// <summary>
+      /// Get or list services
+      /// </summary>
+      READ_SERVICE,
+      /// <summary>
       /// Get or list template contents
       /// </summary>
       READ_TEMPLATE_CONTENT,
@@ -11132,13 +11847,29 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_TENANT_EDC_OMS_INFO,
       /// <summary>
+      /// Get or list tenant users
+      /// </summary>
+      READ_TENANT_USER,
+      /// <summary>
       /// Get or list third parties
       /// </summary>
       READ_THIRD_PARTY,
       /// <summary>
       /// Get or list third party types
       /// </summary>
-      READ_THIRD_PARTY_TYPE
+      READ_THIRD_PARTY_TYPE,
+      /// <summary>
+      /// RelaunchJobMessage
+      /// </summary>
+      RELAUNCH_JOB_MESSAGE,
+      /// <summary>
+      /// Resend document to chorusRight
+      /// </summary>
+      RESEND_DOCUMENT,
+      /// <summary>
+      /// Validate invited user
+      /// </summary>
+      VALIDATE_USER
     }
     
     

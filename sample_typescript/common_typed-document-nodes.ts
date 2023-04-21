@@ -139,16 +139,27 @@ export enum BoolFilterOperator {
 
 export type ChorusB2GConfig = {
   __typename?: 'ChorusB2GConfig';
-  login?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-  technicalAccount?: Maybe<Scalars['String']>;
+  isTestMode: Scalars['Boolean'];
+  login: Scalars['String'];
+  password: Scalars['String'];
+  providerId: Scalars['String'];
+  recalculate: Scalars['Boolean'];
+  serverType: ChorusServerType;
 };
 
 export type ChorusB2GConfigInput = {
-  login?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
-  technicalAccount?: InputMaybe<Scalars['String']>;
+  isTestMode: Scalars['Boolean'];
+  login: Scalars['String'];
+  password: Scalars['String'];
+  providerId: Scalars['String'];
+  recalculate: Scalars['Boolean'];
+  serverType: ChorusServerType;
 };
+
+export enum ChorusServerType {
+  Prod = 'PROD',
+  Qualif = 'QUALIF'
+}
 
 export type CommonSchemaMutation = {
   __typename?: 'CommonSchemaMutation';
@@ -701,6 +712,15 @@ export type PostalAddressInput = {
   zipCode: Scalars['String'];
 };
 
+export type PostalConfiguration = {
+  __typename?: 'PostalConfiguration';
+  isTestMode: Scalars['Boolean'];
+};
+
+export type PostalConfigurationInput = {
+  isTestMode: Scalars['Boolean'];
+};
+
 export type Product = {
   __typename?: 'Product';
   creationDate?: Maybe<Scalars['DateTime']>;
@@ -859,6 +879,8 @@ export enum RightType {
   AddTenant = 'ADD_TENANT',
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
+  /** Create, edit or delete document links */
+  ChangeClickedLinkDocument = 'CHANGE_CLICKED_LINK_DOCUMENT',
   /** Create or edit configurations */
   ChangeConfiguration = 'CHANGE_CONFIGURATION',
   /** Create, edit or delete contacts */
@@ -917,6 +939,8 @@ export enum RightType {
   ChangeThirdParty = 'CHANGE_THIRD_PARTY',
   /** Create, edit or delete third party types */
   ChangeThirdPartyType = 'CHANGE_THIRD_PARTY_TYPE',
+  /** Complete document */
+  CompleteDocument = 'COMPLETE_DOCUMENT',
   /** Edit environments */
   EditEnvironment = 'EDIT_ENVIRONMENT',
   /** Edit tenants */
@@ -925,8 +949,12 @@ export enum RightType {
   GrantInternalRight = 'GRANT_INTERNAL_RIGHT',
   /** Grant user rights */
   GrantRight = 'GRANT_RIGHT',
+  /** Read clicked link document */
+  MarkDocumentAsRead = 'MARK_DOCUMENT_AS_READ',
   /** Get or list activities */
   ReadActivity = 'READ_ACTIVITY',
+  /** Mark document as read */
+  ReadClickedLinkDocument = 'READ_CLICKED_LINK_DOCUMENT',
   /** Get or list configurations */
   ReadConfiguration = 'READ_CONFIGURATION',
   /** Get or list contacts */
@@ -991,6 +1019,10 @@ export enum RightType {
   ReadThirdParty = 'READ_THIRD_PARTY',
   /** Get or list third party types */
   ReadThirdPartyType = 'READ_THIRD_PARTY_TYPE',
+  /** RelaunchJobMessage */
+  RelaunchJobMessage = 'RELAUNCH_JOB_MESSAGE',
+  /** Resend document to chorusRight */
+  ResendDocument = 'RESEND_DOCUMENT',
   /** Synchronize EDC resources */
   SynchronizeEdcResources = 'SYNCHRONIZE_EDC_RESOURCES',
   /** Validate invited user */
@@ -1074,6 +1106,7 @@ export type Tenant = {
   name: Scalars['String'];
   omsServiceAccount?: Maybe<OmsUserAccount>;
   phone?: Maybe<Scalars['String']>;
+  postalConfig?: Maybe<PostalConfiguration>;
 };
 
 export type TenantBoolFilter = {
@@ -1098,6 +1131,7 @@ export type TenantInput = {
   name: Scalars['String'];
   omsServiceAccount?: InputMaybe<OmsUserAccountInput>;
   phone?: InputMaybe<Scalars['String']>;
+  postalConfig?: InputMaybe<PostalConfigurationInput>;
 };
 
 export type TenantIntFilter = {

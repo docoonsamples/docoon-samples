@@ -276,25 +276,47 @@ public class Types {
   
   
   public static class ChorusB2GConfigInput {
+    private Boolean isTestMode;
     private String login;
     private String password;
-    private String technicalAccount;
+    private String providerId;
+    private Boolean recalculate;
+    private ChorusServerType serverType;
   
     public ChorusB2GConfigInput(Map<String, Object> args) {
       if (args != null) {
+        this.isTestMode = (Boolean) args.get("isTestMode");
         this.login = (String) args.get("login");
         this.password = (String) args.get("password");
-        this.technicalAccount = (String) args.get("technicalAccount");
+        this.providerId = (String) args.get("providerId");
+        this.recalculate = (Boolean) args.get("recalculate");
+        if (args.get("serverType") instanceof ChorusServerType) {
+          this.serverType = (ChorusServerType) args.get("serverType");
+        } else {
+          this.serverType = ChorusServerType.valueOf((String) args.get("serverType"));
+        }
       }
     }
   
+    public Boolean getIsTestMode() { return this.isTestMode; }
     public String getLogin() { return this.login; }
     public String getPassword() { return this.password; }
-    public String getTechnicalAccount() { return this.technicalAccount; }
+    public String getProviderId() { return this.providerId; }
+    public Boolean getRecalculate() { return this.recalculate; }
+    public ChorusServerType getServerType() { return this.serverType; }
+    public void setIsTestMode(Boolean isTestMode) { this.isTestMode = isTestMode; }
     public void setLogin(String login) { this.login = login; }
     public void setPassword(String password) { this.password = password; }
-    public void setTechnicalAccount(String technicalAccount) { this.technicalAccount = technicalAccount; }
+    public void setProviderId(String providerId) { this.providerId = providerId; }
+    public void setRecalculate(Boolean recalculate) { this.recalculate = recalculate; }
+    public void setServerType(ChorusServerType serverType) { this.serverType = serverType; }
   }
+  public enum ChorusServerType {
+    PROD,
+    QUALIF
+    
+  }
+  
   public static class CommonSchemaMutationAddApiUserArgs {
     private ApiUserInput item;
   
@@ -1275,6 +1297,19 @@ public class Types {
     public void setZipCode(String zipCode) { this.zipCode = zipCode; }
   }
   
+  public static class PostalConfigurationInput {
+    private Boolean isTestMode;
+  
+    public PostalConfigurationInput(Map<String, Object> args) {
+      if (args != null) {
+        this.isTestMode = (Boolean) args.get("isTestMode");
+      }
+    }
+  
+    public Boolean getIsTestMode() { return this.isTestMode; }
+    public void setIsTestMode(Boolean isTestMode) { this.isTestMode = isTestMode; }
+  }
+  
   
   public static class ProductAccessInput {
     private String productInstallId;
@@ -1612,6 +1647,7 @@ public class Types {
     ADD_ENVIRONMENT,
     ADD_TENANT,
     CHANGE_ACTIVITY,
+    CHANGE_CLICKED_LINK_DOCUMENT,
     CHANGE_CONFIGURATION,
     CHANGE_CONTACT,
     CHANGE_CONTACT_FUNCTION,
@@ -1641,11 +1677,14 @@ public class Types {
     CHANGE_TENANT_USER,
     CHANGE_THIRD_PARTY,
     CHANGE_THIRD_PARTY_TYPE,
+    COMPLETE_DOCUMENT,
     EDIT_ENVIRONMENT,
     EDIT_TENANT,
     GRANT_INTERNAL_RIGHT,
     GRANT_RIGHT,
+    MARK_DOCUMENT_AS_READ,
     READ_ACTIVITY,
+    READ_CLICKED_LINK_DOCUMENT,
     READ_CONFIGURATION,
     READ_CONTACT,
     READ_CONTACT_FUNCTION,
@@ -1678,6 +1717,8 @@ public class Types {
     READ_TENANT_USER,
     READ_THIRD_PARTY,
     READ_THIRD_PARTY_TYPE,
+    RELAUNCH_JOB_MESSAGE,
+    RESEND_DOCUMENT,
     SYNCHRONIZE_EDC_RESOURCES,
     VALIDATE_USER
     
@@ -1815,6 +1856,7 @@ public class Types {
     private String name;
     private OmsUserAccountInput omsServiceAccount;
     private String phone;
+    private PostalConfigurationInput postalConfig;
   
     public TenantInput(Map<String, Object> args) {
       if (args != null) {
@@ -1829,6 +1871,7 @@ public class Types {
         this.name = (String) args.get("name");
         this.omsServiceAccount = new OmsUserAccountInput((Map<String, Object>) args.get("omsServiceAccount"));
         this.phone = (String) args.get("phone");
+        this.postalConfig = new PostalConfigurationInput((Map<String, Object>) args.get("postalConfig"));
       }
     }
   
@@ -1843,6 +1886,7 @@ public class Types {
     public String getName() { return this.name; }
     public OmsUserAccountInput getOmsServiceAccount() { return this.omsServiceAccount; }
     public String getPhone() { return this.phone; }
+    public PostalConfigurationInput getPostalConfig() { return this.postalConfig; }
     public void setAddress(PostalAddressInput address) { this.address = address; }
     public void setAuthorizedProductIds(Iterable<String> authorizedProductIds) { this.authorizedProductIds = authorizedProductIds; }
     public void setChorusB2GConfig(ChorusB2GConfigInput chorusB2GConfig) { this.chorusB2GConfig = chorusB2GConfig; }
@@ -1854,6 +1898,7 @@ public class Types {
     public void setName(String name) { this.name = name; }
     public void setOmsServiceAccount(OmsUserAccountInput omsServiceAccount) { this.omsServiceAccount = omsServiceAccount; }
     public void setPhone(String phone) { this.phone = phone; }
+    public void setPostalConfig(PostalConfigurationInput postalConfig) { this.postalConfig = postalConfig; }
   }
   public static class TenantIntFilterInput {
     private TenantIntFilterField field;

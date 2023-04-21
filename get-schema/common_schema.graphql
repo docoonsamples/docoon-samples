@@ -121,15 +121,26 @@ enum BoolFilterOperator {
 }
 
 type ChorusB2GConfig {
-  technicalAccount: String
-  login: String
-  password: String
+  login: String!
+  password: String!
+  serverType: ChorusServerType!
+  providerId: String!
+  recalculate: Boolean!
+  isTestMode: Boolean!
 }
 
 input ChorusB2GConfigInput {
-  technicalAccount: String
-  login: String
-  password: String
+  login: String!
+  password: String!
+  serverType: ChorusServerType!
+  providerId: String!
+  recalculate: Boolean!
+  isTestMode: Boolean!
+}
+
+enum ChorusServerType {
+  QUALIF
+  PROD
 }
 
 type CommonSchemaMutation {
@@ -509,6 +520,14 @@ input PostalAddressInput {
   zipCode: String!
 }
 
+type PostalConfiguration {
+  isTestMode: Boolean!
+}
+
+input PostalConfigurationInput {
+  isTestMode: Boolean!
+}
+
 type Product {
   creationDate: DateTime
   creationUserId: String
@@ -868,6 +887,24 @@ enum RightType {
 
   """Create, edit or renew Environment Api users"""
   CHANGE_ENVIRONMENT_API_USER
+
+  """Mark document as read"""
+  READ_CLICKED_LINK_DOCUMENT
+
+  """Read clicked link document"""
+  MARK_DOCUMENT_AS_READ
+
+  """Create, edit or delete document links"""
+  CHANGE_CLICKED_LINK_DOCUMENT
+
+  """Resend document to chorusRight"""
+  RESEND_DOCUMENT
+
+  """Complete document"""
+  COMPLETE_DOCUMENT
+
+  """RelaunchJobMessage"""
+  RELAUNCH_JOB_MESSAGE
 }
 
 type RightValue {
@@ -944,6 +981,7 @@ type Tenant {
   authorizedProductIds: [String]
   emailConfig: EmailConfig
   chorusB2GConfig: ChorusB2GConfig
+  postalConfig: PostalConfiguration
 }
 
 input TenantBoolFilter {
@@ -968,6 +1006,7 @@ input TenantInput {
   authorizedProductIds: [String]
   emailConfig: EmailConfigInput
   chorusB2GConfig: ChorusB2GConfigInput
+  postalConfig: PostalConfigurationInput
 }
 
 input TenantIntFilter {
