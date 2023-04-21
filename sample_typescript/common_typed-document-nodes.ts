@@ -877,6 +877,8 @@ export enum RightType {
   AddEnvironment = 'ADD_ENVIRONMENT',
   /** Create tenants */
   AddTenant = 'ADD_TENANT',
+  /** CancelJobMessage */
+  CancelJobMessage = 'CANCEL_JOB_MESSAGE',
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
   /** Create, edit or delete document links */
@@ -917,6 +919,8 @@ export enum RightType {
   ChangeOmsResources = 'CHANGE_OMS_RESOURCES',
   /** Create postalJob */
   ChangePostalJob = 'CHANGE_POSTAL_JOB',
+  /** Create, edit or delete postal parameter configurations */
+  ChangePostalParameterConfiguration = 'CHANGE_POSTAL_PARAMETER_CONFIGURATION',
   /** Create or edit PowerBi auth token */
   ChangePowerBiAuthToken = 'CHANGE_POWER_BI_AUTH_TOKEN',
   /** Create or edit products */
@@ -929,6 +933,8 @@ export enum RightType {
   ChangeTemplateContent = 'CHANGE_TEMPLATE_CONTENT',
   /** Create, edit or delete template structures */
   ChangeTemplateStructure = 'CHANGE_TEMPLATE_STRUCTURE',
+  /** Create, edit or delete template contents */
+  ChangeTemplateVariableConfiguration = 'CHANGE_TEMPLATE_VARIABLE_CONFIGURATION',
   /** Create, edit or renew Api users */
   ChangeTenantApiUser = 'CHANGE_TENANT_API_USER',
   /** Create or edit tenant internal info */
@@ -995,6 +1001,8 @@ export enum RightType {
   ReadOmsResources = 'READ_OMS_RESOURCES',
   /** Get or list postalJobs */
   ReadPostalJob = 'READ_POSTAL_JOB',
+  /** Get or list postal parameter configurations */
+  ReadPostalParameterConfiguration = 'READ_POSTAL_PARAMETER_CONFIGURATION',
   /** Get or list products */
   ReadProduct = 'READ_PRODUCT',
   /** Get or list product installs */
@@ -1003,10 +1011,14 @@ export enum RightType {
   ReadRight = 'READ_RIGHT',
   /** Get or list services */
   ReadService = 'READ_SERVICE',
+  /** Get or list status actions */
+  ReadStatusAction = 'READ_STATUS_ACTION',
   /** Get or list template contents */
   ReadTemplateContent = 'READ_TEMPLATE_CONTENT',
   /** Get or list template structures */
   ReadTemplateStructure = 'READ_TEMPLATE_STRUCTURE',
+  /** Get or list template variables configuration */
+  ReadTemplateVariableConfiguration = 'READ_TEMPLATE_VARIABLE_CONFIGURATION',
   /** Get or list tenants */
   ReadTenant = 'READ_TENANT',
   /** Get or list Api users */
@@ -1046,6 +1058,7 @@ export type Role = {
   domainName?: Maybe<Scalars['String']>;
   environmentId?: Maybe<Scalars['String']>;
   environmentName?: Maybe<Scalars['String']>;
+  isEnabled: Scalars['Boolean'];
   lastConnectionDate?: Maybe<Scalars['DateTime']>;
   productAccesses?: Maybe<Array<Maybe<ProductAccess>>>;
   profile: UserProfile;
@@ -1057,6 +1070,7 @@ export type Role = {
 export type RoleInput = {
   domainId?: InputMaybe<Scalars['String']>;
   environmentId?: InputMaybe<Scalars['String']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']>;
   productAccesses?: InputMaybe<Array<InputMaybe<ProductAccessInput>>>;
   profile: UserProfile;
   rights?: InputMaybe<Array<InputMaybe<RightValueInput>>>;

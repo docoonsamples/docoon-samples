@@ -2204,6 +2204,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       ADD_TENANT,
       /// <summary>
+      /// CancelJobMessage
+      /// </summary>
+      CANCEL_JOB_MESSAGE,
+      /// <summary>
       /// Create, edit or delete activities
       /// </summary>
       CHANGE_ACTIVITY,
@@ -2284,6 +2288,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_POSTAL_JOB,
       /// <summary>
+      /// Create, edit or delete postal parameter configurations
+      /// </summary>
+      CHANGE_POSTAL_PARAMETER_CONFIGURATION,
+      /// <summary>
       /// Create or edit PowerBi auth token
       /// </summary>
       CHANGE_POWER_BI_AUTH_TOKEN,
@@ -2307,6 +2315,10 @@ namespace GraphQLCodeGen {
       /// Create, edit or delete template structures
       /// </summary>
       CHANGE_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Create, edit or delete template contents
+      /// </summary>
+      CHANGE_TEMPLATE_VARIABLE_CONFIGURATION,
       /// <summary>
       /// Create, edit or renew Api users
       /// </summary>
@@ -2440,6 +2452,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_POSTAL_JOB,
       /// <summary>
+      /// Get or list postal parameter configurations
+      /// </summary>
+      READ_POSTAL_PARAMETER_CONFIGURATION,
+      /// <summary>
       /// Get or list products
       /// </summary>
       READ_PRODUCT,
@@ -2456,6 +2472,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_SERVICE,
       /// <summary>
+      /// Get or list status actions
+      /// </summary>
+      READ_STATUS_ACTION,
+      /// <summary>
       /// Get or list template contents
       /// </summary>
       READ_TEMPLATE_CONTENT,
@@ -2463,6 +2483,10 @@ namespace GraphQLCodeGen {
       /// Get or list template structures
       /// </summary>
       READ_TEMPLATE_STRUCTURE,
+      /// <summary>
+      /// Get or list template variables configuration
+      /// </summary>
+      READ_TEMPLATE_VARIABLE_CONFIGURATION,
       /// <summary>
       /// Get or list tenants
       /// </summary>
@@ -2569,6 +2593,9 @@ namespace GraphQLCodeGen {
       [JsonProperty("environmentName")]
       public string environmentName { get; set; }
     
+      [JsonProperty("isEnabled")]
+      public bool isEnabled { get; set; }
+    
       [JsonProperty("lastConnectionDate")]
       public any lastConnectionDate { get; set; }
     
@@ -2596,6 +2623,8 @@ namespace GraphQLCodeGen {
       public string domainId { get; set; }
     
       public string environmentId { get; set; }
+    
+      public bool? isEnabled { get; set; }
     
       public List<ProductAccessInput> productAccesses { get; set; }
     

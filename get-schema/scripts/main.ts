@@ -24,7 +24,7 @@ async function launchScripts(businnesSchema : boolean) {
   let fileName : string;
   if (businnesSchema) {
     endpoint = "https://graphqlapi.docoon.com/api/BusinessApi";
-    envVar = "Endpoint=";
+    envVar = "EndpointBusiness=";
     fileName= "./schema.graphql";
   } else {
     endpoint = "https://graphqlcommonapi.docoon.com/api/CommonApi";
@@ -59,6 +59,8 @@ async function launchScripts(businnesSchema : boolean) {
     if (valret2.status == "err") {
       console.error(valret2.message);
       return;
+    } else {
+      console.log("File generated:" + fileName);
     }
   } else {
     console.error(valret);

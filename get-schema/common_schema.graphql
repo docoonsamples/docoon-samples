@@ -905,6 +905,24 @@ enum RightType {
 
   """RelaunchJobMessage"""
   RELAUNCH_JOB_MESSAGE
+
+  """Get or list template variables configuration"""
+  READ_TEMPLATE_VARIABLE_CONFIGURATION
+
+  """Create, edit or delete template contents"""
+  CHANGE_TEMPLATE_VARIABLE_CONFIGURATION
+
+  """CancelJobMessage"""
+  CANCEL_JOB_MESSAGE
+
+  """Get or list postal parameter configurations"""
+  READ_POSTAL_PARAMETER_CONFIGURATION
+
+  """Create, edit or delete postal parameter configurations"""
+  CHANGE_POSTAL_PARAMETER_CONFIGURATION
+
+  """Get or list status actions"""
+  READ_STATUS_ACTION
 }
 
 type RightValue {
@@ -928,6 +946,7 @@ type Role {
   rights: [RightValue]
   lastConnectionDate: DateTime
   productAccesses: [ProductAccess]
+  isEnabled: Boolean!
 }
 
 input RoleInput {
@@ -937,6 +956,7 @@ input RoleInput {
   tenantId: String
   rights: [RightValueInput]
   productAccesses: [ProductAccessInput]
+  isEnabled: Boolean
 }
 
 enum SortDirection {

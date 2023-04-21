@@ -1646,6 +1646,7 @@ public class Types {
   public enum RightType {
     ADD_ENVIRONMENT,
     ADD_TENANT,
+    CANCEL_JOB_MESSAGE,
     CHANGE_ACTIVITY,
     CHANGE_CLICKED_LINK_DOCUMENT,
     CHANGE_CONFIGURATION,
@@ -1666,12 +1667,14 @@ public class Types {
     CHANGE_NOTE,
     CHANGE_OMS_RESOURCES,
     CHANGE_POSTAL_JOB,
+    CHANGE_POSTAL_PARAMETER_CONFIGURATION,
     CHANGE_POWER_BI_AUTH_TOKEN,
     CHANGE_PRODUCT,
     CHANGE_PRODUCT_INSTALL,
     CHANGE_SERVICE,
     CHANGE_TEMPLATE_CONTENT,
     CHANGE_TEMPLATE_STRUCTURE,
+    CHANGE_TEMPLATE_VARIABLE_CONFIGURATION,
     CHANGE_TENANT_API_USER,
     CHANGE_TENANT_EDC_OMS_INFO,
     CHANGE_TENANT_USER,
@@ -1705,12 +1708,15 @@ public class Types {
     READ_NOTE,
     READ_OMS_RESOURCES,
     READ_POSTAL_JOB,
+    READ_POSTAL_PARAMETER_CONFIGURATION,
     READ_PRODUCT,
     READ_PRODUCT_INSTALL,
     READ_RIGHT,
     READ_SERVICE,
+    READ_STATUS_ACTION,
     READ_TEMPLATE_CONTENT,
     READ_TEMPLATE_STRUCTURE,
+    READ_TEMPLATE_VARIABLE_CONFIGURATION,
     READ_TENANT,
     READ_TENANT_API_USER,
     READ_TENANT_EDC_OMS_INFO,
@@ -1749,6 +1755,7 @@ public class Types {
   public static class RoleInput {
     private String domainId;
     private String environmentId;
+    private Boolean isEnabled;
     private Iterable<ProductAccessInput> productAccesses;
     private UserProfile profile;
     private Iterable<RightValueInput> rights;
@@ -1758,6 +1765,7 @@ public class Types {
       if (args != null) {
         this.domainId = (String) args.get("domainId");
         this.environmentId = (String) args.get("environmentId");
+        this.isEnabled = (Boolean) args.get("isEnabled");
         if (args.get("productAccesses") != null) {
         		this.productAccesses = (Iterable<ProductAccessInput>) args.get("productAccesses");
         }
@@ -1775,12 +1783,14 @@ public class Types {
   
     public String getDomainId() { return this.domainId; }
     public String getEnvironmentId() { return this.environmentId; }
+    public Boolean getIsEnabled() { return this.isEnabled; }
     public Iterable<ProductAccessInput> getProductAccesses() { return this.productAccesses; }
     public UserProfile getProfile() { return this.profile; }
     public Iterable<RightValueInput> getRights() { return this.rights; }
     public String getTenantId() { return this.tenantId; }
     public void setDomainId(String domainId) { this.domainId = domainId; }
     public void setEnvironmentId(String environmentId) { this.environmentId = environmentId; }
+    public void setIsEnabled(Boolean isEnabled) { this.isEnabled = isEnabled; }
     public void setProductAccesses(Iterable<ProductAccessInput> productAccesses) { this.productAccesses = productAccesses; }
     public void setProfile(UserProfile profile) { this.profile = profile; }
     public void setRights(Iterable<RightValueInput> rights) { this.rights = rights; }

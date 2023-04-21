@@ -55,7 +55,7 @@ function launchScripts(businnesSchema) {
                     api_key = '';
                     if (businnesSchema) {
                         endpoint = "https://graphqlapi.docoon.com/api/BusinessApi";
-                        envVar = "Endpoint=";
+                        envVar = "EndpointBusiness=";
                         fileName = "./schema.graphql";
                     }
                     else {
@@ -92,6 +92,9 @@ function launchScripts(businnesSchema) {
                         if (valret2.status == "err") {
                             console.error(valret2.message);
                             return [2 /*return*/];
+                        }
+                        else {
+                            console.log("File generated:" + fileName);
                         }
                     }
                     else {
