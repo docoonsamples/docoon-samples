@@ -68,6 +68,7 @@ enum ActivityCategory {
   CHANGE_STATUS_CHORUS_B_2_G
   COMPLETE_CHORUS_B_2_G
   CANCEL_JOB_MESSAGE
+  ADD_DATA_FILE_ACTION
   EXTERNAL_PROCESS
   ERROR
 }
@@ -327,6 +328,77 @@ type ApiEnvironmentUserTypeConnection {
   pageInfo: PageInfo
 }
 
+type ApiRoutingConfiguration {
+  creationDate: DateTime
+  creationUserId: String
+  creationUserLabel: String
+  lastModificationDate: DateTime
+  lastModificationUserId: String
+  lastModificationUserLabel: String
+  id: String!
+  ownerId: String
+  ownerType: InheritedConfigurationOwnerType!
+  format: String!
+  action: String!
+  queueName: String
+}
+
+input ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilter {
+  field: ApiRoutingConfigurationOwnerTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: InheritedConfigurationOwnerType!
+  filterValue2: InheritedConfigurationOwnerType
+}
+
+input ApiRoutingConfigurationInput {
+  id: String
+  ownerId: String!
+  ownerType: InheritedConfigurationOwnerType!
+  format: String!
+  action: String!
+  queueName: String!
+  sender: PostalAddressInput
+}
+
+enum ApiRoutingConfigurationOwnerTypeFilterField {
+  OWNER_TYPE
+}
+
+input ApiRoutingConfigurationQueryParams {
+  sortField: ApiRoutingConfigurationSortField
+  sortDirection: SortDirection
+  stringFilters: [ApiRoutingConfigurationStringFilter]
+  ownerTypeFilters: [ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilter]
+}
+
+enum ApiRoutingConfigurationSortField {
+  FORMAT
+  ACTION
+  QUEUE_NAME
+  OWNER_ID
+  OWNER_TYPE
+  CREATION_DATE
+  LAST_MODIFICATION_DATE
+}
+
+input ApiRoutingConfigurationStringFilter {
+  field: ApiRoutingConfigurationStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum ApiRoutingConfigurationStringFilterField {
+  FORMAT
+  ACTION
+  QUEUE_NAME
+  OWNER_ID
+}
+
+type ApiRoutingConfigurationTypeConnection {
+  edges: [ApiRoutingConfiguration]
+  pageInfo: PageInfo
+}
+
 type ApiTenantUser {
   creationDate: DateTime
   creationUserId: String
@@ -454,7 +526,6 @@ enum ArrayElementFilterOperator {
 }
 
 input AttachmentInput {
-  documentTransmissionMode: DocumentTransmissionMode
   existingDocumentId: String
   newDocument: DocumentInput
 }
@@ -478,6 +549,9 @@ type BusinessSchemaMutation {
   editApiEnvironmentUser(id: String!, item: ApiEnvironmentUserInput!): ApiEnvironmentUser
   renewApiEnvironmentUser(id: String!): ApiEnvironmentUser
   editApiEnvironmentUserRight(apiUserId: String!, item: [EnvironmentRightValueInput!]): [EnvironmentRightValue!]
+  addApiRoutingConfiguration(item: ApiRoutingConfigurationInput!): ApiRoutingConfiguration
+  editApiRoutingConfiguration(id: String!, item: ApiRoutingConfigurationInput!): ApiRoutingConfiguration
+  deleteApiRoutingConfiguration(id: String!): Void
   addApiTenantUser(item: ApiTenantUserInput!, tenantId: String): ApiTenantUser
   editApiTenantUser(id: String!, item: ApiTenantUserInput!, tenantId: String): ApiTenantUser
   renewApiTenantUser(id: String!, tenantId: String): ApiTenantUser
@@ -490,6 +564,7 @@ type BusinessSchemaMutation {
   deleteContact(id: String!, tenantId: String): Void
   addDashboardRight(item: DashboardRightInput!): DashboardRight
   deleteDashboardRight(id: String!): Void
+  addDataFileAction(item: DataFileActionInput!, tenantId: String): DataFileActionResult
   addDocumentJob(item: DocumentJobInput!, tenantId: String): JobCreationResult
   addDocumentProbativeJob(item: DocumentProbativeJobInput!, tenantId: String): JobCreationResult
   readDocument(tenantId: String!, jobId: String!, jobMessageId: String!, documentId: String!): Void
@@ -517,6 +592,9 @@ type BusinessSchemaMutation {
   addHostedListFile(item: FileContentInput!, tenantId: String): FileContent
   deleteHostedListFile(id: String!, tenantId: String): Void
   deleteHostedReportFile(id: String!, tenantId: String): Void
+  addIncomingEmailHistory(item: IncomingEmailHistoryInput!, tenantId: String): IncomingEmailHistory
+  editIncomingEmailHistory(id: String!, item: IncomingEmailHistoryInput!, tenantId: String): IncomingEmailHistory
+  deleteIncomingEmailHistory(id: String!, tenantId: String): Void
   runActionOnJobMessage(tenantId: String, jobMessageId: String!, options: JobMessageActionOptions!): Void
   relaunchJobMessage(item: RelaunchJobMessageOptionsInput!): Void
   addFaxJob(item: FaxJob!, tenantId: String): JobResult
@@ -576,6 +654,8 @@ type BusinessSchemaQuery {
   apiEnvironmentUserItems(idList: [String!]!): [ApiEnvironmentUser]
   apiEnvironmentUserList(params: ApiEnvironmentUserQueryParams, after: String): ApiEnvironmentUserTypeConnection
   apiEnvironmentUserRightList(apiUserId: String!, params: RightValueQueryParams, after: String): EnvironmentRightValueTypeConnection
+  apiRoutingConfigurationItems(idList: [String!]!): [ApiRoutingConfiguration]
+  apiRoutingConfigurationList(params: ApiRoutingConfigurationQueryParams, after: String): ApiRoutingConfigurationTypeConnection
   apiTenantUserItems(idList: [String!]!, tenantId: String): [ApiTenantUser]
   apiTenantUserList(params: ApiTenantUserQueryParams, after: String, tenantId: String): ApiTenantUserTypeConnection
   apiTenantUserRightList(apiUserId: String!, params: RightValueQueryParams, after: String): TenantRightValueTypeConnection
@@ -590,6 +670,7 @@ type BusinessSchemaQuery {
   dashboardList(params: DashboardQueryParams, after: String, language: Language): DashboardTypeConnection
   dashboardRightItems(idList: [String!]!): [DashboardRight]
   dashboardRightList(params: DashboardRightQueryParams, after: String): DashboardRightTypeConnection
+  documentCountList(tenantId: String): DocumentCount
   documentCountStatisticsList(params: DocumentCountStatisticsQueryParams, tenantId: String): [DocumentCountStatistics]
   documentJobItems(idList: [String!]!, tenantId: String): [DocumentJob]
   documentJobList(params: DocumentJobQueryParams, after: String, tenantId: String): DocumentJobTypeConnection
@@ -620,6 +701,8 @@ type BusinessSchemaQuery {
   hostedReportFileList(after: String, tenantId: String): FileHeaderTypeConnection
   inboundFaxList(params: InboundFaxQueryParams, after: String, tenantId: String): InboundFaxTypeConnection
   inboundSmsList(params: InboundSmsQueryParams, after: String, tenantId: String): InboundSmsTypeConnection
+  incomingEmailHistoryItems(idList: [String!]!, tenantId: String): [IncomingEmailHistory]
+  incomingEmailHistoryList(params: IncomingEmailHistoryQueryParams, after: String, tenantId: String): IncomingEmailHistoryTypeConnection
   jobItemItems(idList: [JobItemId]!, tenantId: String): [JobItem]
   jobItemList(params: JobItemQueryParams, after: String, tenantId: String): JobItemTypeConnection
   jobMessageItems(idList: [String!]!, tenantId: String): [JobMessage]
@@ -1011,6 +1094,18 @@ enum DashboardVisibilityType {
   PUBLIC_STANDARD
 }
 
+input DataFileActionInput {
+  data: String!
+  name: String!
+  format: String!
+  action: String!
+  parameters: String
+}
+
+type DataFileActionResult {
+  id: String!
+}
+
 """
 The `DateTime` scalar type represents a date and time. `DateTime` expects
 timestamps to be formatted in accordance with the
@@ -1081,9 +1176,17 @@ input DocumentBoolFilter {
   filterValue1: Boolean!
 }
 
+type DocumentCount {
+  totalCount: Long!
+  documentTypeCounts: [DocumentTypeCounts]
+  statusCounts: [StatusCounts]
+  subStatusCounts: [SubStatusCounts]
+  serviceCounts: [DocumentTypeCounts]
+}
+
 type DocumentCountStatistics {
-  year: Int!
-  month: Int!
+  year: Int
+  month: Int
   documentTypeCode: String!
   count: Long!
 }
@@ -1216,7 +1319,7 @@ input DocumentJobInput {
   contactRecipients: [ContactRecipientInput]
   thirdPartyRecipients: [ThirdPartyRecipientInput]
   adhocRecipientsFiles: [FileIdOrBase64Input]
-  postalParameter: PostalParameter
+  postalParameter: PostalParameterInput
   postalAdhocRecipients: [PostalAdhocRecipientInput]
   emailAdhocRecipients: [EmailAdhocRecipientInput]
   chorusB2GAdhocRecipient: ChorusB2GAdhocRecipientInput
@@ -1501,6 +1604,11 @@ type DocumentTypeConnection {
   pageInfo: PageInfo
 }
 
+type DocumentTypeCounts {
+  key: String!
+  value: Long!
+}
+
 input DocumentTypeInput {
   id: String
   code: String!
@@ -1660,6 +1768,9 @@ enum DomainRightType {
 
   """Get or list status actions"""
   READ_STATUS_ACTION
+
+  """Edit Tenant postal config"""
+  EDIT_TENANT_POSTAL_CONFIG
 }
 
 type DomainRightValue {
@@ -1837,6 +1948,7 @@ enum EngineEventAction {
   EDIT_METADATA_DOCUMENT
   ADD_ATTACHMENTS_DOCUMENT
   CANCEL_JOB_MESSAGE
+  ADD_DATA_FILE_ACTION
 }
 
 enum EnvelopeType {
@@ -1870,6 +1982,15 @@ enum EnvironmentRightType {
 
   """Get or list status actions"""
   READ_STATUS_ACTION
+
+  """Get or list api routing configurations"""
+  READ_API_ROUTING_CONFIGURATION
+
+  """Create, edit or delete api routing configurations"""
+  CHANGE_API_ROUTING_CONFIGURATION
+
+  """Edit Tenant postal config"""
+  EDIT_TENANT_POSTAL_CONFIG
 }
 
 type EnvironmentRightValue {
@@ -2323,6 +2444,113 @@ type InboundSmsTypeConnection {
   pageInfo: PageInfo
 }
 
+type IncomingEmailHistory {
+  creationDate: DateTime
+  lastModificationDate: DateTime
+  id: String!
+  tenantId: String!
+  routingConfigurationId: String!
+  type: ProcessingType!
+  status: ProcessingStatus!
+  errorString: String!
+  from: String!
+  to: String!
+  subject: String!
+  attachmentNames: [String]
+  headerValues: [KeyValuePair]
+  incomingEmailPath: String!
+}
+
+input IncomingEmailHistoryDateFilter {
+  field: IncomingEmailHistoryDateFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: DateTime
+  filterValue2: DateTime
+}
+
+enum IncomingEmailHistoryDateFilterField {
+  CREATION_DATE
+}
+
+input IncomingEmailHistoryInput {
+  id: String
+  tenantId: String!
+  routingConfigurationId: String!
+  type: ProcessingType!
+  status: ProcessingStatus!
+  errorString: String
+  from: String!
+  to: String!
+  subject: String!
+  attachmentNames: [String]
+  headerValues: [KeyValuePairInput]
+  incomingEmailPath: String!
+}
+
+input IncomingEmailHistoryProcessingStatusEnumFilter {
+  field: IncomingEmailHistoryStatusFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: ProcessingStatus!
+  filterValue2: ProcessingStatus
+}
+
+input IncomingEmailHistoryProcessingTypeEnumFilter {
+  field: IncomingEmailHistoryTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: ProcessingType!
+  filterValue2: ProcessingType
+}
+
+input IncomingEmailHistoryQueryParams {
+  sortField: IncomingEmailHistorySortField
+  sortDirection: SortDirection
+  stringFilters: [IncomingEmailHistoryStringFilter]
+  dateFilters: [IncomingEmailHistoryDateFilter]
+  statusFilters: [IncomingEmailHistoryProcessingStatusEnumFilter]
+  typeFilters: [IncomingEmailHistoryProcessingTypeEnumFilter]
+}
+
+enum IncomingEmailHistorySortField {
+  ID
+  TENANT_ID
+  TYPE
+  STATUS
+  FROM
+  TO
+  SUBJECT
+  INCOMING_EMAIL_PATH
+  CREATION_DATE
+}
+
+enum IncomingEmailHistoryStatusFilterField {
+  STATUS
+}
+
+input IncomingEmailHistoryStringFilter {
+  field: IncomingEmailHistoryStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum IncomingEmailHistoryStringFilterField {
+  ID
+  TENANT_ID
+  ROUTING_CONFIGURATION_ID
+  FROM
+  TO
+  SUBJECT
+  INCOMING_EMAIL_PATH
+}
+
+type IncomingEmailHistoryTypeConnection {
+  edges: [IncomingEmailHistory]
+  pageInfo: PageInfo
+}
+
+enum IncomingEmailHistoryTypeFilterField {
+  TYPE
+}
+
 enum InheritedConfigurationOwnerType {
   SYSTEM
   DOMAIN
@@ -2562,6 +2790,7 @@ type JobMessage {
   isPrimary: Boolean
   emailAddress: String
   postalAddress: PostalAddress
+  recordedDeliveryNumber: String
   transmissionMode: DocumentTransmissionMode
   chorusStatus: JobMessageChorusStatus
   validationErrors: [ChorusB2GValidationError]
@@ -2635,6 +2864,7 @@ enum JobMessageChorusStatus {
   POSTED_IN_THE_ACCOUNTS
   MADE_AVAILABLE_TO_THE_ACCOUNTING_OFFICER
   SERVICE_RENDERED
+  ERROR
 }
 
 enum JobMessageDateFilterField {
@@ -2674,6 +2904,7 @@ type JobMessageStatusCount {
   completedCount: Int!
   errorCount: Int!
   canceledCount: Int!
+  isPrimary: Boolean!
 }
 
 enum JobMessageStatusFilterField {
@@ -3249,6 +3480,7 @@ type PostalJob {
   sentCount: Int!
   failedCount: Int!
   undeliveredCount: Int!
+  parameter: PostalParameter
 }
 
 input PostalJobDateFilter {
@@ -3263,7 +3495,7 @@ input PostalJobInput {
   adhocRecipientFiles: [FileIdOrNewInputType]
   postalAdhocRecipients: [PostalAdhocRecipientInput]
   documents: [FileIdOrNewInputType]
-  parameter: PostalParameter
+  parameter: PostalParameterInput
   serviceId: String
   note: String
 }
@@ -3295,14 +3527,14 @@ type PostalJobTypeConnection {
   pageInfo: PageInfo
 }
 
-input PostalParameter {
+type PostalParameter {
   envelope: EnvelopeType
   stamp: StampType
   printBothSide: Boolean
   printColor: Boolean
   lreArManagement: LreArManagementType
   mergeDocuments: Boolean
-  sender: PostalAddressInput
+  sender: PostalAddress
 }
 
 type PostalParameterConfiguration {
@@ -3351,18 +3583,39 @@ enum PostalParameterConfigurationOwnerTypeFilterField {
 input PostalParameterConfigurationQueryParams {
   sortField: PostalParameterConfigurationSortField
   sortDirection: SortDirection
+  stringFilters: [PostalParameterConfigurationStringFilter]
   ownerTypeFilters: [PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilter]
-  ownerId: String!
 }
 
 enum PostalParameterConfigurationSortField {
   CREATION_DATE
   LAST_MODIFICATION_DATE
+  OWNER_ID
+}
+
+input PostalParameterConfigurationStringFilter {
+  field: PostalParameterConfigurationStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum PostalParameterConfigurationStringFilterField {
+  OWNER_ID
 }
 
 type PostalParameterConfigurationTypeConnection {
   edges: [PostalParameterConfiguration]
   pageInfo: PageInfo
+}
+
+input PostalParameterInput {
+  envelope: EnvelopeType
+  stamp: StampType
+  printBothSide: Boolean
+  printColor: Boolean
+  lreArManagement: LreArManagementType
+  mergeDocuments: Boolean
+  sender: PostalAddressInput
 }
 
 type PowerBiAuthToken {
@@ -3374,6 +3627,15 @@ type PowerBiAuthToken {
   lastModificationUserLabel: String
   accessToken: String!
   embedUrl: String!
+}
+
+enum ProcessingStatus {
+  COMPLETED
+  ERROR
+}
+
+enum ProcessingType {
+  REDIRECT_EMAIL
 }
 
 input PushJob {
@@ -3647,7 +3909,7 @@ enum RightType {
   """Create documentJob"""
   CHANGE_DOCUMENT_JOB
 
-  """Get or list documentJobs"""
+  """Get or list jobMessages"""
   READ_JOB_MESSAGE
 
   """Create, edit or delete jobMessage"""
@@ -3724,6 +3986,21 @@ enum RightType {
 
   """Get or list status actions"""
   READ_STATUS_ACTION
+
+  """Get or list api routing configurations"""
+  READ_API_ROUTING_CONFIGURATION
+
+  """Create, edit or delete api routing configurations"""
+  CHANGE_API_ROUTING_CONFIGURATION
+
+  """Edit Tenant postal config"""
+  EDIT_TENANT_POSTAL_CONFIG
+
+  """Get or list data file action"""
+  READ_DATA_FILE_ACTION
+
+  """Create, edit or delete data file action"""
+  CHANGE_DATA_FILE_ACTION
 }
 
 input RightValueBoolFilter {
@@ -3762,6 +4039,7 @@ type Service {
   customSmtpConfig: SmtpConfig
   isEnabled: Boolean!
   chorusB2GConfig: ChorusB2GConfig
+  code: String
 }
 
 input ServiceBoolFilter {
@@ -3781,6 +4059,7 @@ input ServiceInput {
   customSmtpConfig: SmtpConfigInput
   isEnabled: Boolean
   chorusB2GConfig: ChorusB2GConfigInput
+  code: String
 }
 
 input ServiceIntFilter {
@@ -3931,6 +4210,11 @@ type StatusActionTypeConnection {
   pageInfo: PageInfo
 }
 
+type StatusCounts {
+  key: DocumentStatus!
+  value: Long!
+}
+
 enum StringFilterOperator {
   EQUAL
   NOT_EQUAL
@@ -3946,6 +4230,11 @@ enum StringFilterOperator {
   IN_ARRAY
   IS_NULL
   IS_NOT_NULL
+}
+
+type SubStatusCounts {
+  key: DocumentSubStatus!
+  value: Long!
 }
 
 type TemplateContent {
@@ -4013,6 +4302,23 @@ enum TemplateContentNotificationType {
   DOCUMENT_NOTIFICATION_WITH_LINK
   DOCUMENT_NOTIFICATION_LINK
   INTERNAL_NOT_ARCHIVED_FILES
+  ACTIVITY_DOCUMENT_SIGNED
+  ACTIVITY_DOCUMENT_ARCHIVED
+  ACTIVITY_DOCUMENT_CANCELED
+  ACTIVITY_DOCUMENT_READ
+  ACTIVITY_EDIT_METADATA_DOCUMENT
+  ACTIVITY_ADD_ATTACHMENTS_DOCUMENT
+  ACTIVITY_JOB_CREATED
+  ACTIVITY_JOB_LAUNCHED
+  ACTIVITY_JOB_PROCESSING
+  ACTIVITY_NOTIFICATION_SENT
+  ACTIVITY_SEND_CHORUS_B_2_G
+  ACTIVITY_CHANGE_STATUS_CHORUS_B_2_G
+  ACTIVITY_COMPLETE_CHORUS_B_2_G
+  ACTIVITY_CANCEL_JOB_MESSAGE
+  ACTIVITY_ADD_DATA_FILE_ACTION
+  ACTIVITY_EXTERNAL_PROCESS
+  ACTIVITY_ERROR
 }
 
 enum TemplateContentNotificationTypeFilterField {
@@ -4074,6 +4380,7 @@ enum TemplateContentTransmissionType {
   EMAIL
   WEB_NOTIFICATION
   SMS
+  NONE
 }
 
 enum TemplateContentTransmissionTypeFilterField {
@@ -4429,6 +4736,12 @@ enum TenantRightType {
 
   """Get or list status actions"""
   READ_STATUS_ACTION
+
+  """Get or list data file action"""
+  READ_DATA_FILE_ACTION
+
+  """Create data file action"""
+  CHANGE_DATA_FILE_ACTION
 }
 
 type TenantRightValue {

@@ -521,10 +521,14 @@ input PostalAddressInput {
 }
 
 type PostalConfiguration {
+  clientId: String
+  isEnabled: Boolean!
   isTestMode: Boolean!
 }
 
 input PostalConfigurationInput {
+  clientId: String
+  isEnabled: Boolean!
   isTestMode: Boolean!
 }
 
@@ -846,7 +850,7 @@ enum RightType {
   """Create documentJob"""
   CHANGE_DOCUMENT_JOB
 
-  """Get or list documentJobs"""
+  """Get or list jobMessages"""
   READ_JOB_MESSAGE
 
   """Create, edit or delete jobMessage"""
@@ -923,6 +927,21 @@ enum RightType {
 
   """Get or list status actions"""
   READ_STATUS_ACTION
+
+  """Get or list api routing configurations"""
+  READ_API_ROUTING_CONFIGURATION
+
+  """Create, edit or delete api routing configurations"""
+  CHANGE_API_ROUTING_CONFIGURATION
+
+  """Edit Tenant postal config"""
+  EDIT_TENANT_POSTAL_CONFIG
+
+  """Get or list data file action"""
+  READ_DATA_FILE_ACTION
+
+  """Create, edit or delete data file action"""
+  CHANGE_DATA_FILE_ACTION
 }
 
 type RightValue {
