@@ -34,7 +34,8 @@ npm run generate
 
 ```cmd
 ApiKey=<YourApiKeyGeneratedFronWebsite>
-Endpoint=https://graphqlapi.docoon.com/api/BusinessApi
+EndpointBusiness=https://graphqlapi.docoon.com
+EndpointCommon=https://graphqlcommonapi.docoon.com
 ```
 
 2. Install the modules in the get-schema folder
