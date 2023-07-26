@@ -147,6 +147,7 @@ public class Types {
   
   public enum ActivityCategory {
     ADD_ATTACHMENTS_DOCUMENT,
+    ADD_DATA_FILE_ACTION,
     CANCEL_JOB_MESSAGE,
     CHANGE_STATUS_CHORUS_B_2_G,
     COMPLETE_CHORUS_B_2_G,
@@ -718,6 +719,176 @@ public class Types {
   
   
   
+  public static class ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilterInput {
+    private ApiRoutingConfigurationOwnerTypeFilterField field;
+    private InheritedConfigurationOwnerType filterValue1;
+    private InheritedConfigurationOwnerType filterValue2;
+    private NumberFilterOperator operator;
+  
+    public ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof ApiRoutingConfigurationOwnerTypeFilterField) {
+          this.field = (ApiRoutingConfigurationOwnerTypeFilterField) args.get("field");
+        } else {
+          this.field = ApiRoutingConfigurationOwnerTypeFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof InheritedConfigurationOwnerType) {
+          this.filterValue1 = (InheritedConfigurationOwnerType) args.get("filterValue1");
+        } else {
+          this.filterValue1 = InheritedConfigurationOwnerType.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof InheritedConfigurationOwnerType) {
+          this.filterValue2 = (InheritedConfigurationOwnerType) args.get("filterValue2");
+        } else {
+          this.filterValue2 = InheritedConfigurationOwnerType.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public ApiRoutingConfigurationOwnerTypeFilterField getField() { return this.field; }
+    public InheritedConfigurationOwnerType getFilterValue1() { return this.filterValue1; }
+    public InheritedConfigurationOwnerType getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(ApiRoutingConfigurationOwnerTypeFilterField field) { this.field = field; }
+    public void setFilterValue1(InheritedConfigurationOwnerType filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(InheritedConfigurationOwnerType filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class ApiRoutingConfigurationInput {
+    private String action;
+    private String format;
+    private String id;
+    private String ownerId;
+    private InheritedConfigurationOwnerType ownerType;
+    private String queueName;
+    private PostalAddressInput sender;
+  
+    public ApiRoutingConfigurationInput(Map<String, Object> args) {
+      if (args != null) {
+        this.action = (String) args.get("action");
+        this.format = (String) args.get("format");
+        this.id = (String) args.get("id");
+        this.ownerId = (String) args.get("ownerId");
+        if (args.get("ownerType") instanceof InheritedConfigurationOwnerType) {
+          this.ownerType = (InheritedConfigurationOwnerType) args.get("ownerType");
+        } else {
+          this.ownerType = InheritedConfigurationOwnerType.valueOf((String) args.get("ownerType"));
+        }
+        this.queueName = (String) args.get("queueName");
+        this.sender = new PostalAddressInput((Map<String, Object>) args.get("sender"));
+      }
+    }
+  
+    public String getAction() { return this.action; }
+    public String getFormat() { return this.format; }
+    public String getId() { return this.id; }
+    public String getOwnerId() { return this.ownerId; }
+    public InheritedConfigurationOwnerType getOwnerType() { return this.ownerType; }
+    public String getQueueName() { return this.queueName; }
+    public PostalAddressInput getSender() { return this.sender; }
+    public void setAction(String action) { this.action = action; }
+    public void setFormat(String format) { this.format = format; }
+    public void setId(String id) { this.id = id; }
+    public void setOwnerId(String ownerId) { this.ownerId = ownerId; }
+    public void setOwnerType(InheritedConfigurationOwnerType ownerType) { this.ownerType = ownerType; }
+    public void setQueueName(String queueName) { this.queueName = queueName; }
+    public void setSender(PostalAddressInput sender) { this.sender = sender; }
+  }
+  public enum ApiRoutingConfigurationOwnerTypeFilterField {
+    OWNER_TYPE
+    
+  }
+  
+  public static class ApiRoutingConfigurationQueryParamsInput {
+    private Iterable<ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters;
+    private SortDirection sortDirection;
+    private ApiRoutingConfigurationSortField sortField;
+    private Iterable<ApiRoutingConfigurationStringFilterInput> stringFilters;
+  
+    public ApiRoutingConfigurationQueryParamsInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("ownerTypeFilters") != null) {
+        		this.ownerTypeFilters = (Iterable<ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilterInput>) args.get("ownerTypeFilters");
+        }
+        if (args.get("sortDirection") instanceof SortDirection) {
+          this.sortDirection = (SortDirection) args.get("sortDirection");
+        } else {
+          this.sortDirection = SortDirection.valueOf((String) args.get("sortDirection"));
+        }
+        if (args.get("sortField") instanceof ApiRoutingConfigurationSortField) {
+          this.sortField = (ApiRoutingConfigurationSortField) args.get("sortField");
+        } else {
+          this.sortField = ApiRoutingConfigurationSortField.valueOf((String) args.get("sortField"));
+        }
+        if (args.get("stringFilters") != null) {
+        		this.stringFilters = (Iterable<ApiRoutingConfigurationStringFilterInput>) args.get("stringFilters");
+        }
+      }
+    }
+  
+    public Iterable<ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilterInput> getOwnerTypeFilters() { return this.ownerTypeFilters; }
+    public SortDirection getSortDirection() { return this.sortDirection; }
+    public ApiRoutingConfigurationSortField getSortField() { return this.sortField; }
+    public Iterable<ApiRoutingConfigurationStringFilterInput> getStringFilters() { return this.stringFilters; }
+    public void setOwnerTypeFilters(Iterable<ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters) { this.ownerTypeFilters = ownerTypeFilters; }
+    public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
+    public void setSortField(ApiRoutingConfigurationSortField sortField) { this.sortField = sortField; }
+    public void setStringFilters(Iterable<ApiRoutingConfigurationStringFilterInput> stringFilters) { this.stringFilters = stringFilters; }
+  }
+  public enum ApiRoutingConfigurationSortField {
+    ACTION,
+    CREATION_DATE,
+    FORMAT,
+    LAST_MODIFICATION_DATE,
+    OWNER_ID,
+    OWNER_TYPE,
+    QUEUE_NAME
+    
+  }
+  
+  public static class ApiRoutingConfigurationStringFilterInput {
+    private ApiRoutingConfigurationStringFilterField field;
+    private String filterValue1;
+    private StringFilterOperator operator;
+  
+    public ApiRoutingConfigurationStringFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof ApiRoutingConfigurationStringFilterField) {
+          this.field = (ApiRoutingConfigurationStringFilterField) args.get("field");
+        } else {
+          this.field = ApiRoutingConfigurationStringFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (String) args.get("filterValue1");
+        if (args.get("operator") instanceof StringFilterOperator) {
+          this.operator = (StringFilterOperator) args.get("operator");
+        } else {
+          this.operator = StringFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public ApiRoutingConfigurationStringFilterField getField() { return this.field; }
+    public String getFilterValue1() { return this.filterValue1; }
+    public StringFilterOperator getOperator() { return this.operator; }
+    public void setField(ApiRoutingConfigurationStringFilterField field) { this.field = field; }
+    public void setFilterValue1(String filterValue1) { this.filterValue1 = filterValue1; }
+    public void setOperator(StringFilterOperator operator) { this.operator = operator; }
+  }
+  public enum ApiRoutingConfigurationStringFilterField {
+    ACTION,
+    FORMAT,
+    OWNER_ID,
+    QUEUE_NAME
+    
+  }
+  
+  
+  
   public static class ApiTenantUserBoolFilterInput {
     private ApiTenantUserBoolFilterField field;
     private Boolean filterValue1;
@@ -971,26 +1142,18 @@ public class Types {
   }
   
   public static class AttachmentInput {
-    private DocumentTransmissionMode documentTransmissionMode;
     private String existingDocumentId;
     private DocumentInput newDocument;
   
     public AttachmentInput(Map<String, Object> args) {
       if (args != null) {
-        if (args.get("documentTransmissionMode") instanceof DocumentTransmissionMode) {
-          this.documentTransmissionMode = (DocumentTransmissionMode) args.get("documentTransmissionMode");
-        } else {
-          this.documentTransmissionMode = DocumentTransmissionMode.valueOf((String) args.get("documentTransmissionMode"));
-        }
         this.existingDocumentId = (String) args.get("existingDocumentId");
         this.newDocument = new DocumentInput((Map<String, Object>) args.get("newDocument"));
       }
     }
   
-    public DocumentTransmissionMode getDocumentTransmissionMode() { return this.documentTransmissionMode; }
     public String getExistingDocumentId() { return this.existingDocumentId; }
     public DocumentInput getNewDocument() { return this.newDocument; }
-    public void setDocumentTransmissionMode(DocumentTransmissionMode documentTransmissionMode) { this.documentTransmissionMode = documentTransmissionMode; }
     public void setExistingDocumentId(String existingDocumentId) { this.existingDocumentId = existingDocumentId; }
     public void setNewDocument(DocumentInput newDocument) { this.newDocument = newDocument; }
   }
@@ -1028,6 +1191,18 @@ public class Types {
   
     public ApiEnvironmentUserInput getItem() { return this.item; }
     public void setItem(ApiEnvironmentUserInput item) { this.item = item; }
+  }
+  public static class BusinessSchemaMutationAddApiRoutingConfigurationArgs {
+    private ApiRoutingConfigurationInput item;
+  
+    public BusinessSchemaMutationAddApiRoutingConfigurationArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.item = new ApiRoutingConfigurationInput((Map<String, Object>) args.get("item"));
+      }
+    }
+  
+    public ApiRoutingConfigurationInput getItem() { return this.item; }
+    public void setItem(ApiRoutingConfigurationInput item) { this.item = item; }
   }
   public static class BusinessSchemaMutationAddApiTenantUserArgs {
     private ApiTenantUserInput item;
@@ -1088,6 +1263,22 @@ public class Types {
   
     public DashboardRightInput getItem() { return this.item; }
     public void setItem(DashboardRightInput item) { this.item = item; }
+  }
+  public static class BusinessSchemaMutationAddDataFileActionArgs {
+    private DataFileActionInput item;
+    private String tenantId;
+  
+    public BusinessSchemaMutationAddDataFileActionArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.item = new DataFileActionInput((Map<String, Object>) args.get("item"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public DataFileActionInput getItem() { return this.item; }
+    public String getTenantId() { return this.tenantId; }
+    public void setItem(DataFileActionInput item) { this.item = item; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaMutationAddDocumentJobArgs {
     private DocumentJobInput item;
@@ -1243,6 +1434,22 @@ public class Types {
     public FileContentInput getItem() { return this.item; }
     public String getTenantId() { return this.tenantId; }
     public void setItem(FileContentInput item) { this.item = item; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationAddIncomingEmailHistoryArgs {
+    private IncomingEmailHistoryInput item;
+    private String tenantId;
+  
+    public BusinessSchemaMutationAddIncomingEmailHistoryArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.item = new IncomingEmailHistoryInput((Map<String, Object>) args.get("item"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public IncomingEmailHistoryInput getItem() { return this.item; }
+    public String getTenantId() { return this.tenantId; }
+    public void setItem(IncomingEmailHistoryInput item) { this.item = item; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaMutationAddListOfValuesArgs {
@@ -1509,6 +1716,18 @@ public class Types {
     public void setItem(VoiceJobInput item) { this.item = item; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
+  public static class BusinessSchemaMutationDeleteApiRoutingConfigurationArgs {
+    private String id;
+  
+    public BusinessSchemaMutationDeleteApiRoutingConfigurationArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public void setId(String id) { this.id = id; }
+  }
   public static class BusinessSchemaMutationDeleteContactArgs {
     private String id;
     private String tenantId;
@@ -1646,6 +1865,22 @@ public class Types {
     private String tenantId;
   
     public BusinessSchemaMutationDeleteHostedReportFileArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public String getTenantId() { return this.tenantId; }
+    public void setId(String id) { this.id = id; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaMutationDeleteIncomingEmailHistoryArgs {
+    private String id;
+    private String tenantId;
+  
+    public BusinessSchemaMutationDeleteIncomingEmailHistoryArgs(Map<String, Object> args) {
       if (args != null) {
         this.id = (String) args.get("id");
         this.tenantId = (String) args.get("tenantId");
@@ -1897,6 +2132,22 @@ public class Types {
     public void setApiUserId(String apiUserId) { this.apiUserId = apiUserId; }
     public void setItem(Iterable<EnvironmentRightValueInput> item) { this.item = item; }
   }
+  public static class BusinessSchemaMutationEditApiRoutingConfigurationArgs {
+    private String id;
+    private ApiRoutingConfigurationInput item;
+  
+    public BusinessSchemaMutationEditApiRoutingConfigurationArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+        this.item = new ApiRoutingConfigurationInput((Map<String, Object>) args.get("item"));
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public ApiRoutingConfigurationInput getItem() { return this.item; }
+    public void setId(String id) { this.id = id; }
+    public void setItem(ApiRoutingConfigurationInput item) { this.item = item; }
+  }
   public static class BusinessSchemaMutationEditApiTenantUserArgs {
     private String id;
     private ApiTenantUserInput item;
@@ -2102,6 +2353,26 @@ public class Types {
     public ErrorQueueMessageInput getItem() { return this.item; }
     public void setId(String id) { this.id = id; }
     public void setItem(ErrorQueueMessageInput item) { this.item = item; }
+  }
+  public static class BusinessSchemaMutationEditIncomingEmailHistoryArgs {
+    private String id;
+    private IncomingEmailHistoryInput item;
+    private String tenantId;
+  
+    public BusinessSchemaMutationEditIncomingEmailHistoryArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.id = (String) args.get("id");
+        this.item = new IncomingEmailHistoryInput((Map<String, Object>) args.get("item"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getId() { return this.id; }
+    public IncomingEmailHistoryInput getItem() { return this.item; }
+    public String getTenantId() { return this.tenantId; }
+    public void setId(String id) { this.id = id; }
+    public void setItem(IncomingEmailHistoryInput item) { this.item = item; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaMutationEditListOfValuesArgs {
     private String id;
@@ -2705,6 +2976,34 @@ public class Types {
     public void setApiUserId(String apiUserId) { this.apiUserId = apiUserId; }
     public void setParams(RightValueQueryParamsInput params) { this.params = params; }
   }
+  public static class BusinessSchemaQueryApiRoutingConfigurationItemsArgs {
+    private Iterable<String> idList;
+  
+    public BusinessSchemaQueryApiRoutingConfigurationItemsArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.idList = (Iterable<String>) args.get("idList");
+      }
+    }
+  
+    public Iterable<String> getIdList() { return this.idList; }
+    public void setIdList(Iterable<String> idList) { this.idList = idList; }
+  }
+  public static class BusinessSchemaQueryApiRoutingConfigurationListArgs {
+    private String after;
+    private ApiRoutingConfigurationQueryParamsInput params;
+  
+    public BusinessSchemaQueryApiRoutingConfigurationListArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.after = (String) args.get("after");
+        this.params = new ApiRoutingConfigurationQueryParamsInput((Map<String, Object>) args.get("params"));
+      }
+    }
+  
+    public String getAfter() { return this.after; }
+    public ApiRoutingConfigurationQueryParamsInput getParams() { return this.params; }
+    public void setAfter(String after) { this.after = after; }
+    public void setParams(ApiRoutingConfigurationQueryParamsInput params) { this.params = params; }
+  }
   public static class BusinessSchemaQueryApiTenantUserItemsArgs {
     private Iterable<String> idList;
     private String tenantId;
@@ -2972,6 +3271,18 @@ public class Types {
     public DashboardRightQueryParamsInput getParams() { return this.params; }
     public void setAfter(String after) { this.after = after; }
     public void setParams(DashboardRightQueryParamsInput params) { this.params = params; }
+  }
+  public static class BusinessSchemaQueryDocumentCountListArgs {
+    private String tenantId;
+  
+    public BusinessSchemaQueryDocumentCountListArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getTenantId() { return this.tenantId; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaQueryDocumentCountStatisticsListArgs {
     private DocumentCountStatisticsQueryParamsInput params;
@@ -3491,6 +3802,42 @@ public class Types {
     public String getTenantId() { return this.tenantId; }
     public void setAfter(String after) { this.after = after; }
     public void setParams(InboundSmsQueryParamsInput params) { this.params = params; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaQueryIncomingEmailHistoryItemsArgs {
+    private Iterable<String> idList;
+    private String tenantId;
+  
+    public BusinessSchemaQueryIncomingEmailHistoryItemsArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.idList = (Iterable<String>) args.get("idList");
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public Iterable<String> getIdList() { return this.idList; }
+    public String getTenantId() { return this.tenantId; }
+    public void setIdList(Iterable<String> idList) { this.idList = idList; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+  }
+  public static class BusinessSchemaQueryIncomingEmailHistoryListArgs {
+    private String after;
+    private IncomingEmailHistoryQueryParamsInput params;
+    private String tenantId;
+  
+    public BusinessSchemaQueryIncomingEmailHistoryListArgs(Map<String, Object> args) {
+      if (args != null) {
+        this.after = (String) args.get("after");
+        this.params = new IncomingEmailHistoryQueryParamsInput((Map<String, Object>) args.get("params"));
+        this.tenantId = (String) args.get("tenantId");
+      }
+    }
+  
+    public String getAfter() { return this.after; }
+    public IncomingEmailHistoryQueryParamsInput getParams() { return this.params; }
+    public String getTenantId() { return this.tenantId; }
+    public void setAfter(String after) { this.after = after; }
+    public void setParams(IncomingEmailHistoryQueryParamsInput params) { this.params = params; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }
   }
   public static class BusinessSchemaQueryJobItemItemsArgs {
@@ -5087,6 +5434,35 @@ public class Types {
     
   }
   
+  public static class DataFileActionInput {
+    private String action;
+    private String data;
+    private String format;
+    private String name;
+    private String parameters;
+  
+    public DataFileActionInput(Map<String, Object> args) {
+      if (args != null) {
+        this.action = (String) args.get("action");
+        this.data = (String) args.get("data");
+        this.format = (String) args.get("format");
+        this.name = (String) args.get("name");
+        this.parameters = (String) args.get("parameters");
+      }
+    }
+  
+    public String getAction() { return this.action; }
+    public String getData() { return this.data; }
+    public String getFormat() { return this.format; }
+    public String getName() { return this.name; }
+    public String getParameters() { return this.parameters; }
+    public void setAction(String action) { this.action = action; }
+    public void setData(String data) { this.data = data; }
+    public void setFormat(String format) { this.format = format; }
+    public void setName(String name) { this.name = name; }
+    public void setParameters(String parameters) { this.parameters = parameters; }
+  }
+  
   
   public static class DocumentActionOptionsInput {
     private DocumentActionType action;
@@ -5168,6 +5544,7 @@ public class Types {
     IS_SIGNED
     
   }
+  
   
   
   public enum DocumentCountStatisticsCycleFilterField {
@@ -6283,6 +6660,7 @@ public class Types {
   
   
   
+  
   public static class DocumentTypeInput {
     private ArchiveConfigurationInput archiveConfiguration;
     private String code;
@@ -6420,6 +6798,7 @@ public class Types {
     CHANGE_TENANT_EDC_OMS_INFO,
     CHANGE_TENANT_USER,
     EDIT_TENANT,
+    EDIT_TENANT_POSTAL_CONFIG,
     GRANT_INTERNAL_RIGHT,
     GRANT_RIGHT,
     READ_CONFIGURATION,
@@ -6811,6 +7190,7 @@ public class Types {
   public enum EngineEventAction {
     ACCEPT_ERE,
     ADD_ATTACHMENTS_DOCUMENT,
+    ADD_DATA_FILE_ACTION,
     ARCHIVE_DOCUMENT,
     CANCEL_DOCUMENT,
     CANCEL_JOB_MESSAGE,
@@ -6843,10 +7223,13 @@ public class Types {
   
   /** The application rights for environment user. */
   public enum EnvironmentRightType {
+    CHANGE_API_ROUTING_CONFIGURATION,
     CHANGE_CONTACT_FUNCTION,
     CHANGE_ENVIRONMENT_API_USER,
     CHANGE_ENVIRONMENT_USER,
     CHANGE_THIRD_PARTY_TYPE,
+    EDIT_TENANT_POSTAL_CONFIG,
+    READ_API_ROUTING_CONFIGURATION,
     READ_CONTACT_FUNCTION,
     READ_ENVIRONMENT_API_USER,
     READ_STATUS_ACTION,
@@ -7910,6 +8293,301 @@ public class Types {
   }
   
   
+  
+  public static class IncomingEmailHistoryDateFilterInput {
+    private IncomingEmailHistoryDateFilterField field;
+    private Object filterValue1;
+    private Object filterValue2;
+    private NumberFilterOperator operator;
+  
+    public IncomingEmailHistoryDateFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof IncomingEmailHistoryDateFilterField) {
+          this.field = (IncomingEmailHistoryDateFilterField) args.get("field");
+        } else {
+          this.field = IncomingEmailHistoryDateFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (Object) args.get("filterValue1");
+        this.filterValue2 = (Object) args.get("filterValue2");
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public IncomingEmailHistoryDateFilterField getField() { return this.field; }
+    public Object getFilterValue1() { return this.filterValue1; }
+    public Object getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(IncomingEmailHistoryDateFilterField field) { this.field = field; }
+    public void setFilterValue1(Object filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(Object filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public enum IncomingEmailHistoryDateFilterField {
+    CREATION_DATE
+    
+  }
+  
+  public static class IncomingEmailHistoryInput {
+    private Iterable<String> attachmentNames;
+    private String errorString;
+    private String from;
+    private Iterable<KeyValuePairInput> headerValues;
+    private String id;
+    private String incomingEmailPath;
+    private String routingConfigurationId;
+    private ProcessingStatus status;
+    private String subject;
+    private String tenantId;
+    private String to;
+    private ProcessingType type;
+  
+    public IncomingEmailHistoryInput(Map<String, Object> args) {
+      if (args != null) {
+        this.attachmentNames = (Iterable<String>) args.get("attachmentNames");
+        this.errorString = (String) args.get("errorString");
+        this.from = (String) args.get("from");
+        if (args.get("headerValues") != null) {
+        		this.headerValues = (Iterable<KeyValuePairInput>) args.get("headerValues");
+        }
+        this.id = (String) args.get("id");
+        this.incomingEmailPath = (String) args.get("incomingEmailPath");
+        this.routingConfigurationId = (String) args.get("routingConfigurationId");
+        if (args.get("status") instanceof ProcessingStatus) {
+          this.status = (ProcessingStatus) args.get("status");
+        } else {
+          this.status = ProcessingStatus.valueOf((String) args.get("status"));
+        }
+        this.subject = (String) args.get("subject");
+        this.tenantId = (String) args.get("tenantId");
+        this.to = (String) args.get("to");
+        if (args.get("type") instanceof ProcessingType) {
+          this.type = (ProcessingType) args.get("type");
+        } else {
+          this.type = ProcessingType.valueOf((String) args.get("type"));
+        }
+      }
+    }
+  
+    public Iterable<String> getAttachmentNames() { return this.attachmentNames; }
+    public String getErrorString() { return this.errorString; }
+    public String getFrom() { return this.from; }
+    public Iterable<KeyValuePairInput> getHeaderValues() { return this.headerValues; }
+    public String getId() { return this.id; }
+    public String getIncomingEmailPath() { return this.incomingEmailPath; }
+    public String getRoutingConfigurationId() { return this.routingConfigurationId; }
+    public ProcessingStatus getStatus() { return this.status; }
+    public String getSubject() { return this.subject; }
+    public String getTenantId() { return this.tenantId; }
+    public String getTo() { return this.to; }
+    public ProcessingType getType() { return this.type; }
+    public void setAttachmentNames(Iterable<String> attachmentNames) { this.attachmentNames = attachmentNames; }
+    public void setErrorString(String errorString) { this.errorString = errorString; }
+    public void setFrom(String from) { this.from = from; }
+    public void setHeaderValues(Iterable<KeyValuePairInput> headerValues) { this.headerValues = headerValues; }
+    public void setId(String id) { this.id = id; }
+    public void setIncomingEmailPath(String incomingEmailPath) { this.incomingEmailPath = incomingEmailPath; }
+    public void setRoutingConfigurationId(String routingConfigurationId) { this.routingConfigurationId = routingConfigurationId; }
+    public void setStatus(ProcessingStatus status) { this.status = status; }
+    public void setSubject(String subject) { this.subject = subject; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
+    public void setTo(String to) { this.to = to; }
+    public void setType(ProcessingType type) { this.type = type; }
+  }
+  public static class IncomingEmailHistoryProcessingStatusEnumFilterInput {
+    private IncomingEmailHistoryStatusFilterField field;
+    private ProcessingStatus filterValue1;
+    private ProcessingStatus filterValue2;
+    private NumberFilterOperator operator;
+  
+    public IncomingEmailHistoryProcessingStatusEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof IncomingEmailHistoryStatusFilterField) {
+          this.field = (IncomingEmailHistoryStatusFilterField) args.get("field");
+        } else {
+          this.field = IncomingEmailHistoryStatusFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof ProcessingStatus) {
+          this.filterValue1 = (ProcessingStatus) args.get("filterValue1");
+        } else {
+          this.filterValue1 = ProcessingStatus.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof ProcessingStatus) {
+          this.filterValue2 = (ProcessingStatus) args.get("filterValue2");
+        } else {
+          this.filterValue2 = ProcessingStatus.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public IncomingEmailHistoryStatusFilterField getField() { return this.field; }
+    public ProcessingStatus getFilterValue1() { return this.filterValue1; }
+    public ProcessingStatus getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(IncomingEmailHistoryStatusFilterField field) { this.field = field; }
+    public void setFilterValue1(ProcessingStatus filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(ProcessingStatus filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class IncomingEmailHistoryProcessingTypeEnumFilterInput {
+    private IncomingEmailHistoryTypeFilterField field;
+    private ProcessingType filterValue1;
+    private ProcessingType filterValue2;
+    private NumberFilterOperator operator;
+  
+    public IncomingEmailHistoryProcessingTypeEnumFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof IncomingEmailHistoryTypeFilterField) {
+          this.field = (IncomingEmailHistoryTypeFilterField) args.get("field");
+        } else {
+          this.field = IncomingEmailHistoryTypeFilterField.valueOf((String) args.get("field"));
+        }
+        if (args.get("filterValue1") instanceof ProcessingType) {
+          this.filterValue1 = (ProcessingType) args.get("filterValue1");
+        } else {
+          this.filterValue1 = ProcessingType.valueOf((String) args.get("filterValue1"));
+        }
+        if (args.get("filterValue2") instanceof ProcessingType) {
+          this.filterValue2 = (ProcessingType) args.get("filterValue2");
+        } else {
+          this.filterValue2 = ProcessingType.valueOf((String) args.get("filterValue2"));
+        }
+        if (args.get("operator") instanceof NumberFilterOperator) {
+          this.operator = (NumberFilterOperator) args.get("operator");
+        } else {
+          this.operator = NumberFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public IncomingEmailHistoryTypeFilterField getField() { return this.field; }
+    public ProcessingType getFilterValue1() { return this.filterValue1; }
+    public ProcessingType getFilterValue2() { return this.filterValue2; }
+    public NumberFilterOperator getOperator() { return this.operator; }
+    public void setField(IncomingEmailHistoryTypeFilterField field) { this.field = field; }
+    public void setFilterValue1(ProcessingType filterValue1) { this.filterValue1 = filterValue1; }
+    public void setFilterValue2(ProcessingType filterValue2) { this.filterValue2 = filterValue2; }
+    public void setOperator(NumberFilterOperator operator) { this.operator = operator; }
+  }
+  public static class IncomingEmailHistoryQueryParamsInput {
+    private Iterable<IncomingEmailHistoryDateFilterInput> dateFilters;
+    private SortDirection sortDirection;
+    private IncomingEmailHistorySortField sortField;
+    private Iterable<IncomingEmailHistoryProcessingStatusEnumFilterInput> statusFilters;
+    private Iterable<IncomingEmailHistoryStringFilterInput> stringFilters;
+    private Iterable<IncomingEmailHistoryProcessingTypeEnumFilterInput> typeFilters;
+  
+    public IncomingEmailHistoryQueryParamsInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("dateFilters") != null) {
+        		this.dateFilters = (Iterable<IncomingEmailHistoryDateFilterInput>) args.get("dateFilters");
+        }
+        if (args.get("sortDirection") instanceof SortDirection) {
+          this.sortDirection = (SortDirection) args.get("sortDirection");
+        } else {
+          this.sortDirection = SortDirection.valueOf((String) args.get("sortDirection"));
+        }
+        if (args.get("sortField") instanceof IncomingEmailHistorySortField) {
+          this.sortField = (IncomingEmailHistorySortField) args.get("sortField");
+        } else {
+          this.sortField = IncomingEmailHistorySortField.valueOf((String) args.get("sortField"));
+        }
+        if (args.get("statusFilters") != null) {
+        		this.statusFilters = (Iterable<IncomingEmailHistoryProcessingStatusEnumFilterInput>) args.get("statusFilters");
+        }
+        if (args.get("stringFilters") != null) {
+        		this.stringFilters = (Iterable<IncomingEmailHistoryStringFilterInput>) args.get("stringFilters");
+        }
+        if (args.get("typeFilters") != null) {
+        		this.typeFilters = (Iterable<IncomingEmailHistoryProcessingTypeEnumFilterInput>) args.get("typeFilters");
+        }
+      }
+    }
+  
+    public Iterable<IncomingEmailHistoryDateFilterInput> getDateFilters() { return this.dateFilters; }
+    public SortDirection getSortDirection() { return this.sortDirection; }
+    public IncomingEmailHistorySortField getSortField() { return this.sortField; }
+    public Iterable<IncomingEmailHistoryProcessingStatusEnumFilterInput> getStatusFilters() { return this.statusFilters; }
+    public Iterable<IncomingEmailHistoryStringFilterInput> getStringFilters() { return this.stringFilters; }
+    public Iterable<IncomingEmailHistoryProcessingTypeEnumFilterInput> getTypeFilters() { return this.typeFilters; }
+    public void setDateFilters(Iterable<IncomingEmailHistoryDateFilterInput> dateFilters) { this.dateFilters = dateFilters; }
+    public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
+    public void setSortField(IncomingEmailHistorySortField sortField) { this.sortField = sortField; }
+    public void setStatusFilters(Iterable<IncomingEmailHistoryProcessingStatusEnumFilterInput> statusFilters) { this.statusFilters = statusFilters; }
+    public void setStringFilters(Iterable<IncomingEmailHistoryStringFilterInput> stringFilters) { this.stringFilters = stringFilters; }
+    public void setTypeFilters(Iterable<IncomingEmailHistoryProcessingTypeEnumFilterInput> typeFilters) { this.typeFilters = typeFilters; }
+  }
+  public enum IncomingEmailHistorySortField {
+    CREATION_DATE,
+    FROM,
+    ID,
+    INCOMING_EMAIL_PATH,
+    STATUS,
+    SUBJECT,
+    TENANT_ID,
+    TO,
+    TYPE
+    
+  }
+  
+  public enum IncomingEmailHistoryStatusFilterField {
+    STATUS
+    
+  }
+  
+  public static class IncomingEmailHistoryStringFilterInput {
+    private IncomingEmailHistoryStringFilterField field;
+    private String filterValue1;
+    private StringFilterOperator operator;
+  
+    public IncomingEmailHistoryStringFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof IncomingEmailHistoryStringFilterField) {
+          this.field = (IncomingEmailHistoryStringFilterField) args.get("field");
+        } else {
+          this.field = IncomingEmailHistoryStringFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (String) args.get("filterValue1");
+        if (args.get("operator") instanceof StringFilterOperator) {
+          this.operator = (StringFilterOperator) args.get("operator");
+        } else {
+          this.operator = StringFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public IncomingEmailHistoryStringFilterField getField() { return this.field; }
+    public String getFilterValue1() { return this.filterValue1; }
+    public StringFilterOperator getOperator() { return this.operator; }
+    public void setField(IncomingEmailHistoryStringFilterField field) { this.field = field; }
+    public void setFilterValue1(String filterValue1) { this.filterValue1 = filterValue1; }
+    public void setOperator(StringFilterOperator operator) { this.operator = operator; }
+  }
+  public enum IncomingEmailHistoryStringFilterField {
+    FROM,
+    ID,
+    INCOMING_EMAIL_PATH,
+    ROUTING_CONFIGURATION_ID,
+    SUBJECT,
+    TENANT_ID,
+    TO
+    
+  }
+  
+  
+  public enum IncomingEmailHistoryTypeFilterField {
+    TYPE
+    
+  }
+  
   public enum InheritedConfigurationOwnerType {
     DOCUMENT_TYPE,
     DOMAIN,
@@ -8512,6 +9190,7 @@ public class Types {
   public enum JobMessageChorusStatus {
     COMPLETED,
     DRAFT,
+    ERROR,
     MADE_AVAILABLE_TO_THE_ACCOUNTING_OFFICER,
     MADE_AVAILABLE_TO_THE_FIRST_VALIDATOR,
     MADE_AVAILABLE_TO_THE_RECIPIENT,
@@ -9828,54 +10507,7 @@ public class Types {
     public void setOperator(StringFilterOperator operator) { this.operator = operator; }
   }
   
-  public static class PostalParameterInput {
-    private EnvelopeType envelope;
-    private LreArManagementType lreArManagement;
-    private Boolean mergeDocuments;
-    private Boolean printBothSide;
-    private Boolean printColor;
-    private PostalAddressInput sender;
-    private StampType stamp;
   
-    public PostalParameterInput(Map<String, Object> args) {
-      if (args != null) {
-        if (args.get("envelope") instanceof EnvelopeType) {
-          this.envelope = (EnvelopeType) args.get("envelope");
-        } else {
-          this.envelope = EnvelopeType.valueOf((String) args.get("envelope"));
-        }
-        if (args.get("lreArManagement") instanceof LreArManagementType) {
-          this.lreArManagement = (LreArManagementType) args.get("lreArManagement");
-        } else {
-          this.lreArManagement = LreArManagementType.valueOf((String) args.get("lreArManagement"));
-        }
-        this.mergeDocuments = (Boolean) args.get("mergeDocuments");
-        this.printBothSide = (Boolean) args.get("printBothSide");
-        this.printColor = (Boolean) args.get("printColor");
-        this.sender = new PostalAddressInput((Map<String, Object>) args.get("sender"));
-        if (args.get("stamp") instanceof StampType) {
-          this.stamp = (StampType) args.get("stamp");
-        } else {
-          this.stamp = StampType.valueOf((String) args.get("stamp"));
-        }
-      }
-    }
-  
-    public EnvelopeType getEnvelope() { return this.envelope; }
-    public LreArManagementType getLreArManagement() { return this.lreArManagement; }
-    public Boolean getMergeDocuments() { return this.mergeDocuments; }
-    public Boolean getPrintBothSide() { return this.printBothSide; }
-    public Boolean getPrintColor() { return this.printColor; }
-    public PostalAddressInput getSender() { return this.sender; }
-    public StampType getStamp() { return this.stamp; }
-    public void setEnvelope(EnvelopeType envelope) { this.envelope = envelope; }
-    public void setLreArManagement(LreArManagementType lreArManagement) { this.lreArManagement = lreArManagement; }
-    public void setMergeDocuments(Boolean mergeDocuments) { this.mergeDocuments = mergeDocuments; }
-    public void setPrintBothSide(Boolean printBothSide) { this.printBothSide = printBothSide; }
-    public void setPrintColor(Boolean printColor) { this.printColor = printColor; }
-    public void setSender(PostalAddressInput sender) { this.sender = sender; }
-    public void setStamp(StampType stamp) { this.stamp = stamp; }
-  }
   
   public static class PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput {
     private PostalParameterConfigurationOwnerTypeFilterField field;
@@ -9987,14 +10619,13 @@ public class Types {
   }
   
   public static class PostalParameterConfigurationQueryParamsInput {
-    private String ownerId;
     private Iterable<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters;
     private SortDirection sortDirection;
     private PostalParameterConfigurationSortField sortField;
+    private Iterable<PostalParameterConfigurationStringFilterInput> stringFilters;
   
     public PostalParameterConfigurationQueryParamsInput(Map<String, Object> args) {
       if (args != null) {
-        this.ownerId = (String) args.get("ownerId");
         if (args.get("ownerTypeFilters") != null) {
         		this.ownerTypeFilters = (Iterable<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput>) args.get("ownerTypeFilters");
         }
@@ -10008,25 +10639,121 @@ public class Types {
         } else {
           this.sortField = PostalParameterConfigurationSortField.valueOf((String) args.get("sortField"));
         }
+        if (args.get("stringFilters") != null) {
+        		this.stringFilters = (Iterable<PostalParameterConfigurationStringFilterInput>) args.get("stringFilters");
+        }
       }
     }
   
-    public String getOwnerId() { return this.ownerId; }
     public Iterable<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput> getOwnerTypeFilters() { return this.ownerTypeFilters; }
     public SortDirection getSortDirection() { return this.sortDirection; }
     public PostalParameterConfigurationSortField getSortField() { return this.sortField; }
-    public void setOwnerId(String ownerId) { this.ownerId = ownerId; }
+    public Iterable<PostalParameterConfigurationStringFilterInput> getStringFilters() { return this.stringFilters; }
     public void setOwnerTypeFilters(Iterable<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilterInput> ownerTypeFilters) { this.ownerTypeFilters = ownerTypeFilters; }
     public void setSortDirection(SortDirection sortDirection) { this.sortDirection = sortDirection; }
     public void setSortField(PostalParameterConfigurationSortField sortField) { this.sortField = sortField; }
+    public void setStringFilters(Iterable<PostalParameterConfigurationStringFilterInput> stringFilters) { this.stringFilters = stringFilters; }
   }
   public enum PostalParameterConfigurationSortField {
     CREATION_DATE,
-    LAST_MODIFICATION_DATE
+    LAST_MODIFICATION_DATE,
+    OWNER_ID
+    
+  }
+  
+  public static class PostalParameterConfigurationStringFilterInput {
+    private PostalParameterConfigurationStringFilterField field;
+    private String filterValue1;
+    private StringFilterOperator operator;
+  
+    public PostalParameterConfigurationStringFilterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("field") instanceof PostalParameterConfigurationStringFilterField) {
+          this.field = (PostalParameterConfigurationStringFilterField) args.get("field");
+        } else {
+          this.field = PostalParameterConfigurationStringFilterField.valueOf((String) args.get("field"));
+        }
+        this.filterValue1 = (String) args.get("filterValue1");
+        if (args.get("operator") instanceof StringFilterOperator) {
+          this.operator = (StringFilterOperator) args.get("operator");
+        } else {
+          this.operator = StringFilterOperator.valueOf((String) args.get("operator"));
+        }
+      }
+    }
+  
+    public PostalParameterConfigurationStringFilterField getField() { return this.field; }
+    public String getFilterValue1() { return this.filterValue1; }
+    public StringFilterOperator getOperator() { return this.operator; }
+    public void setField(PostalParameterConfigurationStringFilterField field) { this.field = field; }
+    public void setFilterValue1(String filterValue1) { this.filterValue1 = filterValue1; }
+    public void setOperator(StringFilterOperator operator) { this.operator = operator; }
+  }
+  public enum PostalParameterConfigurationStringFilterField {
+    OWNER_ID
     
   }
   
   
+  public static class PostalParameterInput {
+    private EnvelopeType envelope;
+    private LreArManagementType lreArManagement;
+    private Boolean mergeDocuments;
+    private Boolean printBothSide;
+    private Boolean printColor;
+    private PostalAddressInput sender;
+    private StampType stamp;
+  
+    public PostalParameterInput(Map<String, Object> args) {
+      if (args != null) {
+        if (args.get("envelope") instanceof EnvelopeType) {
+          this.envelope = (EnvelopeType) args.get("envelope");
+        } else {
+          this.envelope = EnvelopeType.valueOf((String) args.get("envelope"));
+        }
+        if (args.get("lreArManagement") instanceof LreArManagementType) {
+          this.lreArManagement = (LreArManagementType) args.get("lreArManagement");
+        } else {
+          this.lreArManagement = LreArManagementType.valueOf((String) args.get("lreArManagement"));
+        }
+        this.mergeDocuments = (Boolean) args.get("mergeDocuments");
+        this.printBothSide = (Boolean) args.get("printBothSide");
+        this.printColor = (Boolean) args.get("printColor");
+        this.sender = new PostalAddressInput((Map<String, Object>) args.get("sender"));
+        if (args.get("stamp") instanceof StampType) {
+          this.stamp = (StampType) args.get("stamp");
+        } else {
+          this.stamp = StampType.valueOf((String) args.get("stamp"));
+        }
+      }
+    }
+  
+    public EnvelopeType getEnvelope() { return this.envelope; }
+    public LreArManagementType getLreArManagement() { return this.lreArManagement; }
+    public Boolean getMergeDocuments() { return this.mergeDocuments; }
+    public Boolean getPrintBothSide() { return this.printBothSide; }
+    public Boolean getPrintColor() { return this.printColor; }
+    public PostalAddressInput getSender() { return this.sender; }
+    public StampType getStamp() { return this.stamp; }
+    public void setEnvelope(EnvelopeType envelope) { this.envelope = envelope; }
+    public void setLreArManagement(LreArManagementType lreArManagement) { this.lreArManagement = lreArManagement; }
+    public void setMergeDocuments(Boolean mergeDocuments) { this.mergeDocuments = mergeDocuments; }
+    public void setPrintBothSide(Boolean printBothSide) { this.printBothSide = printBothSide; }
+    public void setPrintColor(Boolean printColor) { this.printColor = printColor; }
+    public void setSender(PostalAddressInput sender) { this.sender = sender; }
+    public void setStamp(StampType stamp) { this.stamp = stamp; }
+  }
+  
+  public enum ProcessingStatus {
+    COMPLETED,
+    ERROR
+    
+  }
+  
+  public enum ProcessingType {
+    REDIRECT_EMAIL
+    
+  }
   
   public static class PushJobInput {
     private Iterable<FileIdOrNewInputTypeInput> adhocRecipientFiles;
@@ -10324,11 +11051,13 @@ public class Types {
     ADD_TENANT,
     CANCEL_JOB_MESSAGE,
     CHANGE_ACTIVITY,
+    CHANGE_API_ROUTING_CONFIGURATION,
     CHANGE_CLICKED_LINK_DOCUMENT,
     CHANGE_CONFIGURATION,
     CHANGE_CONTACT,
     CHANGE_CONTACT_FUNCTION,
     CHANGE_DASHBOARD,
+    CHANGE_DATA_FILE_ACTION,
     CHANGE_DOCUMENT,
     CHANGE_DOCUMENT_JOB,
     CHANGE_DOCUMENT_TYPE,
@@ -10359,15 +11088,18 @@ public class Types {
     COMPLETE_DOCUMENT,
     EDIT_ENVIRONMENT,
     EDIT_TENANT,
+    EDIT_TENANT_POSTAL_CONFIG,
     GRANT_INTERNAL_RIGHT,
     GRANT_RIGHT,
     MARK_DOCUMENT_AS_READ,
     READ_ACTIVITY,
+    READ_API_ROUTING_CONFIGURATION,
     READ_CLICKED_LINK_DOCUMENT,
     READ_CONFIGURATION,
     READ_CONTACT,
     READ_CONTACT_FUNCTION,
     READ_DASHBOARD,
+    READ_DATA_FILE_ACTION,
     READ_DOCUMENT,
     READ_DOCUMENT_JOB,
     READ_DOCUMENT_ON_SERVICE,
@@ -10512,6 +11244,7 @@ public class Types {
   
   public static class ServiceInput {
     private ChorusB2GConfigInput chorusB2GConfig;
+    private String code;
     private SmtpConfigInput customSmtpConfig;
     private String id;
     private Boolean isEnabled;
@@ -10520,6 +11253,7 @@ public class Types {
     public ServiceInput(Map<String, Object> args) {
       if (args != null) {
         this.chorusB2GConfig = new ChorusB2GConfigInput((Map<String, Object>) args.get("chorusB2GConfig"));
+        this.code = (String) args.get("code");
         this.customSmtpConfig = new SmtpConfigInput((Map<String, Object>) args.get("customSmtpConfig"));
         this.id = (String) args.get("id");
         this.isEnabled = (Boolean) args.get("isEnabled");
@@ -10528,11 +11262,13 @@ public class Types {
     }
   
     public ChorusB2GConfigInput getChorusB2GConfig() { return this.chorusB2GConfig; }
+    public String getCode() { return this.code; }
     public SmtpConfigInput getCustomSmtpConfig() { return this.customSmtpConfig; }
     public String getId() { return this.id; }
     public Boolean getIsEnabled() { return this.isEnabled; }
     public String getName() { return this.name; }
     public void setChorusB2GConfig(ChorusB2GConfigInput chorusB2GConfig) { this.chorusB2GConfig = chorusB2GConfig; }
+    public void setCode(String code) { this.code = code; }
     public void setCustomSmtpConfig(SmtpConfigInput customSmtpConfig) { this.customSmtpConfig = customSmtpConfig; }
     public void setId(String id) { this.id = id; }
     public void setIsEnabled(Boolean isEnabled) { this.isEnabled = isEnabled; }
@@ -10898,6 +11634,7 @@ public class Types {
   }
   
   
+  
   public enum StringFilterOperator {
     CONTAIN,
     DEFINED,
@@ -10915,6 +11652,7 @@ public class Types {
     UNDEFINED
     
   }
+  
   
   
   public static class TemplateContentBoolFilterInput {
@@ -11080,6 +11818,23 @@ public class Types {
     public void setTransmissionType(TemplateContentTransmissionType transmissionType) { this.transmissionType = transmissionType; }
   }
   public enum TemplateContentNotificationType {
+    ACTIVITY_ADD_ATTACHMENTS_DOCUMENT,
+    ACTIVITY_ADD_DATA_FILE_ACTION,
+    ACTIVITY_CANCEL_JOB_MESSAGE,
+    ACTIVITY_CHANGE_STATUS_CHORUS_B_2_G,
+    ACTIVITY_COMPLETE_CHORUS_B_2_G,
+    ACTIVITY_DOCUMENT_ARCHIVED,
+    ACTIVITY_DOCUMENT_CANCELED,
+    ACTIVITY_DOCUMENT_READ,
+    ACTIVITY_DOCUMENT_SIGNED,
+    ACTIVITY_EDIT_METADATA_DOCUMENT,
+    ACTIVITY_ERROR,
+    ACTIVITY_EXTERNAL_PROCESS,
+    ACTIVITY_JOB_CREATED,
+    ACTIVITY_JOB_LAUNCHED,
+    ACTIVITY_JOB_PROCESSING,
+    ACTIVITY_NOTIFICATION_SENT,
+    ACTIVITY_SEND_CHORUS_B_2_G,
     ADD_USER_TO_TENANT,
     DOCUMENT_NOTIFICATION,
     DOCUMENT_NOTIFICATION_LINK,
@@ -11294,6 +12049,7 @@ public class Types {
   }
   public enum TemplateContentTransmissionType {
     EMAIL,
+    NONE,
     SMS,
     WEB_NOTIFICATION
     
@@ -11702,6 +12458,7 @@ public class Types {
     CHANGE_CONTACT,
     CHANGE_CONTACT_FUNCTION,
     CHANGE_DASHBOARD,
+    CHANGE_DATA_FILE_ACTION,
     CHANGE_DOCUMENT,
     CHANGE_DOCUMENT_JOB,
     CHANGE_DOCUMENT_TYPE,
@@ -11729,6 +12486,7 @@ public class Types {
     READ_CONTACT,
     READ_CONTACT_FUNCTION,
     READ_DASHBOARD,
+    READ_DATA_FILE_ACTION,
     READ_DOCUMENT,
     READ_DOCUMENT_JOB,
     READ_DOCUMENT_ON_SERVICE,

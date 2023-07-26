@@ -928,11 +928,17 @@ enum RightType {
   """Get or list status actions"""
   READ_STATUS_ACTION
 
+  """Get or list callback configurations"""
+  READ_CALLBACK_CONFIGURATION
+
+  """Create, edit or delete callback configurations"""
+  CHANGE_CALLBACK_CONFIGURATION
+
   """Get or list api routing configurations"""
-  READ_API_ROUTING_CONFIGURATION
+  READ_ROUTING_CONFIGURATION
 
   """Create, edit or delete api routing configurations"""
-  CHANGE_API_ROUTING_CONFIGURATION
+  CHANGE_ROUTING_CONFIGURATION
 
   """Edit Tenant postal config"""
   EDIT_TENANT_POSTAL_CONFIG

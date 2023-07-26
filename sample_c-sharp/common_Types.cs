@@ -1607,6 +1607,12 @@ namespace GraphQLCodeGen {
     #region PostalConfiguration
     public class PostalConfiguration {
       #region members
+      [JsonProperty("clientId")]
+      public string clientId { get; set; }
+    
+      [JsonProperty("isEnabled")]
+      public bool isEnabled { get; set; }
+    
       [JsonProperty("isTestMode")]
       public bool isTestMode { get; set; }
       #endregion
@@ -1616,6 +1622,12 @@ namespace GraphQLCodeGen {
     #region PostalConfigurationInput
     public class PostalConfigurationInput {
       #region members
+      public string clientId { get; set; }
+    
+      [Required]
+      [JsonRequired]
+      public bool isEnabled { get; set; }
+    
       [Required]
       [JsonRequired]
       public bool isTestMode { get; set; }
@@ -2212,6 +2224,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       CHANGE_ACTIVITY,
       /// <summary>
+      /// Create, edit or delete api routing configurations
+      /// </summary>
+      CHANGE_API_ROUTING_CONFIGURATION,
+      /// <summary>
       /// Create, edit or delete document links
       /// </summary>
       CHANGE_CLICKED_LINK_DOCUMENT,
@@ -2231,6 +2247,10 @@ namespace GraphQLCodeGen {
       /// Create, edit or delete dashboards
       /// </summary>
       CHANGE_DASHBOARD,
+      /// <summary>
+      /// Create, edit or delete data file action
+      /// </summary>
+      CHANGE_DATA_FILE_ACTION,
       /// <summary>
       /// Create, edit or delete documents
       /// </summary>
@@ -2352,6 +2372,10 @@ namespace GraphQLCodeGen {
       /// </summary>
       EDIT_TENANT,
       /// <summary>
+      /// Edit Tenant postal config
+      /// </summary>
+      EDIT_TENANT_POSTAL_CONFIG,
+      /// <summary>
       /// Grant internal user rights
       /// </summary>
       GRANT_INTERNAL_RIGHT,
@@ -2367,6 +2391,10 @@ namespace GraphQLCodeGen {
       /// Get or list activities
       /// </summary>
       READ_ACTIVITY,
+      /// <summary>
+      /// Get or list api routing configurations
+      /// </summary>
+      READ_API_ROUTING_CONFIGURATION,
       /// <summary>
       /// Mark document as read
       /// </summary>
@@ -2387,6 +2415,10 @@ namespace GraphQLCodeGen {
       /// Get or list dashboards
       /// </summary>
       READ_DASHBOARD,
+      /// <summary>
+      /// Get or list data file action
+      /// </summary>
+      READ_DATA_FILE_ACTION,
       /// <summary>
       /// Get or list documents sent to the user
       /// </summary>
@@ -2428,7 +2460,7 @@ namespace GraphQLCodeGen {
       /// </summary>
       READ_ENVIRONMENT_USER,
       /// <summary>
-      /// Get or list documentJobs
+      /// Get or list jobMessages
       /// </summary>
       READ_JOB_MESSAGE,
       /// <summary>

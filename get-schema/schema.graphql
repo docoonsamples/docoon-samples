@@ -58,17 +58,20 @@ enum ActivityCategory {
   DOCUMENT_ARCHIVED
   DOCUMENT_CANCELED
   DOCUMENT_READ
-  EDIT_METADATA_DOCUMENT
-  ADD_ATTACHMENTS_DOCUMENT
+  DOCUMENT_METADATA_EDITED
+  DOCUMENT_ATTACHMENTS_ADDED
   JOB_CREATED
   JOB_LAUNCHED
   JOB_PROCESSING
+  JOB_PRE_PROCESSED
+  JOB_COMPLETED
   NOTIFICATION_SENT
-  SEND_CHORUS_B_2_G
-  CHANGE_STATUS_CHORUS_B_2_G
-  COMPLETE_CHORUS_B_2_G
-  CANCEL_JOB_MESSAGE
-  ADD_DATA_FILE_ACTION
+  CHORUS_B_2_G_SENT
+  CHORUS_B_2_G_STATUS_CHANGED
+  CHORUS_B_2_G_COMPLETED
+  JOB_MESSAGE_CANCELED
+  JOB_MESSAGE_RELAUNCHED
+  ROUTING
   EXTERNAL_PROCESS
   ERROR
 }
@@ -96,6 +99,16 @@ input ActivityQueryParams {
   eventTypeFilters: [ActivityActivityCategoryEnumFilter]
   sourceTypeFilters: [ActivityActivitySourceTypeEnumFilter]
   actorTypeFilters: [ActivityActivityActorTypeEnumFilter]
+}
+
+enum ActivityResultFilterField {
+  ACTIVITY_RESULT
+}
+
+enum ActivityResults {
+  ALL
+  ERROR_ONLY
+  OK_ONLY
 }
 
 enum ActivitySortField {
@@ -329,74 +342,13 @@ type ApiEnvironmentUserTypeConnection {
 }
 
 type ApiRoutingConfiguration {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  ownerId: String
-  ownerType: InheritedConfigurationOwnerType!
   format: String!
   action: String!
-  queueName: String
-}
-
-input ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilter {
-  field: ApiRoutingConfigurationOwnerTypeFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: InheritedConfigurationOwnerType!
-  filterValue2: InheritedConfigurationOwnerType
 }
 
 input ApiRoutingConfigurationInput {
-  id: String
-  ownerId: String!
-  ownerType: InheritedConfigurationOwnerType!
   format: String!
   action: String!
-  queueName: String!
-  sender: PostalAddressInput
-}
-
-enum ApiRoutingConfigurationOwnerTypeFilterField {
-  OWNER_TYPE
-}
-
-input ApiRoutingConfigurationQueryParams {
-  sortField: ApiRoutingConfigurationSortField
-  sortDirection: SortDirection
-  stringFilters: [ApiRoutingConfigurationStringFilter]
-  ownerTypeFilters: [ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilter]
-}
-
-enum ApiRoutingConfigurationSortField {
-  FORMAT
-  ACTION
-  QUEUE_NAME
-  OWNER_ID
-  OWNER_TYPE
-  CREATION_DATE
-  LAST_MODIFICATION_DATE
-}
-
-input ApiRoutingConfigurationStringFilter {
-  field: ApiRoutingConfigurationStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ApiRoutingConfigurationStringFilterField {
-  FORMAT
-  ACTION
-  QUEUE_NAME
-  OWNER_ID
-}
-
-type ApiRoutingConfigurationTypeConnection {
-  edges: [ApiRoutingConfiguration]
-  pageInfo: PageInfo
 }
 
 type ApiTenantUser {
@@ -549,13 +501,13 @@ type BusinessSchemaMutation {
   editApiEnvironmentUser(id: String!, item: ApiEnvironmentUserInput!): ApiEnvironmentUser
   renewApiEnvironmentUser(id: String!): ApiEnvironmentUser
   editApiEnvironmentUserRight(apiUserId: String!, item: [EnvironmentRightValueInput!]): [EnvironmentRightValue!]
-  addApiRoutingConfiguration(item: ApiRoutingConfigurationInput!): ApiRoutingConfiguration
-  editApiRoutingConfiguration(id: String!, item: ApiRoutingConfigurationInput!): ApiRoutingConfiguration
-  deleteApiRoutingConfiguration(id: String!): Void
   addApiTenantUser(item: ApiTenantUserInput!, tenantId: String): ApiTenantUser
   editApiTenantUser(id: String!, item: ApiTenantUserInput!, tenantId: String): ApiTenantUser
   renewApiTenantUser(id: String!, tenantId: String): ApiTenantUser
   editApiTenantUserRight(apiUserId: String!, item: [TenantRightValueInput!]): [TenantRightValue!]
+  addCallbackConfiguration(item: CallbackConfigurationInput!, tenantId: String): CallbackConfiguration
+  editCallbackConfiguration(id: String!, item: CallbackConfigurationInput!, tenantId: String): CallbackConfiguration
+  deleteCallbackConfiguration(id: String!, tenantId: String): Void
   addContactFunction(item: ContactFunctionInput!, tenantId: String): ContactFunction
   editContactFunction(id: String!, item: ContactFunctionInput!, tenantId: String): ContactFunction
   deleteContactFunction(id: String!, tenantId: String): Void
@@ -564,7 +516,7 @@ type BusinessSchemaMutation {
   deleteContact(id: String!, tenantId: String): Void
   addDashboardRight(item: DashboardRightInput!): DashboardRight
   deleteDashboardRight(id: String!): Void
-  addDataFileAction(item: DataFileActionInput!, tenantId: String): DataFileActionResult
+  addDataFileAction(item: DataFileActionInput!, tenantId: String): JobCreationResult
   addDocumentJob(item: DocumentJobInput!, tenantId: String): JobCreationResult
   addDocumentProbativeJob(item: DocumentProbativeJobInput!, tenantId: String): JobCreationResult
   readDocument(tenantId: String!, jobId: String!, jobMessageId: String!, documentId: String!): Void
@@ -573,8 +525,8 @@ type BusinessSchemaMutation {
   editDocumentType(id: String!, item: DocumentTypeInput!, tenantId: String): DocumentType
   deleteDocumentType(id: String!, tenantId: String): Void
   addDocumentTypeMetadata(documentTypeId: String!, item: MetadataConfigInput!, tenantId: String): DocumentType
-  editDocumentTypeMetadata(documentTypeId: String!, id: String!, item: MetadataConfigInput!, tenantId: String): DocumentType
-  deleteDocumentTypeMetadata(documentTypeId: String!, id: String!, tenantId: String): Void
+  editDocumentTypeMetadata(documentTypeId: String!, code: String!, item: MetadataConfigInput!, tenantId: String): DocumentType
+  deleteDocumentTypeMetadata(documentTypeId: String!, code: String!, tenantId: String): Void
   addDomainUser(item: DomainUserInput!): DomainUser
   editDomainUser(id: String!, item: DomainUserInput!): DomainUser
   resendInviteDomainUser(id: String!): Void
@@ -603,12 +555,6 @@ type BusinessSchemaMutation {
   addPushJob(item: PushJob!, tenantId: String): JobResult
   addEmailJob(item: EmailJob!, tenantId: String): JobResult
   runActionOnJob(tenantId: String, jobId: String!, options: JobActionOptions!): Void
-  addListOfValues(item: ListOfValuesInput!, tenantId: String): ListOfValues
-  editListOfValues(id: String!, item: ListOfValuesInput!, tenantId: String): ListOfValues
-  deleteListOfValues(id: String!, tenantId: String): Void
-  addMetadata(item: MetadataInput!, tenantId: String): Metadata
-  editMetadata(id: String!, item: MetadataInput!, tenantId: String): Metadata
-  deleteMetadata(id: String!, tenantId: String): Void
   addNote(item: NoteInput!, tenantId: String): Note
   editNote(id: String!, item: NoteInput!, tenantId: String): Note
   deleteNote(id: String!, tenantId: String): Void
@@ -617,6 +563,12 @@ type BusinessSchemaMutation {
   editPostalParameterConfiguration(id: String!, item: PostalParameterConfigurationInput!, tenantId: String): PostalParameterConfiguration
   deletePostalParameterConfiguration(id: String!, tenantId: String): Void
   addPowerBiAuthToken(id: String!): PowerBiAuthToken
+  addRedirectEmailConfiguration(item: RedirectEmailConfigurationInput!, tenantId: String): RedirectEmailConfiguration
+  editRedirectEmailConfiguration(id: String!, item: RedirectEmailConfigurationInput!, tenantId: String): RedirectEmailConfiguration
+  deleteRedirectEmailConfiguration(id: String!, tenantId: String): Void
+  addRoutingConfiguration(item: RoutingConfigurationInput!): RoutingConfiguration
+  editRoutingConfiguration(id: String!, item: RoutingConfigurationInput!): RoutingConfiguration
+  deleteRoutingConfiguration(id: String!): Void
   addService(item: ServiceInput!, tenantId: String): Service
   editService(id: String!, item: ServiceInput!, tenantId: String): Service
   deleteService(id: String!, tenantId: String): Void
@@ -626,6 +578,7 @@ type BusinessSchemaMutation {
   addTemplateStructure(item: TemplateStructureInput!, tenantId: String): TemplateStructure
   editTemplateStructure(id: String!, item: TemplateStructureInput!, tenantId: String): TemplateStructure
   deleteTemplateStructure(id: String!, tenantId: String): Void
+  addTemporaryDocumentFile(item: TemporaryDocumentFileInput!, tenantId: String): String
   addTemporaryDocument(item: TemporaryDocumentContentInput!): TemporaryDocumentContent
   deleteTemporaryDocument(id: String!): Void
   addTenantUser(item: TenantUserInput!, tenantId: String): TenantUser
@@ -639,9 +592,6 @@ type BusinessSchemaMutation {
   addThirdPartyType(item: ThirdPartyTypeInput!, tenantId: String): ThirdPartyType
   editThirdPartyType(id: String!, item: ThirdPartyTypeInput!, tenantId: String): ThirdPartyType
   deleteThirdPartyType(id: String!, tenantId: String): Void
-  addValueOfList(item: ValueOfListInput!, tenantId: String): ValueOfList
-  editValueOfList(id: String!, item: ValueOfListInput!, tenantId: String): ValueOfList
-  deleteValueOfList(id: String!, tenantId: String): Void
 }
 
 type BusinessSchemaQuery {
@@ -654,11 +604,12 @@ type BusinessSchemaQuery {
   apiEnvironmentUserItems(idList: [String!]!): [ApiEnvironmentUser]
   apiEnvironmentUserList(params: ApiEnvironmentUserQueryParams, after: String): ApiEnvironmentUserTypeConnection
   apiEnvironmentUserRightList(apiUserId: String!, params: RightValueQueryParams, after: String): EnvironmentRightValueTypeConnection
-  apiRoutingConfigurationItems(idList: [String!]!): [ApiRoutingConfiguration]
-  apiRoutingConfigurationList(params: ApiRoutingConfigurationQueryParams, after: String): ApiRoutingConfigurationTypeConnection
   apiTenantUserItems(idList: [String!]!, tenantId: String): [ApiTenantUser]
   apiTenantUserList(params: ApiTenantUserQueryParams, after: String, tenantId: String): ApiTenantUserTypeConnection
   apiTenantUserRightList(apiUserId: String!, params: RightValueQueryParams, after: String): TenantRightValueTypeConnection
+  callbackConfigurationItems(idList: [String!]!, tenantId: String): [CallbackConfiguration]
+  callbackConfigurationList(params: CallbackConfigurationQueryParams, after: String, tenantId: String): CallbackConfigurationTypeConnection
+  callbackConfigurations(activityCategory: ActivityCategory, tenantId: String): [CallbackConfiguration]
   chorusB2GProvidersList(login: String!, password: String!, serverType: ChorusServerType!): [ChorusProviderIdName]
   clickedLinkDocumentItems(id: String!): ClickedLinkDocument
   contactFunctionItems(idList: [String!]!, tenantId: String, language: Language): [ContactFunction]
@@ -712,12 +663,6 @@ type BusinessSchemaQuery {
   processingJobCountStatistics(tenantId: String): JobCountStatistics
   jobSummaryItems(idList: [Int!]!, tenantId: String): [JobSummary]
   jobSummaryList(params: JobSummaryQueryParams, after: String, tenantId: String): JobSummaryTypeConnection
-  listOfValuesItems(idList: [String!]!, tenantId: String, language: Language): [ListOfValues]
-  listOfValuesList(params: ListOfValuesQueryParams, after: String, tenantId: String): ListOfValuesTypeConnection
-  listOfValuesSystemList(params: ListOfValuesQueryParams, after: String, language: Language): ListOfValuesTypeConnection
-  metadataItems(idList: [String!]!, tenantId: String, language: Language): [Metadata]
-  metadataList(params: MetadataQueryParams, after: String, tenantId: String): MetadataTypeConnection
-  metadataSystemList(params: MetadataQueryParams, after: String, language: Language): MetadataTypeConnection
   natureItems(idList: [String!]!, language: Language): [Nature]
   natureList(params: NatureQueryParams, after: String, language: Language): NatureTypeConnection
   noteItems(idList: [String!]!, tenantId: String): [Note]
@@ -726,7 +671,11 @@ type BusinessSchemaQuery {
   postalJobList(params: PostalJobQueryParams, after: String, tenantId: String): PostalJobTypeConnection
   postalParameterConfigurationItems(idList: [String!]!, tenantId: String): [PostalParameterConfiguration]
   postalParameterConfigurationList(params: PostalParameterConfigurationQueryParams, after: String, tenantId: String): PostalParameterConfigurationTypeConnection
+  redirectEmailConfigurationItems(idList: [String!]!, tenantId: String): [RedirectEmailConfiguration]
+  redirectEmailConfigurationList(params: RedirectEmailConfigurationQueryParams, after: String, tenantId: String): RedirectEmailConfigurationTypeConnection
   rightInitialValueList(profile: UserProfile!, params: RightInitialValueQueryParams, after: String): RightInitialValueTypeConnection
+  routingConfigurationItems(idList: [String!]!): [RoutingConfiguration]
+  routingConfigurationList(params: RoutingConfigurationQueryParams, after: String): RoutingConfigurationTypeConnection
   serviceItems(idList: [String!]!, tenantId: String): [Service]
   serviceList(params: ServiceQueryParams, after: String, tenantId: String): ServiceTypeConnection
   statusActionList(params: StatusActionQueryParams, after: String): StatusActionTypeConnection
@@ -746,12 +695,105 @@ type BusinessSchemaQuery {
   thirdPartyTypeItems(idList: [String!]!, tenantId: String, language: Language): [ThirdPartyType]
   thirdPartyTypeList(params: ThirdPartyTypeQueryParams, after: String, tenantId: String): ThirdPartyTypeTypeConnection
   thirdPartyTypeSystemList(params: ThirdPartyTypeQueryParams, after: String, language: Language): ThirdPartyTypeTypeConnection
-  valueOfListItems(idList: [String!]!, tenantId: String, language: Language): [ValueOfList]
-  valueOfListList(params: ValueOfListQueryParams, after: String, tenantId: String): ValueOfListTypeConnection
-  valueOfListSystemList(params: ValueOfListQueryParams, after: String, language: Language): ValueOfListTypeConnection
 }
 
 scalar Byte
+
+enum CallbackActivityCategoryFilterField {
+  ACTIVITY_CATEGORY
+}
+
+type CallbackConfiguration {
+  creationDate: DateTime
+  creationUserId: String
+  creationUserLabel: String
+  lastModificationDate: DateTime
+  lastModificationUserId: String
+  lastModificationUserLabel: String
+  id: String!
+  tenantId: String!
+  activityCategories: [ActivityCategory!]!
+  activityResult: ActivityResults!
+  communicationMode: CommunicationModes!
+  destination: String!
+  isEnabled: Boolean!
+  headers: [KeyValuePair]
+}
+
+input CallbackConfigurationActivityCategoryEnumFilter {
+  field: CallbackActivityCategoryFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: ActivityCategory!
+  filterValue2: ActivityCategory
+}
+
+input CallbackConfigurationActivityResultsEnumFilter {
+  field: ActivityResultFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: ActivityResults!
+  filterValue2: ActivityResults
+}
+
+input CallbackConfigurationBoolFilter {
+  field: CallbackConfigurationBoolFilterField!
+  operator: BoolFilterOperator!
+  filterValue1: Boolean!
+}
+
+enum CallbackConfigurationBoolFilterField {
+  IS_ENABLED
+}
+
+input CallbackConfigurationCommunicationModesEnumFilter {
+  field: CommunicationModeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: CommunicationModes!
+  filterValue2: CommunicationModes
+}
+
+input CallbackConfigurationInput {
+  id: String
+  tenantId: String!
+  activityCategories: [ActivityCategory!]
+  activityResult: ActivityResults!
+  communicationMode: CommunicationModes!
+  destination: String!
+  isEnabled: Boolean
+  headers: [KeyValuePairInput]
+}
+
+input CallbackConfigurationQueryParams {
+  sortField: CallbackConfigurationSortField
+  sortDirection: SortDirection
+  stringFilters: [CallbackConfigurationStringFilter]
+  boolFilters: [CallbackConfigurationBoolFilter]
+  activityCategoryFilters: [CallbackConfigurationActivityCategoryEnumFilter]
+  activityResultFilters: [CallbackConfigurationActivityResultsEnumFilter]
+  communicationModeFilters: [CallbackConfigurationCommunicationModesEnumFilter]
+}
+
+enum CallbackConfigurationSortField {
+  ID
+  TENANT_ID
+  ACTIVITY_RESULT
+  COMMUNICATION_MODE
+  DESTINATION
+}
+
+input CallbackConfigurationStringFilter {
+  field: CallbackConfigurationStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum CallbackConfigurationStringFilterField {
+  TENANT_ID
+}
+
+type CallbackConfigurationTypeConnection {
+  edges: [CallbackConfiguration]
+  pageInfo: PageInfo
+}
 
 type ChorusB2GAddress {
   name: String!
@@ -832,6 +874,16 @@ type ClickedLinkDocument {
   isCountExpired: Boolean!
   content: String!
   documentId: String!
+}
+
+enum CommunicationModeFilterField {
+  COMMUNICATION_MODE
+}
+
+enum CommunicationModes {
+  HTTP
+  EMAIL
+  QUEUE
 }
 
 type Contact {
@@ -1095,15 +1147,12 @@ enum DashboardVisibilityType {
 }
 
 input DataFileActionInput {
+  trackingId: String
   data: String!
-  name: String!
+  fileName: String!
   format: String!
   action: String!
   parameters: String
-}
-
-type DataFileActionResult {
-  id: String!
 }
 
 """
@@ -1128,8 +1177,7 @@ type Document {
   status: DocumentStatus!
   subStatus: DocumentSubStatus
   jobIds: [String]
-  metadata: [KeyValue]
-  typedMetadata: [KeyMultipleTypeValue]
+  metadata: [GedField]
   fileContent: String
   archiveId: String
   archiveDate: DateTime
@@ -1143,6 +1191,8 @@ type Document {
   attachmentIds: [String]
   jobMessageStatusCounts: [JobMessageStatusCount]
   primaryJobMessageId: String
+  previewBlobStorageFilePath: String
+  standardFileData: [KeyValue]
 }
 
 input DocumentActionOptions {
@@ -1526,6 +1576,12 @@ enum DocumentSubStatus {
   ERROR
   DRAFT
   CANCELED
+  ANTIVIRUS_SCAN_FAILED
+  VIRUS_DETECTED
+  STANDARD_FILE_INVALID
+  STANDARD_DATA_EXTRACTION_FAILED
+  METADATA_GENERATION_FAILED
+  INVOICE_GENERATION_FAILED
 }
 
 type DocumentSubType {
@@ -1688,6 +1744,12 @@ enum DomainRightType {
   """Create, edit or renew Api users"""
   CHANGE_TENANT_API_USER
 
+  """Get or list document types"""
+  READ_DOCUMENT_TYPE
+
+  """Create, edit or delete document types"""
+  CHANGE_DOCUMENT_TYPE
+
   """Get or list tenants with internal info"""
   READ_TENANT_EDC_OMS_INFO
 
@@ -1726,6 +1788,12 @@ enum DomainRightType {
 
   """Validate invited user"""
   VALIDATE_USER
+
+  """Get or list metadatas"""
+  READ_METADATA
+
+  """Create, edit or delete metadatas"""
+  CHANGE_METADATA
 
   """Get or list dashboards"""
   READ_DASHBOARD
@@ -1768,6 +1836,12 @@ enum DomainRightType {
 
   """Get or list status actions"""
   READ_STATUS_ACTION
+
+  """Get or list callback configurations"""
+  READ_CALLBACK_CONFIGURATION
+
+  """Create, edit or delete callback configurations"""
+  CHANGE_CALLBACK_CONFIGURATION
 
   """Edit Tenant postal config"""
   EDIT_TENANT_POSTAL_CONFIG
@@ -1879,6 +1953,7 @@ input EmailAdhocRecipientInput {
   documentTransmissionMode: DocumentTransmissionMode!
   email: String!
   isPrimary: Boolean
+  language: String
 }
 
 input EmailJob {
@@ -1948,7 +2023,11 @@ enum EngineEventAction {
   EDIT_METADATA_DOCUMENT
   ADD_ATTACHMENTS_DOCUMENT
   CANCEL_JOB_MESSAGE
-  ADD_DATA_FILE_ACTION
+  PRE_PROCESS_JOB
+  ANTIVIRUS_SCAN_DOCUMENT
+  UPDATE_DATABASE
+  COMPLETE_JOB
+  RELAUNCH_JOB_MESSAGE
 }
 
 enum EnvelopeType {
@@ -1984,10 +2063,10 @@ enum EnvironmentRightType {
   READ_STATUS_ACTION
 
   """Get or list api routing configurations"""
-  READ_API_ROUTING_CONFIGURATION
+  READ_ROUTING_CONFIGURATION
 
   """Create, edit or delete api routing configurations"""
-  CHANGE_API_ROUTING_CONFIGURATION
+  CHANGE_ROUTING_CONFIGURATION
 
   """Edit Tenant postal config"""
   EDIT_TENANT_POSTAL_CONFIG
@@ -2170,6 +2249,7 @@ enum ErrorQueueMessageResourceType {
   JOB
   DOCUMENT
   ARCHIVE_BATCH
+  NONE
 }
 
 enum ErrorQueueMessageResourceTypeFilterField {
@@ -2295,10 +2375,24 @@ input FileReferenceBase {
   content: String
 }
 
+type GedField {
+  key: String!
+  value: String!
+  dataType: GedFieldDataType!
+}
+
+enum GedFieldDataType {
+  STRING
+  INTEGER
+  DOUBLE
+  DATE
+  BOOL
+}
+
 input GedFieldInput {
   key: String!
   value: String
-  typedValue: MultipleTypeValueInput
+  dataType: GedFieldDataType
 }
 
 type IdName {
@@ -2629,6 +2723,7 @@ enum JobBaseType {
   VOICE
   FAX
   PUSH
+  DATA_FILE
 }
 
 type JobCountStatistics {
@@ -3113,11 +3208,6 @@ enum JobTypeFilterField {
   JOB_TYPE
 }
 
-type KeyMultipleTypeValue {
-  key: String!
-  value: MultipleTypeValue
-}
-
 type KeyValue {
   key: String!
   value: String
@@ -3139,59 +3229,6 @@ enum Language {
   FR
 }
 
-type ListOfValues {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  name: String!
-  ownerType: ListOfValuesOwnerType!
-  ownerId: String
-  valueCount: Int!
-  metadataIds: [String]
-}
-
-input ListOfValuesInput {
-  id: String
-  name: String!
-  ownerType: ListOfValuesOwnerType!
-  ownerId: String
-}
-
-enum ListOfValuesOwnerType {
-  SYSTEM
-  TENANT
-}
-
-input ListOfValuesQueryParams {
-  sortField: ListOfValuesSortField
-  sortDirection: SortDirection
-  stringFilters: [ListOfValuesStringFilter]
-}
-
-enum ListOfValuesSortField {
-  NAME
-}
-
-input ListOfValuesStringFilter {
-  field: ListOfValuesStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ListOfValuesStringFilterField {
-  NAME
-  OWNER_ID
-}
-
-type ListOfValuesTypeConnection {
-  edges: [ListOfValues]
-  pageInfo: PageInfo
-}
-
 scalar Long
 
 enum LreArManagementType {
@@ -3209,134 +3246,47 @@ enum Media {
   FAX_EMAIL
 }
 
-type Metadata {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  ownerType: MetadataOwnerType!
-  ownerId: String
-  code: String!
-  name: String!
-  dataType: MetadataDataType!
-  documentTypeIds: [String]
-  listOfValuesId: String
-}
-
 type MetadataConfig {
-  metadataId: String!
+  metadataCode: String!
+  dataType: GedFieldDataType!
   isMandatory: Boolean!
+  isFilterable: Boolean!
   isEditable: Boolean!
-  isDeletable: Boolean
+  isArchivable: Boolean!
   defaultValue: String
   expectedFormat: String
 }
 
 input MetadataConfigInput {
-  metadataId: String!
+  metadataCode: String!
+  dataType: GedFieldDataType!
   isMandatory: Boolean!
+  isFilterable: Boolean!
   isEditable: Boolean!
+  isArchivable: Boolean!
   defaultValue: String
   expectedFormat: String
-}
-
-enum MetadataDataType {
-  STRING
-  INTEGER
-  DOUBLE
-  DATE
-  BOOL
-  LIST_OF_VALUES
-}
-
-enum MetadataDataTypeFilterField {
-  DATA_TYPE
-}
-
-input MetadataInput {
-  id: String
-  ownerType: MetadataOwnerType!
-  ownerId: String!
-  code: String!
-  name: String!
-  dataType: MetadataDataType!
-  listOfValuesId: String
-}
-
-input MetadataMetadataDataTypeEnumFilter {
-  field: MetadataDataTypeFilterField!
-  operator: NumberFilterOperator!
-  filterValue1: MetadataDataType!
-  filterValue2: MetadataDataType
-}
-
-enum MetadataOwnerType {
-  SYSTEM
-  TENANT
-}
-
-input MetadataQueryParams {
-  sortField: MetadataSortField
-  sortDirection: SortDirection
-  stringFilters: [MetadataStringFilter]
-  dataTypeFilters: [MetadataMetadataDataTypeEnumFilter]
-}
-
-enum MetadataSortField {
-  CODE
-  NAME
-  DATA_TYPE
-}
-
-input MetadataStringFilter {
-  field: MetadataStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum MetadataStringFilterField {
-  CODE
-  NAME
-}
-
-type MetadataTypeConnection {
-  edges: [Metadata]
-  pageInfo: PageInfo
-}
-
-type MultipleTypeValue {
-  stringValue: String
-  intValue: Int
-  doubleValue: Float
-  boolValue: Boolean
-  dateValue: DateTime
-  listValues: [String]
-}
-
-input MultipleTypeValueInput {
-  stringValue: String
-  intValue: Int
-  doubleValue: Float
-  boolValue: Boolean
-  dateValue: DateTime
-  listValues: [String]
 }
 
 type Nature {
   id: String!
   cycle: NatureCycle!
+  natureType: NatureCategory!
   code: String!
   label: String!
   metadataConfigs: [MetadataConfig]
   archiveConfiguration: ArchiveConfiguration
 }
 
+enum NatureCategory {
+  DOCUMENT_MODEL
+  TRANSMISSION_MODE
+}
+
 enum NatureCycle {
   P_2_P
   O_2_C
+  MISC
 }
 
 input NatureQueryParams {
@@ -3666,6 +3616,80 @@ input Recipient {
   optionalFields: [String]
 }
 
+type RedirectEmailConfiguration {
+  id: String!
+  tenantId: String!
+  address: String!
+  transmissionMode: DocumentTransmissionMode!
+  isEnabled: Boolean!
+  documentTypeId: String!
+  creationDate: DateTime!
+  lastModificationDate: DateTime!
+}
+
+input RedirectEmailConfigurationBoolFilter {
+  field: RedirectEmailConfigurationBoolFilterField!
+  operator: BoolFilterOperator!
+  filterValue1: Boolean!
+}
+
+enum RedirectEmailConfigurationBoolFilterField {
+  IS_ENABLED
+}
+
+input RedirectEmailConfigurationDocumentTransmissionModeEnumFilter {
+  field: RedirectEmailConfigurationTransmissionModeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: DocumentTransmissionMode!
+  filterValue2: DocumentTransmissionMode
+}
+
+input RedirectEmailConfigurationInput {
+  address: String!
+  tenantId: String!
+  transmissionMode: DocumentTransmissionMode!
+  isEnabled: Boolean!
+  documentTypeId: String!
+}
+
+input RedirectEmailConfigurationQueryParams {
+  sortField: RedirectEmailConfigurationSortField
+  sortDirection: SortDirection
+  stringFilters: [RedirectEmailConfigurationStringFilter]
+  boolFilters: [RedirectEmailConfigurationBoolFilter]
+  transmissionModeFilters: [RedirectEmailConfigurationDocumentTransmissionModeEnumFilter]
+}
+
+enum RedirectEmailConfigurationSortField {
+  TENANT_ID
+  DOCUMENT_TYPE_ID
+  ADDRESS
+  TRANSMISSION_MODE
+  IS_ENABLED
+  CREATION_DATE
+  LAST_MODIFICATION_DATE
+}
+
+input RedirectEmailConfigurationStringFilter {
+  field: RedirectEmailConfigurationStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum RedirectEmailConfigurationStringFilterField {
+  DOCUMENT_TYPE_ID
+  ADDRESS
+}
+
+enum RedirectEmailConfigurationTransmissionModeFilterField {
+  TRANSMISSION_MODE
+}
+
+type RedirectEmailConfigurationTypeConnection {
+  edges: [RedirectEmailConfiguration]
+  pageInfo: PageInfo
+}
+
 type RegisteredPostalOptions {
   anonymous: Boolean!
 }
@@ -3675,7 +3699,7 @@ input RegisteredPostalOptionsInput {
 }
 
 input RelaunchJobMessageOptionsInput {
-  transmissionStatus: JobMessageTransmissionStatus!
+  transmissionStatus: JobMessageTransmissionStatus
   domainId: String
   tenantId: String
   jobId: String
@@ -3987,11 +4011,17 @@ enum RightType {
   """Get or list status actions"""
   READ_STATUS_ACTION
 
+  """Get or list callback configurations"""
+  READ_CALLBACK_CONFIGURATION
+
+  """Create, edit or delete callback configurations"""
+  CHANGE_CALLBACK_CONFIGURATION
+
   """Get or list api routing configurations"""
-  READ_API_ROUTING_CONFIGURATION
+  READ_ROUTING_CONFIGURATION
 
   """Create, edit or delete api routing configurations"""
-  CHANGE_API_ROUTING_CONFIGURATION
+  CHANGE_ROUTING_CONFIGURATION
 
   """Edit Tenant postal config"""
   EDIT_TENANT_POSTAL_CONFIG
@@ -4022,6 +4052,89 @@ input RightValueQueryParams {
 enum RightValueSortField {
   VALUE
   RIGHT
+}
+
+type RoutingConfiguration {
+  creationDate: DateTime
+  creationUserId: String
+  creationUserLabel: String
+  lastModificationDate: DateTime
+  lastModificationUserId: String
+  lastModificationUserLabel: String
+  id: String!
+  ownerId: String
+  ownerType: InheritedConfigurationOwnerType!
+  queueName: String
+  isEnabled: Boolean!
+  apiRoutingConfig: ApiRoutingConfiguration
+  smtpRoutingConfig: SmtpRoutingConfiguration
+}
+
+input RoutingConfigurationBoolFilter {
+  field: RoutingConfigurationBoolFilterField!
+  operator: BoolFilterOperator!
+  filterValue1: Boolean!
+}
+
+enum RoutingConfigurationBoolFilterField {
+  IS_ENABLED
+}
+
+input RoutingConfigurationInheritedConfigurationOwnerTypeEnumFilter {
+  field: RoutingConfigurationOwnerTypeFilterField!
+  operator: NumberFilterOperator!
+  filterValue1: InheritedConfigurationOwnerType!
+  filterValue2: InheritedConfigurationOwnerType
+}
+
+input RoutingConfigurationInput {
+  id: String
+  ownerId: String!
+  ownerType: InheritedConfigurationOwnerType!
+  queueName: String!
+  isEnabled: Boolean
+  apiRoutingConfig: ApiRoutingConfigurationInput
+  smtpRoutingConfig: SmtpRoutingConfigurationInput
+}
+
+enum RoutingConfigurationOwnerTypeFilterField {
+  OWNER_TYPE
+}
+
+input RoutingConfigurationQueryParams {
+  sortField: RoutingConfigurationSortField
+  sortDirection: SortDirection
+  stringFilters: [RoutingConfigurationStringFilter]
+  boolFilters: [RoutingConfigurationBoolFilter]
+  ownerTypeFilters: [RoutingConfigurationInheritedConfigurationOwnerTypeEnumFilter]
+}
+
+enum RoutingConfigurationSortField {
+  FORMAT
+  ACTION
+  QUEUE_NAME
+  OWNER_ID
+  OWNER_TYPE
+  CREATION_DATE
+  LAST_MODIFICATION_DATE
+}
+
+input RoutingConfigurationStringFilter {
+  field: RoutingConfigurationStringFilterField!
+  operator: StringFilterOperator!
+  filterValue1: String!
+}
+
+enum RoutingConfigurationStringFilterField {
+  FORMAT
+  ACTION
+  QUEUE_NAME
+  OWNER_ID
+}
+
+type RoutingConfigurationTypeConnection {
+  edges: [RoutingConfiguration]
+  pageInfo: PageInfo
 }
 
 type Service {
@@ -4155,6 +4268,24 @@ input SmtpConfigInput {
   smtpPassword: String
   smtpPort: Int
   smtpServer: String
+}
+
+type SmtpRoutingConfiguration {
+  froms: [String]
+  to: String!
+  subject: String!
+  attachmentName: String!
+  headers: [KeyValuePair]
+  metadataList: [GedField]
+}
+
+input SmtpRoutingConfigurationInput {
+  froms: [String]
+  to: String!
+  subject: String!
+  attachmentName: String!
+  headers: [KeyValuePairInput]
+  metadataList: [GedFieldInput]
 }
 
 enum SortDirection {
@@ -4311,6 +4442,7 @@ enum TemplateContentNotificationType {
   ACTIVITY_JOB_CREATED
   ACTIVITY_JOB_LAUNCHED
   ACTIVITY_JOB_PROCESSING
+  ACTIVITY_JOB_PRE_PROCESSED
   ACTIVITY_NOTIFICATION_SENT
   ACTIVITY_SEND_CHORUS_B_2_G
   ACTIVITY_CHANGE_STATUS_CHORUS_B_2_G
@@ -4319,6 +4451,25 @@ enum TemplateContentNotificationType {
   ACTIVITY_ADD_DATA_FILE_ACTION
   ACTIVITY_EXTERNAL_PROCESS
   ACTIVITY_ERROR
+  CALLBACK_DOCUMENT_SIGNED
+  CALLBACK_DOCUMENT_ARCHIVED
+  CALLBACK_DOCUMENT_CANCELED
+  CALLBACK_DOCUMENT_READ
+  CALLBACK_EDIT_METADATA_DOCUMENT
+  CALLBACK_ADD_ATTACHMENTS_DOCUMENT
+  CALLBACK_JOB_CREATED
+  CALLBACK_JOB_LAUNCHED
+  CALLBACK_JOB_PROCESSING
+  CALLBACK_JOB_PRE_PROCESSED
+  CALLBACK_NOTIFICATION_SENT
+  CALLBACK_SEND_CHORUS_B_2_G
+  CALLBACK_CHANGE_STATUS_CHORUS_B_2_G
+  CALLBACK_COMPLETE_CHORUS_B_2_G
+  CALLBACK_CANCEL_JOB_MESSAGE
+  CALLBACK_EXTERNAL_PROCESS
+  REDIRECT_EMAIL_THIRD_PARTY_ERROR_RESPONSE
+  REDIRECT_EMAIL_ATTACHMENT_ERROR_RESPONSE
+  REDIRECT_EMAIL_PDF_ERROR_RESPONSE
 }
 
 enum TemplateContentNotificationTypeFilterField {
@@ -4380,6 +4531,7 @@ enum TemplateContentTransmissionType {
   EMAIL
   WEB_NOTIFICATION
   SMS
+  JSON
   NONE
 }
 
@@ -4502,6 +4654,11 @@ input TemporaryDocumentContentInput {
   tenantId: String!
   metadata: [KeyValuePairInput]
   content: String!
+}
+
+input TemporaryDocumentFileInput {
+  file: FileContentInput
+  tenantId: String
 }
 
 type TemporaryDocumentHeader {
@@ -4736,6 +4893,12 @@ enum TenantRightType {
 
   """Get or list status actions"""
   READ_STATUS_ACTION
+
+  """Get or list callback configurations"""
+  READ_CALLBACK_CONFIGURATION
+
+  """Create, edit or delete callback configurations"""
+  CHANGE_CALLBACK_CONFIGURATION
 
   """Get or list data file action"""
   READ_DATA_FILE_ACTION
@@ -5014,63 +5177,6 @@ enum UserProfile {
   ADMINISTRATOR
   TENANT_RECEIVER
   WEBSITE_ADMINISTRATOR
-}
-
-type ValueOfList {
-  creationDate: DateTime
-  creationUserId: String
-  creationUserLabel: String
-  lastModificationDate: DateTime
-  lastModificationUserId: String
-  lastModificationUserLabel: String
-  id: String!
-  listOfValuesId: String!
-  ownerType: ValueOfListOwnerType!
-  ownerId: String
-  code: String!
-  name: String!
-}
-
-input ValueOfListInput {
-  id: String
-  listOfValuesId: String!
-  ownerType: ValueOfListOwnerType!
-  ownerId: String!
-  code: String!
-  name: String!
-}
-
-enum ValueOfListOwnerType {
-  SYSTEM
-  TENANT
-}
-
-input ValueOfListQueryParams {
-  sortField: ValueOfListSortField
-  sortDirection: SortDirection
-  stringFilters: [ValueOfListStringFilter]
-}
-
-enum ValueOfListSortField {
-  CODE
-  NAME
-}
-
-input ValueOfListStringFilter {
-  field: ValueOfListStringFilterField!
-  operator: StringFilterOperator!
-  filterValue1: String!
-}
-
-enum ValueOfListStringFilterField {
-  LIST_OF_VALUES_ID
-  CODE
-  NAME
-}
-
-type ValueOfListTypeConnection {
-  edges: [ValueOfList]
-  pageInfo: PageInfo
 }
 
 input VoiceJob {

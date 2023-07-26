@@ -714,10 +714,14 @@ export type PostalAddressInput = {
 
 export type PostalConfiguration = {
   __typename?: 'PostalConfiguration';
+  clientId?: Maybe<Scalars['String']>;
+  isEnabled: Scalars['Boolean'];
   isTestMode: Scalars['Boolean'];
 };
 
 export type PostalConfigurationInput = {
+  clientId?: InputMaybe<Scalars['String']>;
+  isEnabled: Scalars['Boolean'];
   isTestMode: Scalars['Boolean'];
 };
 
@@ -881,6 +885,8 @@ export enum RightType {
   CancelJobMessage = 'CANCEL_JOB_MESSAGE',
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
+  /** Create, edit or delete api routing configurations */
+  ChangeApiRoutingConfiguration = 'CHANGE_API_ROUTING_CONFIGURATION',
   /** Create, edit or delete document links */
   ChangeClickedLinkDocument = 'CHANGE_CLICKED_LINK_DOCUMENT',
   /** Create or edit configurations */
@@ -891,6 +897,8 @@ export enum RightType {
   ChangeContactFunction = 'CHANGE_CONTACT_FUNCTION',
   /** Create, edit or delete dashboards */
   ChangeDashboard = 'CHANGE_DASHBOARD',
+  /** Create, edit or delete data file action */
+  ChangeDataFileAction = 'CHANGE_DATA_FILE_ACTION',
   /** Create, edit or delete documents */
   ChangeDocument = 'CHANGE_DOCUMENT',
   /** Create documentJob */
@@ -951,6 +959,8 @@ export enum RightType {
   EditEnvironment = 'EDIT_ENVIRONMENT',
   /** Edit tenants */
   EditTenant = 'EDIT_TENANT',
+  /** Edit Tenant postal config */
+  EditTenantPostalConfig = 'EDIT_TENANT_POSTAL_CONFIG',
   /** Grant internal user rights */
   GrantInternalRight = 'GRANT_INTERNAL_RIGHT',
   /** Grant user rights */
@@ -959,6 +969,8 @@ export enum RightType {
   MarkDocumentAsRead = 'MARK_DOCUMENT_AS_READ',
   /** Get or list activities */
   ReadActivity = 'READ_ACTIVITY',
+  /** Get or list api routing configurations */
+  ReadApiRoutingConfiguration = 'READ_API_ROUTING_CONFIGURATION',
   /** Mark document as read */
   ReadClickedLinkDocument = 'READ_CLICKED_LINK_DOCUMENT',
   /** Get or list configurations */
@@ -969,6 +981,8 @@ export enum RightType {
   ReadContactFunction = 'READ_CONTACT_FUNCTION',
   /** Get or list dashboards */
   ReadDashboard = 'READ_DASHBOARD',
+  /** Get or list data file action */
+  ReadDataFileAction = 'READ_DATA_FILE_ACTION',
   /** Get or list documents sent to the user */
   ReadDocument = 'READ_DOCUMENT',
   /** Get or list documentJobs */
@@ -989,7 +1003,7 @@ export enum RightType {
   ReadEnvironmentApiUser = 'READ_ENVIRONMENT_API_USER',
   /** Get or list environment administrators */
   ReadEnvironmentUser = 'READ_ENVIRONMENT_USER',
-  /** Get or list documentJobs */
+  /** Get or list jobMessages */
   ReadJobMessage = 'READ_JOB_MESSAGE',
   /** Get or list list of values */
   ReadListOfValues = 'READ_LIST_OF_VALUES',

@@ -74,6 +74,7 @@ export enum ActivityActorTypeFilterField {
 
 export enum ActivityCategory {
   AddAttachmentsDocument = 'ADD_ATTACHMENTS_DOCUMENT',
+  AddDataFileAction = 'ADD_DATA_FILE_ACTION',
   CancelJobMessage = 'CANCEL_JOB_MESSAGE',
   ChangeStatusChorusB_2G = 'CHANGE_STATUS_CHORUS_B_2_G',
   CompleteChorusB_2G = 'COMPLETE_CHORUS_B_2_G',
@@ -352,6 +353,79 @@ export type ApiEnvironmentUserTypeConnection = {
   pageInfo?: Maybe<PageInfo>;
 };
 
+export type ApiRoutingConfiguration = {
+  __typename?: 'ApiRoutingConfiguration';
+  action: Scalars['String'];
+  creationDate?: Maybe<Scalars['DateTime']>;
+  creationUserId?: Maybe<Scalars['String']>;
+  creationUserLabel?: Maybe<Scalars['String']>;
+  format: Scalars['String'];
+  id: Scalars['String'];
+  lastModificationDate?: Maybe<Scalars['DateTime']>;
+  lastModificationUserId?: Maybe<Scalars['String']>;
+  lastModificationUserLabel?: Maybe<Scalars['String']>;
+  ownerId?: Maybe<Scalars['String']>;
+  ownerType: InheritedConfigurationOwnerType;
+  queueName?: Maybe<Scalars['String']>;
+};
+
+export type ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilter = {
+  field: ApiRoutingConfigurationOwnerTypeFilterField;
+  filterValue1: InheritedConfigurationOwnerType;
+  filterValue2?: InputMaybe<InheritedConfigurationOwnerType>;
+  operator: NumberFilterOperator;
+};
+
+export type ApiRoutingConfigurationInput = {
+  action: Scalars['String'];
+  format: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  ownerId: Scalars['String'];
+  ownerType: InheritedConfigurationOwnerType;
+  queueName: Scalars['String'];
+  sender?: InputMaybe<PostalAddressInput>;
+};
+
+export enum ApiRoutingConfigurationOwnerTypeFilterField {
+  OwnerType = 'OWNER_TYPE'
+}
+
+export type ApiRoutingConfigurationQueryParams = {
+  ownerTypeFilters?: InputMaybe<Array<InputMaybe<ApiRoutingConfigurationInheritedConfigurationOwnerTypeEnumFilter>>>;
+  sortDirection?: InputMaybe<SortDirection>;
+  sortField?: InputMaybe<ApiRoutingConfigurationSortField>;
+  stringFilters?: InputMaybe<Array<InputMaybe<ApiRoutingConfigurationStringFilter>>>;
+};
+
+export enum ApiRoutingConfigurationSortField {
+  Action = 'ACTION',
+  CreationDate = 'CREATION_DATE',
+  Format = 'FORMAT',
+  LastModificationDate = 'LAST_MODIFICATION_DATE',
+  OwnerId = 'OWNER_ID',
+  OwnerType = 'OWNER_TYPE',
+  QueueName = 'QUEUE_NAME'
+}
+
+export type ApiRoutingConfigurationStringFilter = {
+  field: ApiRoutingConfigurationStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
+
+export enum ApiRoutingConfigurationStringFilterField {
+  Action = 'ACTION',
+  Format = 'FORMAT',
+  OwnerId = 'OWNER_ID',
+  QueueName = 'QUEUE_NAME'
+}
+
+export type ApiRoutingConfigurationTypeConnection = {
+  __typename?: 'ApiRoutingConfigurationTypeConnection';
+  edges?: Maybe<Array<Maybe<ApiRoutingConfiguration>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
 export type ApiTenantUser = {
   __typename?: 'ApiTenantUser';
   authorizedIPs?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -482,7 +556,6 @@ export enum ArrayElementFilterOperator {
 }
 
 export type AttachmentInput = {
-  documentTransmissionMode?: InputMaybe<DocumentTransmissionMode>;
   existingDocumentId?: InputMaybe<Scalars['String']>;
   newDocument?: InputMaybe<DocumentInput>;
 };
@@ -501,10 +574,12 @@ export type BusinessSchemaMutation = {
   __typename?: 'BusinessSchemaMutation';
   addApiDomainUser?: Maybe<ApiDomainUser>;
   addApiEnvironmentUser?: Maybe<ApiEnvironmentUser>;
+  addApiRoutingConfiguration?: Maybe<ApiRoutingConfiguration>;
   addApiTenantUser?: Maybe<ApiTenantUser>;
   addContact?: Maybe<Contact>;
   addContactFunction?: Maybe<ContactFunction>;
   addDashboardRight?: Maybe<DashboardRight>;
+  addDataFileAction?: Maybe<DataFileActionResult>;
   addDocumentJob?: Maybe<JobCreationResult>;
   addDocumentProbativeJob?: Maybe<JobCreationResult>;
   addDocumentType?: Maybe<DocumentType>;
@@ -515,6 +590,7 @@ export type BusinessSchemaMutation = {
   addFaxJob?: Maybe<JobResult>;
   addHostedDocumentFile?: Maybe<FileContent>;
   addHostedListFile?: Maybe<FileContent>;
+  addIncomingEmailHistory?: Maybe<IncomingEmailHistory>;
   addListOfValues?: Maybe<ListOfValues>;
   addMetadata?: Maybe<Metadata>;
   addNote?: Maybe<Note>;
@@ -532,6 +608,7 @@ export type BusinessSchemaMutation = {
   addThirdPartyType?: Maybe<ThirdPartyType>;
   addValueOfList?: Maybe<ValueOfList>;
   addVoiceJob?: Maybe<JobResult>;
+  deleteApiRoutingConfiguration?: Maybe<Scalars['Void']>;
   deleteContact?: Maybe<Scalars['Void']>;
   deleteContactFunction?: Maybe<Scalars['Void']>;
   deleteDashboardRight?: Maybe<Scalars['Void']>;
@@ -541,6 +618,7 @@ export type BusinessSchemaMutation = {
   deleteHostedInboundFile?: Maybe<Scalars['Void']>;
   deleteHostedListFile?: Maybe<Scalars['Void']>;
   deleteHostedReportFile?: Maybe<Scalars['Void']>;
+  deleteIncomingEmailHistory?: Maybe<Scalars['Void']>;
   deleteListOfValues?: Maybe<Scalars['Void']>;
   deleteMetadata?: Maybe<Scalars['Void']>;
   deleteNote?: Maybe<Scalars['Void']>;
@@ -556,6 +634,7 @@ export type BusinessSchemaMutation = {
   editApiDomainUserRight?: Maybe<Array<DomainRightValue>>;
   editApiEnvironmentUser?: Maybe<ApiEnvironmentUser>;
   editApiEnvironmentUserRight?: Maybe<Array<EnvironmentRightValue>>;
+  editApiRoutingConfiguration?: Maybe<ApiRoutingConfiguration>;
   editApiTenantUser?: Maybe<ApiTenantUser>;
   editApiTenantUserRight?: Maybe<Array<TenantRightValue>>;
   editContact?: Maybe<Contact>;
@@ -567,6 +646,7 @@ export type BusinessSchemaMutation = {
   editEnvironmentUser?: Maybe<EnvironmentUser>;
   editEnvironmentUserRight?: Maybe<Array<EnvironmentRightValue>>;
   editErrorQueueMessage?: Maybe<ErrorQueueMessage>;
+  editIncomingEmailHistory?: Maybe<IncomingEmailHistory>;
   editListOfValues?: Maybe<ListOfValues>;
   editMetadata?: Maybe<Metadata>;
   editNote?: Maybe<Note>;
@@ -606,6 +686,11 @@ export type BusinessSchemaMutationAddApiEnvironmentUserArgs = {
 };
 
 
+export type BusinessSchemaMutationAddApiRoutingConfigurationArgs = {
+  item: ApiRoutingConfigurationInput;
+};
+
+
 export type BusinessSchemaMutationAddApiTenantUserArgs = {
   item: ApiTenantUserInput;
   tenantId?: InputMaybe<Scalars['String']>;
@@ -626,6 +711,12 @@ export type BusinessSchemaMutationAddContactFunctionArgs = {
 
 export type BusinessSchemaMutationAddDashboardRightArgs = {
   item: DashboardRightInput;
+};
+
+
+export type BusinessSchemaMutationAddDataFileActionArgs = {
+  item: DataFileActionInput;
+  tenantId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -684,6 +775,12 @@ export type BusinessSchemaMutationAddHostedDocumentFileArgs = {
 
 export type BusinessSchemaMutationAddHostedListFileArgs = {
   item: FileContentInput;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationAddIncomingEmailHistoryArgs = {
+  item: IncomingEmailHistoryInput;
   tenantId?: InputMaybe<Scalars['String']>;
 };
 
@@ -788,6 +885,11 @@ export type BusinessSchemaMutationAddVoiceJobArgs = {
 };
 
 
+export type BusinessSchemaMutationDeleteApiRoutingConfigurationArgs = {
+  id: Scalars['String'];
+};
+
+
 export type BusinessSchemaMutationDeleteContactArgs = {
   id: Scalars['String'];
   tenantId?: InputMaybe<Scalars['String']>;
@@ -838,6 +940,12 @@ export type BusinessSchemaMutationDeleteHostedListFileArgs = {
 
 
 export type BusinessSchemaMutationDeleteHostedReportFileArgs = {
+  id: Scalars['String'];
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaMutationDeleteIncomingEmailHistoryArgs = {
   id: Scalars['String'];
   tenantId?: InputMaybe<Scalars['String']>;
 };
@@ -932,6 +1040,12 @@ export type BusinessSchemaMutationEditApiEnvironmentUserRightArgs = {
 };
 
 
+export type BusinessSchemaMutationEditApiRoutingConfigurationArgs = {
+  id: Scalars['String'];
+  item: ApiRoutingConfigurationInput;
+};
+
+
 export type BusinessSchemaMutationEditApiTenantUserArgs = {
   id: Scalars['String'];
   item: ApiTenantUserInput;
@@ -1001,6 +1115,13 @@ export type BusinessSchemaMutationEditEnvironmentUserRightArgs = {
 export type BusinessSchemaMutationEditErrorQueueMessageArgs = {
   id: Scalars['String'];
   item: ErrorQueueMessageInput;
+};
+
+
+export type BusinessSchemaMutationEditIncomingEmailHistoryArgs = {
+  id: Scalars['String'];
+  item: IncomingEmailHistoryInput;
+  tenantId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1178,6 +1299,8 @@ export type BusinessSchemaQuery = {
   apiEnvironmentUserItems?: Maybe<Array<Maybe<ApiEnvironmentUser>>>;
   apiEnvironmentUserList?: Maybe<ApiEnvironmentUserTypeConnection>;
   apiEnvironmentUserRightList?: Maybe<EnvironmentRightValueTypeConnection>;
+  apiRoutingConfigurationItems?: Maybe<Array<Maybe<ApiRoutingConfiguration>>>;
+  apiRoutingConfigurationList?: Maybe<ApiRoutingConfigurationTypeConnection>;
   apiTenantUserItems?: Maybe<Array<Maybe<ApiTenantUser>>>;
   apiTenantUserList?: Maybe<ApiTenantUserTypeConnection>;
   apiTenantUserRightList?: Maybe<TenantRightValueTypeConnection>;
@@ -1192,6 +1315,7 @@ export type BusinessSchemaQuery = {
   dashboardList?: Maybe<DashboardTypeConnection>;
   dashboardRightItems?: Maybe<Array<Maybe<DashboardRight>>>;
   dashboardRightList?: Maybe<DashboardRightTypeConnection>;
+  documentCountList?: Maybe<DocumentCount>;
   documentCountStatisticsList?: Maybe<Array<Maybe<DocumentCountStatistics>>>;
   documentItems?: Maybe<Array<Maybe<Document>>>;
   documentJobItems?: Maybe<Array<Maybe<DocumentJob>>>;
@@ -1222,6 +1346,8 @@ export type BusinessSchemaQuery = {
   hostedReportFileList?: Maybe<FileHeaderTypeConnection>;
   inboundFaxList?: Maybe<InboundFaxTypeConnection>;
   inboundSmsList?: Maybe<InboundSmsTypeConnection>;
+  incomingEmailHistoryItems?: Maybe<Array<Maybe<IncomingEmailHistory>>>;
+  incomingEmailHistoryList?: Maybe<IncomingEmailHistoryTypeConnection>;
   jobItemItems?: Maybe<Array<Maybe<JobItem>>>;
   jobItemList?: Maybe<JobItemTypeConnection>;
   jobItems?: Maybe<Array<Maybe<Job>>>;
@@ -1323,6 +1449,17 @@ export type BusinessSchemaQueryApiEnvironmentUserRightListArgs = {
 };
 
 
+export type BusinessSchemaQueryApiRoutingConfigurationItemsArgs = {
+  idList: Array<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryApiRoutingConfigurationListArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  params?: InputMaybe<ApiRoutingConfigurationQueryParams>;
+};
+
+
 export type BusinessSchemaQueryApiTenantUserItemsArgs = {
   idList: Array<Scalars['String']>;
   tenantId?: InputMaybe<Scalars['String']>;
@@ -1410,6 +1547,11 @@ export type BusinessSchemaQueryDashboardRightItemsArgs = {
 export type BusinessSchemaQueryDashboardRightListArgs = {
   after?: InputMaybe<Scalars['String']>;
   params?: InputMaybe<DashboardRightQueryParams>;
+};
+
+
+export type BusinessSchemaQueryDocumentCountListArgs = {
+  tenantId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1597,6 +1739,19 @@ export type BusinessSchemaQueryInboundFaxListArgs = {
 export type BusinessSchemaQueryInboundSmsListArgs = {
   after?: InputMaybe<Scalars['String']>;
   params?: InputMaybe<InboundSmsQueryParams>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryIncomingEmailHistoryItemsArgs = {
+  idList: Array<Scalars['String']>;
+  tenantId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type BusinessSchemaQueryIncomingEmailHistoryListArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  params?: InputMaybe<IncomingEmailHistoryQueryParams>;
   tenantId?: InputMaybe<Scalars['String']>;
 };
 
@@ -2259,6 +2414,19 @@ export enum DashboardVisibilityType {
   PublicStandard = 'PUBLIC_STANDARD'
 }
 
+export type DataFileActionInput = {
+  action: Scalars['String'];
+  data: Scalars['String'];
+  format: Scalars['String'];
+  name: Scalars['String'];
+  parameters?: InputMaybe<Scalars['String']>;
+};
+
+export type DataFileActionResult = {
+  __typename?: 'DataFileActionResult';
+  id: Scalars['String'];
+};
+
 export type Document = {
   __typename?: 'Document';
   archiveDate?: Maybe<Scalars['DateTime']>;
@@ -2323,12 +2491,21 @@ export enum DocumentBooleanFilterField {
   IsSigned = 'IS_SIGNED'
 }
 
+export type DocumentCount = {
+  __typename?: 'DocumentCount';
+  documentTypeCounts?: Maybe<Array<Maybe<DocumentTypeCounts>>>;
+  serviceCounts?: Maybe<Array<Maybe<DocumentTypeCounts>>>;
+  statusCounts?: Maybe<Array<Maybe<StatusCounts>>>;
+  subStatusCounts?: Maybe<Array<Maybe<SubStatusCounts>>>;
+  totalCount: Scalars['Long'];
+};
+
 export type DocumentCountStatistics = {
   __typename?: 'DocumentCountStatistics';
   count: Scalars['Long'];
   documentTypeCode: Scalars['String'];
-  month: Scalars['Int'];
-  year: Scalars['Int'];
+  month?: Maybe<Scalars['Int']>;
+  year?: Maybe<Scalars['Int']>;
 };
 
 export enum DocumentCountStatisticsCycleFilterField {
@@ -2460,7 +2637,7 @@ export type DocumentJobInput = {
   emailAdhocRecipients?: InputMaybe<Array<InputMaybe<EmailAdhocRecipientInput>>>;
   note?: InputMaybe<Scalars['String']>;
   postalAdhocRecipients?: InputMaybe<Array<InputMaybe<PostalAdhocRecipientInput>>>;
-  postalParameter?: InputMaybe<PostalParameter>;
+  postalParameter?: InputMaybe<PostalParameterInput>;
   serviceId?: InputMaybe<Scalars['String']>;
   thirdPartyRecipients?: InputMaybe<Array<InputMaybe<ThirdPartyRecipientInput>>>;
   trackingId?: InputMaybe<Scalars['String']>;
@@ -2754,6 +2931,12 @@ export type DocumentTypeConnection = {
   pageInfo?: Maybe<PageInfo>;
 };
 
+export type DocumentTypeCounts = {
+  __typename?: 'DocumentTypeCounts';
+  key: Scalars['String'];
+  value: Scalars['Long'];
+};
+
 export type DocumentTypeInput = {
   archiveConfiguration?: InputMaybe<ArchiveConfigurationInput>;
   code: Scalars['String'];
@@ -2839,6 +3022,8 @@ export enum DomainRightType {
   ChangeTenantUser = 'CHANGE_TENANT_USER',
   /** Edit tenants */
   EditTenant = 'EDIT_TENANT',
+  /** Edit Tenant postal config */
+  EditTenantPostalConfig = 'EDIT_TENANT_POSTAL_CONFIG',
   /** Grant internal user rights */
   GrantInternalRight = 'GRANT_INTERNAL_RIGHT',
   /** Grant user rights */
@@ -3038,6 +3223,7 @@ export enum EmailTrackingType {
 export enum EngineEventAction {
   AcceptEre = 'ACCEPT_ERE',
   AddAttachmentsDocument = 'ADD_ATTACHMENTS_DOCUMENT',
+  AddDataFileAction = 'ADD_DATA_FILE_ACTION',
   ArchiveDocument = 'ARCHIVE_DOCUMENT',
   CancelDocument = 'CANCEL_DOCUMENT',
   CancelJobMessage = 'CANCEL_JOB_MESSAGE',
@@ -3068,6 +3254,8 @@ export enum EnvelopeType {
 
 /** The application rights for environment user. */
 export enum EnvironmentRightType {
+  /** Create, edit or delete api routing configurations */
+  ChangeApiRoutingConfiguration = 'CHANGE_API_ROUTING_CONFIGURATION',
   /** Create, edit or delete contact functions */
   ChangeContactFunction = 'CHANGE_CONTACT_FUNCTION',
   /** Create, edit or renew Environment Api users */
@@ -3076,6 +3264,10 @@ export enum EnvironmentRightType {
   ChangeEnvironmentUser = 'CHANGE_ENVIRONMENT_USER',
   /** Create, edit or delete third party types */
   ChangeThirdPartyType = 'CHANGE_THIRD_PARTY_TYPE',
+  /** Edit Tenant postal config */
+  EditTenantPostalConfig = 'EDIT_TENANT_POSTAL_CONFIG',
+  /** Get or list api routing configurations */
+  ReadApiRoutingConfiguration = 'READ_API_ROUTING_CONFIGURATION',
   /** Get or list contact functions */
   ReadContactFunction = 'READ_CONTACT_FUNCTION',
   /** Get or list Environment Api users */
@@ -3552,6 +3744,115 @@ export type InboundSmsTypeConnection = {
   pageInfo?: Maybe<PageInfo>;
 };
 
+export type IncomingEmailHistory = {
+  __typename?: 'IncomingEmailHistory';
+  attachmentNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  creationDate?: Maybe<Scalars['DateTime']>;
+  errorString: Scalars['String'];
+  from: Scalars['String'];
+  headerValues?: Maybe<Array<Maybe<KeyValuePair>>>;
+  id: Scalars['String'];
+  incomingEmailPath: Scalars['String'];
+  lastModificationDate?: Maybe<Scalars['DateTime']>;
+  routingConfigurationId: Scalars['String'];
+  status: ProcessingStatus;
+  subject: Scalars['String'];
+  tenantId: Scalars['String'];
+  to: Scalars['String'];
+  type: ProcessingType;
+};
+
+export type IncomingEmailHistoryDateFilter = {
+  field: IncomingEmailHistoryDateFilterField;
+  filterValue1?: InputMaybe<Scalars['DateTime']>;
+  filterValue2?: InputMaybe<Scalars['DateTime']>;
+  operator: NumberFilterOperator;
+};
+
+export enum IncomingEmailHistoryDateFilterField {
+  CreationDate = 'CREATION_DATE'
+}
+
+export type IncomingEmailHistoryInput = {
+  attachmentNames?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  errorString?: InputMaybe<Scalars['String']>;
+  from: Scalars['String'];
+  headerValues?: InputMaybe<Array<InputMaybe<KeyValuePairInput>>>;
+  id?: InputMaybe<Scalars['String']>;
+  incomingEmailPath: Scalars['String'];
+  routingConfigurationId: Scalars['String'];
+  status: ProcessingStatus;
+  subject: Scalars['String'];
+  tenantId: Scalars['String'];
+  to: Scalars['String'];
+  type: ProcessingType;
+};
+
+export type IncomingEmailHistoryProcessingStatusEnumFilter = {
+  field: IncomingEmailHistoryStatusFilterField;
+  filterValue1: ProcessingStatus;
+  filterValue2?: InputMaybe<ProcessingStatus>;
+  operator: NumberFilterOperator;
+};
+
+export type IncomingEmailHistoryProcessingTypeEnumFilter = {
+  field: IncomingEmailHistoryTypeFilterField;
+  filterValue1: ProcessingType;
+  filterValue2?: InputMaybe<ProcessingType>;
+  operator: NumberFilterOperator;
+};
+
+export type IncomingEmailHistoryQueryParams = {
+  dateFilters?: InputMaybe<Array<InputMaybe<IncomingEmailHistoryDateFilter>>>;
+  sortDirection?: InputMaybe<SortDirection>;
+  sortField?: InputMaybe<IncomingEmailHistorySortField>;
+  statusFilters?: InputMaybe<Array<InputMaybe<IncomingEmailHistoryProcessingStatusEnumFilter>>>;
+  stringFilters?: InputMaybe<Array<InputMaybe<IncomingEmailHistoryStringFilter>>>;
+  typeFilters?: InputMaybe<Array<InputMaybe<IncomingEmailHistoryProcessingTypeEnumFilter>>>;
+};
+
+export enum IncomingEmailHistorySortField {
+  CreationDate = 'CREATION_DATE',
+  From = 'FROM',
+  Id = 'ID',
+  IncomingEmailPath = 'INCOMING_EMAIL_PATH',
+  Status = 'STATUS',
+  Subject = 'SUBJECT',
+  TenantId = 'TENANT_ID',
+  To = 'TO',
+  Type = 'TYPE'
+}
+
+export enum IncomingEmailHistoryStatusFilterField {
+  Status = 'STATUS'
+}
+
+export type IncomingEmailHistoryStringFilter = {
+  field: IncomingEmailHistoryStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
+
+export enum IncomingEmailHistoryStringFilterField {
+  From = 'FROM',
+  Id = 'ID',
+  IncomingEmailPath = 'INCOMING_EMAIL_PATH',
+  RoutingConfigurationId = 'ROUTING_CONFIGURATION_ID',
+  Subject = 'SUBJECT',
+  TenantId = 'TENANT_ID',
+  To = 'TO'
+}
+
+export type IncomingEmailHistoryTypeConnection = {
+  __typename?: 'IncomingEmailHistoryTypeConnection';
+  edges?: Maybe<Array<Maybe<IncomingEmailHistory>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export enum IncomingEmailHistoryTypeFilterField {
+  Type = 'TYPE'
+}
+
 export enum InheritedConfigurationOwnerType {
   DocumentType = 'DOCUMENT_TYPE',
   Domain = 'DOMAIN',
@@ -3796,6 +4097,7 @@ export type JobMessage = {
   postalAddress?: Maybe<PostalAddress>;
   readDocumentDate?: Maybe<Scalars['DateTime']>;
   recipientName: Scalars['String'];
+  recordedDeliveryNumber?: Maybe<Scalars['String']>;
   retryCount: Scalars['Int'];
   status: JobMessageStatus;
   tenantId: Scalars['String'];
@@ -3849,6 +4151,7 @@ export enum JobMessageChorusActionType {
 export enum JobMessageChorusStatus {
   Completed = 'COMPLETED',
   Draft = 'DRAFT',
+  Error = 'ERROR',
   MadeAvailableToTheAccountingOfficer = 'MADE_AVAILABLE_TO_THE_ACCOUNTING_OFFICER',
   MadeAvailableToTheFirstValidator = 'MADE_AVAILABLE_TO_THE_FIRST_VALIDATOR',
   MadeAvailableToTheRecipient = 'MADE_AVAILABLE_TO_THE_RECIPIENT',
@@ -3910,6 +4213,7 @@ export type JobMessageStatusCount = {
   canceledCount: Scalars['Int'];
   completedCount: Scalars['Int'];
   errorCount: Scalars['Int'];
+  isPrimary: Scalars['Boolean'];
   totalCount: Scalars['Int'];
   type: JobMessageType;
 };
@@ -4499,6 +4803,7 @@ export type PostalJob = {
   id: Scalars['String'];
   jobType?: Maybe<JobBaseType>;
   note?: Maybe<Scalars['String']>;
+  parameter?: Maybe<PostalParameter>;
   recipientCount: Scalars['Int'];
   sentCount: Scalars['Int'];
   serviceId?: Maybe<Scalars['String']>;
@@ -4519,7 +4824,7 @@ export type PostalJobInput = {
   adhocRecipientFiles?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
   documents?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
   note?: InputMaybe<Scalars['String']>;
-  parameter?: InputMaybe<PostalParameter>;
+  parameter?: InputMaybe<PostalParameterInput>;
   postalAdhocRecipients?: InputMaybe<Array<InputMaybe<PostalAdhocRecipientInput>>>;
   serviceId?: InputMaybe<Scalars['String']>;
   trackingId?: InputMaybe<Scalars['String']>;
@@ -4554,13 +4859,14 @@ export type PostalJobTypeConnection = {
 };
 
 export type PostalParameter = {
-  envelope?: InputMaybe<EnvelopeType>;
-  lreArManagement?: InputMaybe<LreArManagementType>;
-  mergeDocuments?: InputMaybe<Scalars['Boolean']>;
-  printBothSide?: InputMaybe<Scalars['Boolean']>;
-  printColor?: InputMaybe<Scalars['Boolean']>;
-  sender?: InputMaybe<PostalAddressInput>;
-  stamp?: InputMaybe<StampType>;
+  __typename?: 'PostalParameter';
+  envelope?: Maybe<EnvelopeType>;
+  lreArManagement?: Maybe<LreArManagementType>;
+  mergeDocuments?: Maybe<Scalars['Boolean']>;
+  printBothSide?: Maybe<Scalars['Boolean']>;
+  printColor?: Maybe<Scalars['Boolean']>;
+  sender?: Maybe<PostalAddress>;
+  stamp?: Maybe<StampType>;
 };
 
 export type PostalParameterConfiguration = {
@@ -4608,21 +4914,42 @@ export enum PostalParameterConfigurationOwnerTypeFilterField {
 }
 
 export type PostalParameterConfigurationQueryParams = {
-  ownerId: Scalars['String'];
   ownerTypeFilters?: InputMaybe<Array<InputMaybe<PostalParameterConfigurationInheritedConfigurationOwnerTypeEnumFilter>>>;
   sortDirection?: InputMaybe<SortDirection>;
   sortField?: InputMaybe<PostalParameterConfigurationSortField>;
+  stringFilters?: InputMaybe<Array<InputMaybe<PostalParameterConfigurationStringFilter>>>;
 };
 
 export enum PostalParameterConfigurationSortField {
   CreationDate = 'CREATION_DATE',
-  LastModificationDate = 'LAST_MODIFICATION_DATE'
+  LastModificationDate = 'LAST_MODIFICATION_DATE',
+  OwnerId = 'OWNER_ID'
+}
+
+export type PostalParameterConfigurationStringFilter = {
+  field: PostalParameterConfigurationStringFilterField;
+  filterValue1: Scalars['String'];
+  operator: StringFilterOperator;
+};
+
+export enum PostalParameterConfigurationStringFilterField {
+  OwnerId = 'OWNER_ID'
 }
 
 export type PostalParameterConfigurationTypeConnection = {
   __typename?: 'PostalParameterConfigurationTypeConnection';
   edges?: Maybe<Array<Maybe<PostalParameterConfiguration>>>;
   pageInfo?: Maybe<PageInfo>;
+};
+
+export type PostalParameterInput = {
+  envelope?: InputMaybe<EnvelopeType>;
+  lreArManagement?: InputMaybe<LreArManagementType>;
+  mergeDocuments?: InputMaybe<Scalars['Boolean']>;
+  printBothSide?: InputMaybe<Scalars['Boolean']>;
+  printColor?: InputMaybe<Scalars['Boolean']>;
+  sender?: InputMaybe<PostalAddressInput>;
+  stamp?: InputMaybe<StampType>;
 };
 
 export type PowerBiAuthToken = {
@@ -4636,6 +4963,15 @@ export type PowerBiAuthToken = {
   lastModificationUserId?: Maybe<Scalars['String']>;
   lastModificationUserLabel?: Maybe<Scalars['String']>;
 };
+
+export enum ProcessingStatus {
+  Completed = 'COMPLETED',
+  Error = 'ERROR'
+}
+
+export enum ProcessingType {
+  RedirectEmail = 'REDIRECT_EMAIL'
+}
 
 export type PushJob = {
   adhocRecipientFiles?: InputMaybe<Array<InputMaybe<FileIdOrNewInputType>>>;
@@ -4748,6 +5084,8 @@ export enum RightType {
   CancelJobMessage = 'CANCEL_JOB_MESSAGE',
   /** Create, edit or delete activities */
   ChangeActivity = 'CHANGE_ACTIVITY',
+  /** Create, edit or delete api routing configurations */
+  ChangeApiRoutingConfiguration = 'CHANGE_API_ROUTING_CONFIGURATION',
   /** Create, edit or delete document links */
   ChangeClickedLinkDocument = 'CHANGE_CLICKED_LINK_DOCUMENT',
   /** Create or edit configurations */
@@ -4758,6 +5096,8 @@ export enum RightType {
   ChangeContactFunction = 'CHANGE_CONTACT_FUNCTION',
   /** Create, edit or delete dashboards */
   ChangeDashboard = 'CHANGE_DASHBOARD',
+  /** Create, edit or delete data file action */
+  ChangeDataFileAction = 'CHANGE_DATA_FILE_ACTION',
   /** Create, edit or delete documents */
   ChangeDocument = 'CHANGE_DOCUMENT',
   /** Create documentJob */
@@ -4818,6 +5158,8 @@ export enum RightType {
   EditEnvironment = 'EDIT_ENVIRONMENT',
   /** Edit tenants */
   EditTenant = 'EDIT_TENANT',
+  /** Edit Tenant postal config */
+  EditTenantPostalConfig = 'EDIT_TENANT_POSTAL_CONFIG',
   /** Grant internal user rights */
   GrantInternalRight = 'GRANT_INTERNAL_RIGHT',
   /** Grant user rights */
@@ -4826,6 +5168,8 @@ export enum RightType {
   MarkDocumentAsRead = 'MARK_DOCUMENT_AS_READ',
   /** Get or list activities */
   ReadActivity = 'READ_ACTIVITY',
+  /** Get or list api routing configurations */
+  ReadApiRoutingConfiguration = 'READ_API_ROUTING_CONFIGURATION',
   /** Mark document as read */
   ReadClickedLinkDocument = 'READ_CLICKED_LINK_DOCUMENT',
   /** Get or list configurations */
@@ -4836,6 +5180,8 @@ export enum RightType {
   ReadContactFunction = 'READ_CONTACT_FUNCTION',
   /** Get or list dashboards */
   ReadDashboard = 'READ_DASHBOARD',
+  /** Get or list data file action */
+  ReadDataFileAction = 'READ_DATA_FILE_ACTION',
   /** Get or list documents sent to the user */
   ReadDocument = 'READ_DOCUMENT',
   /** Get or list documentJobs */
@@ -4856,7 +5202,7 @@ export enum RightType {
   ReadEnvironmentApiUser = 'READ_ENVIRONMENT_API_USER',
   /** Get or list environment administrators */
   ReadEnvironmentUser = 'READ_ENVIRONMENT_USER',
-  /** Get or list documentJobs */
+  /** Get or list jobMessages */
   ReadJobMessage = 'READ_JOB_MESSAGE',
   /** Get or list list of values */
   ReadListOfValues = 'READ_LIST_OF_VALUES',
@@ -4932,6 +5278,7 @@ export enum RightValueSortField {
 export type Service = {
   __typename?: 'Service';
   chorusB2GConfig?: Maybe<ChorusB2GConfig>;
+  code?: Maybe<Scalars['String']>;
   creationDate?: Maybe<Scalars['DateTime']>;
   creationUserId?: Maybe<Scalars['String']>;
   creationUserLabel?: Maybe<Scalars['String']>;
@@ -4960,6 +5307,7 @@ export enum ServiceBoolFilterField {
 
 export type ServiceInput = {
   chorusB2GConfig?: InputMaybe<ChorusB2GConfigInput>;
+  code?: InputMaybe<Scalars['String']>;
   customSmtpConfig?: InputMaybe<SmtpConfigInput>;
   id?: InputMaybe<Scalars['String']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
@@ -5118,6 +5466,12 @@ export type StatusActionTypeConnection = {
   pageInfo?: Maybe<PageInfo>;
 };
 
+export type StatusCounts = {
+  __typename?: 'StatusCounts';
+  key: DocumentStatus;
+  value: Scalars['Long'];
+};
+
 export enum StringFilterOperator {
   Contain = 'CONTAIN',
   Defined = 'DEFINED',
@@ -5134,6 +5488,12 @@ export enum StringFilterOperator {
   StartWith = 'START_WITH',
   Undefined = 'UNDEFINED'
 }
+
+export type SubStatusCounts = {
+  __typename?: 'SubStatusCounts';
+  key: DocumentSubStatus;
+  value: Scalars['Long'];
+};
 
 export type TemplateContent = {
   __typename?: 'TemplateContent';
@@ -5188,6 +5548,23 @@ export type TemplateContentInput = {
 };
 
 export enum TemplateContentNotificationType {
+  ActivityAddAttachmentsDocument = 'ACTIVITY_ADD_ATTACHMENTS_DOCUMENT',
+  ActivityAddDataFileAction = 'ACTIVITY_ADD_DATA_FILE_ACTION',
+  ActivityCancelJobMessage = 'ACTIVITY_CANCEL_JOB_MESSAGE',
+  ActivityChangeStatusChorusB_2G = 'ACTIVITY_CHANGE_STATUS_CHORUS_B_2_G',
+  ActivityCompleteChorusB_2G = 'ACTIVITY_COMPLETE_CHORUS_B_2_G',
+  ActivityDocumentArchived = 'ACTIVITY_DOCUMENT_ARCHIVED',
+  ActivityDocumentCanceled = 'ACTIVITY_DOCUMENT_CANCELED',
+  ActivityDocumentRead = 'ACTIVITY_DOCUMENT_READ',
+  ActivityDocumentSigned = 'ACTIVITY_DOCUMENT_SIGNED',
+  ActivityEditMetadataDocument = 'ACTIVITY_EDIT_METADATA_DOCUMENT',
+  ActivityError = 'ACTIVITY_ERROR',
+  ActivityExternalProcess = 'ACTIVITY_EXTERNAL_PROCESS',
+  ActivityJobCreated = 'ACTIVITY_JOB_CREATED',
+  ActivityJobLaunched = 'ACTIVITY_JOB_LAUNCHED',
+  ActivityJobProcessing = 'ACTIVITY_JOB_PROCESSING',
+  ActivityNotificationSent = 'ACTIVITY_NOTIFICATION_SENT',
+  ActivitySendChorusB_2G = 'ACTIVITY_SEND_CHORUS_B_2_G',
   AddUserToTenant = 'ADD_USER_TO_TENANT',
   DocumentNotification = 'DOCUMENT_NOTIFICATION',
   DocumentNotificationLink = 'DOCUMENT_NOTIFICATION_LINK',
@@ -5260,6 +5637,7 @@ export type TemplateContentTemplateContentTransmissionTypeEnumFilter = {
 
 export enum TemplateContentTransmissionType {
   Email = 'EMAIL',
+  None = 'NONE',
   Sms = 'SMS',
   WebNotification = 'WEB_NOTIFICATION'
 }
@@ -5463,6 +5841,8 @@ export enum TenantRightType {
   ChangeContactFunction = 'CHANGE_CONTACT_FUNCTION',
   /** Create, edit or delete dashboards */
   ChangeDashboard = 'CHANGE_DASHBOARD',
+  /** Create data file action */
+  ChangeDataFileAction = 'CHANGE_DATA_FILE_ACTION',
   /** Create, edit or delete documents */
   ChangeDocument = 'CHANGE_DOCUMENT',
   /** Create, edit or delete documentJob */
@@ -5517,6 +5897,8 @@ export enum TenantRightType {
   ReadContactFunction = 'READ_CONTACT_FUNCTION',
   /** Get or list dashboards */
   ReadDashboard = 'READ_DASHBOARD',
+  /** Get or list data file action */
+  ReadDataFileAction = 'READ_DATA_FILE_ACTION',
   /** Get or list documents sent to the user */
   ReadDocument = 'READ_DOCUMENT',
   /** Get or list documentJob */

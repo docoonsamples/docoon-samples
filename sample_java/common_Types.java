@@ -1298,15 +1298,23 @@ public class Types {
   }
   
   public static class PostalConfigurationInput {
+    private String clientId;
+    private Boolean isEnabled;
     private Boolean isTestMode;
   
     public PostalConfigurationInput(Map<String, Object> args) {
       if (args != null) {
+        this.clientId = (String) args.get("clientId");
+        this.isEnabled = (Boolean) args.get("isEnabled");
         this.isTestMode = (Boolean) args.get("isTestMode");
       }
     }
   
+    public String getClientId() { return this.clientId; }
+    public Boolean getIsEnabled() { return this.isEnabled; }
     public Boolean getIsTestMode() { return this.isTestMode; }
+    public void setClientId(String clientId) { this.clientId = clientId; }
+    public void setIsEnabled(Boolean isEnabled) { this.isEnabled = isEnabled; }
     public void setIsTestMode(Boolean isTestMode) { this.isTestMode = isTestMode; }
   }
   
@@ -1648,11 +1656,13 @@ public class Types {
     ADD_TENANT,
     CANCEL_JOB_MESSAGE,
     CHANGE_ACTIVITY,
+    CHANGE_API_ROUTING_CONFIGURATION,
     CHANGE_CLICKED_LINK_DOCUMENT,
     CHANGE_CONFIGURATION,
     CHANGE_CONTACT,
     CHANGE_CONTACT_FUNCTION,
     CHANGE_DASHBOARD,
+    CHANGE_DATA_FILE_ACTION,
     CHANGE_DOCUMENT,
     CHANGE_DOCUMENT_JOB,
     CHANGE_DOCUMENT_TYPE,
@@ -1683,15 +1693,18 @@ public class Types {
     COMPLETE_DOCUMENT,
     EDIT_ENVIRONMENT,
     EDIT_TENANT,
+    EDIT_TENANT_POSTAL_CONFIG,
     GRANT_INTERNAL_RIGHT,
     GRANT_RIGHT,
     MARK_DOCUMENT_AS_READ,
     READ_ACTIVITY,
+    READ_API_ROUTING_CONFIGURATION,
     READ_CLICKED_LINK_DOCUMENT,
     READ_CONFIGURATION,
     READ_CONTACT,
     READ_CONTACT_FUNCTION,
     READ_DASHBOARD,
+    READ_DATA_FILE_ACTION,
     READ_DOCUMENT,
     READ_DOCUMENT_JOB,
     READ_DOCUMENT_ON_SERVICE,
