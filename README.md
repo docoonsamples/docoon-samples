@@ -11,10 +11,18 @@ You can directly use the generated examples and files or generate your own files
 ## Generate your own files
 
 ### Install
-1. Install Node.js 18
+1. Install GIT / Git client 
+Suggestion : install https://desktop.github.com/
+
+2. Clone this repository
+```cmd
+git clone https://github.com/docoonsamples/docoon-samples.git
+```
+
+3. Install Node.js 20
 https://nodejs.org/en/
 
-2. Intall the modules
+3. Intall the modules
 
 ```cmd
 npm install
@@ -34,8 +42,8 @@ npm run generate
 
 ```cmd
 ApiKey=<YourApiKeyGeneratedFronWebsite>
-EndpointBusiness=https://graphqlapi.docoon.com
-EndpointCommon=https://graphqlcommonapi.docoon.com
+EndpointBusiness=https://graphqlapi.docoon.com/api/BusinessApi
+EndpointCommon=https://graphqlcommonapi.docoon.com/api/CommonApi
 ```
 
 2. Install the modules in the get-schema folder
